@@ -1,13 +1,10 @@
+import 'package:car_system/controllers/client_controller.dart';
+import 'package:car_system/route_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class ClientView extends StatefulWidget {
-  const ClientView({Key? key}) : super(key: key);
+class RegisterClientView extends GetView<ClientController> {
 
-  @override
-  _ClientViewState createState() => _ClientViewState();
-}
-
-class _ClientViewState extends State<ClientView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +17,8 @@ class _ClientViewState extends State<ClientView> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Obx(() => Text("${controller.count}")),
+                Obx(() => Text("${controller.count2}")),
                 inputField('','Nombre completo',Icons.perm_identity),
                 inputField('','CI',Icons.wysiwyg),
                 inputField('','Ciudad',Icons.location_city_outlined),
@@ -31,7 +30,7 @@ class _ClientViewState extends State<ClientView> {
                 Row(
                   children: [   ElevatedButton(
                     child: const Text('Guardar'),
-                    onPressed: () {},
+                    onPressed: () =>Get.toNamed(RouterManager.LOGIN),
                     style:  ElevatedButton.styleFrom(
                         primary: Colors.green,
                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
