@@ -17,8 +17,6 @@ class RegisterClientView extends GetView<ClientController> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Obx(() => Text("${controller.count}")),
-                Obx(() => Text("${controller.count2}")),
                 inputField('','Nombre completo',Icons.perm_identity),
                 inputField('','CI',Icons.wysiwyg),
                 inputField('','Ciudad',Icons.location_city_outlined),
