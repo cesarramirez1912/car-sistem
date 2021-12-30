@@ -1,5 +1,5 @@
 class Rest {
-  static const String BASE_URL_TEST = "http://192.168.251.209:3000";
+  static const String BASE_URL_TEST = "http://192.168.0.4:3000";
   static const String VEHICLES = '/vehicles';
   static const String BASE_URL_PRODUCTION =
       "https://matrisoja-crm.herokuapp.com";

@@ -6,9 +6,10 @@ import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/repositories/home_repository.dart';
 import 'package:get/get.dart';
 
-class HomeController extends GetxController {
+class ListVehicleController extends GetxController {
   LoginController loginController = LoginController();
   HomeRepository _homeRepository = HomeRepository();
+  RxList vehiclesComplete = [].obs;
   RxList vehicles = [].obs;
   User? user = User();
 
@@ -25,7 +26,19 @@ class HomeController extends GetxController {
     try {
       List<Vehicle> res =
           await _homeRepository.fetchVehicles(user?.idSucursal ?? 0);
-      vehicles.value = res;
+      vehiclesComplete.value = res;
+      List<Vehicle> resFil = [];
+      if(res.isNotEmpty){
+        resFil.add(res.first);
+        print(resFil.first.toJson());
+        for(var i in res){
+          var find = resFil.where((element) => element.idVehiculoSucursal==i.idVehiculoSucursal);
+          if(find.isEmpty){
+           resFil.add(i);
+          }
+        }
+      }
+      vehicles.value = resFil;
     } catch (e) {
       print("error");
       print(e);

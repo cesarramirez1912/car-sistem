@@ -3,12 +3,12 @@ class Vehicle {
     required this.idVehiculoSucursal,
     required this.idEmpresa,
     required this.idSucursal,
-    required this.chapa,
-    required this.chassis,
-    required this.costoGuaranies,
-    required this.costoDolares,
+    this.chapa,
+    this.chassis,
+    this.costoGuaranies,
+    this.costoDolares,
     required this.contadoGuaranies,
-    required this.contadoDolares,
+    this.contadoDolares,
     required this.combustible,
     required this.color,
     required this.motor,
@@ -25,15 +25,16 @@ class Vehicle {
     required this.entradaGuaranies,
     required this.entradaDolares,
   });
+
   late final int idVehiculoSucursal;
   late final int idEmpresa;
   late final int idSucursal;
-  late final String chapa;
-  late final String chassis;
-  late final dynamic costoGuaranies;
-  late final dynamic costoDolares;
+  dynamic? chapa;
+  dynamic? chassis;
+  dynamic costoGuaranies;
+  dynamic costoDolares;
   late final dynamic contadoGuaranies;
-  late final dynamic contadoDolares;
+  dynamic contadoDolares;
   late final String combustible;
   late final String color;
   late final String motor;
@@ -42,15 +43,15 @@ class Vehicle {
   late final String marca;
   late final String modelo;
   late final int? cantidadCuotas;
-  late final dynamic? cuotaGuaranies;
-  late final dynamic? cuotaDolares;
+  dynamic? cuotaGuaranies;
+  dynamic? cuotaDolares;
   late final int? cantidadRefuerzo;
   late final dynamic? refuerzoGuaranies;
   late final dynamic? refuerzoDolares;
   late final dynamic? entradaGuaranies;
   late final dynamic? entradaDolares;
 
-  Vehicle.fromJson(Map<String, dynamic> json){
+  Vehicle.fromJson(Map<String, dynamic> json) {
     idVehiculoSucursal = json['id_vehiculo_sucursal'];
     idEmpresa = json['id_empresa'];
     idSucursal = json['id_sucursal'];
