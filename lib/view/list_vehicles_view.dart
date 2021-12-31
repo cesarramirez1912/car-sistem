@@ -19,11 +19,10 @@ class ListVehiclesView extends GetView<ListVehicleController> {
               child: ListView.builder(
                 itemCount: controller.vehicles.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Vehicle _vehicle = controller.vehicles[index];
                   return GestureDetector(
-                    onTap: () => Get.toNamed(RouterManager.VEHICLE_DETAIL,parameters: {'id':_vehicle.idVehiculoSucursal.toString()}),
+                    onTap: () => Get.toNamed(RouterManager.VEHICLE_DETAIL,parameters: {'idVehiculoSucursal':controller.vehicles[index].idVehiculoSucursal.toString()}),
                     child: Card(
-                      child: VehicleDetails(_vehicle),
+                      child: VehicleDetails(controller.vehicles[index]),
                     ),
                   );
                 },

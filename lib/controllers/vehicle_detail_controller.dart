@@ -10,15 +10,15 @@ import 'package:get/get.dart';
 class VehicleDetailController extends GetxController {
   ListVehicleController listVehicleController = ListVehicleController();
   RxList<Vehicle> vehicles = <Vehicle>[].obs;
-  RxList<Vehicle> vehiclesComplete = <Vehicle>[].obs;
   Rx<Vehicle>? vehicleDetail;
+  String idVehiculoSucursal = '';
+
   @override
   void onInit() async {
-    //final Map<dynamic, dynamic>? args = Get.arguments;
+    Map<dynamic, dynamic>? args = Get.parameters;
+    idVehiculoSucursal = args['idVehiculoSucursal'];
     listVehicleController = Get.find<ListVehicleController>();
-    vehicles.add(listVehicleController.vehiclesComplete.first);
-  }
-  void filter(){
-   // var find = vehiclesComplete.where((element) => element.idVehiculoSucursal==i.idVehiculoSucursal);
+    vehicles.addAll(listVehicleController.getVehiclesFromId(idVehiculoSucursal));
+    vehicleDetail?.value = vehicles.first;
   }
 }

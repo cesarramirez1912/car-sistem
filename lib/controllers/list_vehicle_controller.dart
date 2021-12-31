@@ -9,8 +9,8 @@ import 'package:get/get.dart';
 class ListVehicleController extends GetxController {
   LoginController loginController = LoginController();
   HomeRepository _homeRepository = HomeRepository();
-  RxList vehiclesComplete = [].obs;
-  RxList vehicles = [].obs;
+  RxList<Vehicle> vehiclesComplete = <Vehicle>[].obs;
+  RxList<Vehicle> vehicles = <Vehicle>[].obs;
   User? user = User();
 
   @override
@@ -44,4 +44,9 @@ class ListVehicleController extends GetxController {
       print(e);
     }
   }
+
+  List<Vehicle> getVehiclesFromId(String id){
+    return vehiclesComplete.where((element) => element.idVehiculoSucursal.toString()==id).toList();
+  }
+
 }
