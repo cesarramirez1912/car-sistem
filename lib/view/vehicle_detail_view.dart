@@ -104,12 +104,12 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                                         ),
                                         CustomTitle('PLAN DOLARES'),
                                         planText(
-                                            'Cuota:',
+                                            'Cuota',
                                             MoneyFormat().formatCommaToDot(
                                                 controller.vehicles[index]
                                                     .cuotaDolares)),
                                         planText(
-                                          'Refuerzo:',
+                                          'Refuerzo',
                                           MoneyFormat().formatCommaToDot(
                                               controller.vehicles[index]
                                                   .refuerzoDolares),
