@@ -1,3 +1,4 @@
+import 'package:car_system/colors.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/route_manager.dart';
@@ -6,13 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ListVehiclesView extends GetView<ListVehicleController> {
+
   @override
   Widget build(context) => Scaffold(
         appBar: AppBar(
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               alignment: Alignment.topLeft,
               margin: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
               decoration: const BoxDecoration(
@@ -56,6 +58,46 @@ class ListVehiclesView extends GetView<ListVehicleController> {
                 },
               ),
             ),
+          ),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                  decoration: const BoxDecoration(
+                    color: ColorPalette.PRIMARY,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        controller.user?.empresa ?? '-',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      Text(
+                        controller.user?.colaborador ?? '-',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  )),
+              ListTile(
+                title: const Text('Registrar Cliente'),
+                onTap: () => Get.toNamed(RouterManager.REGISTER_CLIENT),
+              ),
+              ListTile(
+                title: const Text('Registrar Vehiculo'),
+                onTap: () {
+                  // Update the state of the app
+                  // ...
+                  // Then close the drawer
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           ),
         ),
       );

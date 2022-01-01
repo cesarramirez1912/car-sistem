@@ -12,7 +12,7 @@ class _VehicleViewState extends State<VehicleView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Catastro Vehiculo'),
+        title: const Text('Registro Vehiculo'),
       ),
       body: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -30,14 +30,14 @@ class _VehicleViewState extends State<VehicleView> {
                 inputField('', 'Numero chapa', Icons.phone_android),
                 inputField('', 'Costo Guarani', Icons.work_outline),
                 inputField('', 'Costo Dolar', Icons.work_outline),
-                SizedBox(
-                  height: 20,
+                const SizedBox(
+                  height: 10,
                 ),
                 inputCuote('','Precio contado'),
                 inputCuote('','Precio finaciado'),
                 inputCuote('','Maximas cuotas'),
-                SizedBox(
-                  height: 20,
+                const SizedBox(
+                  height: 10,
                 ),
                 Row(
                   children: [

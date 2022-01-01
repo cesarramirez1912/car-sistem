@@ -1,4 +1,4 @@
-import 'package:car_system/view/create_client_view.dart';
+import 'package:car_system/view/register_client_view.dart';
 import 'package:car_system/view/list_vehicles_view.dart';
 import 'package:car_system/view/login_view.dart';
 import 'package:car_system/view/vehicle_detail_view.dart';

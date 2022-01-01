@@ -12,7 +12,10 @@ void main() {
             iconTheme: IconThemeData(
               color: ColorPalette.PRIMARY, //change your color here
             ),
-          titleTextStyle: TextStyle(color: ColorPalette.PRIMARY,fontSize: 22,fontWeight: FontWeight.w700),
+            titleTextStyle: TextStyle(
+                color: ColorPalette.PRIMARY,
+                fontSize: 22,
+                fontWeight: FontWeight.w700),
             backgroundColor: Colors.white,
             elevation: 0),
         fontFamily: 'Poppins',

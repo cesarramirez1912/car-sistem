@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 Widget CustomButton(String text, Function onPressed, Color color,
-    {bool withShadow = true}) {
+    {bool withShadow = false}) {
   return ElevatedButton(
     child: Text(text),
-    onPressed: () => onPressed(),
+    onPressed:  ()=> onPressed(),
     style: ElevatedButton.styleFrom(
       elevation: withShadow?2:0,
       primary: color,

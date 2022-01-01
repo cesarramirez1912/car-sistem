@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:car_system/controllers/login_controller.dart';
+import 'package:car_system/controllers/user_controller.dart';
 import 'package:car_system/models/user_model.dart';
 import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/repositories/home_repository.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class ListVehicleController extends GetxController {
+  UserController userController = Get.put(UserController());
   LoginController loginController = LoginController();
   HomeRepository _homeRepository = HomeRepository();
   RxList<Vehicle> vehiclesComplete = <Vehicle>[].obs;
@@ -34,7 +36,6 @@ class ListVehicleController extends GetxController {
       List<Vehicle> resFil = [];
       if (res.isNotEmpty) {
         resFil.add(res.first);
-        print(resFil.first.toJson());
         for (var i in res) {
           var find = resFil.where(
               (element) => element.idVehiculoSucursal == i.idVehiculoSucursal);
@@ -62,7 +63,9 @@ class ListVehicleController extends GetxController {
       vehicles.value = vehiclesAux;
     } else {
       List<Vehicle> _list = vehiclesAux
-          .where((element) => element.marca.contains(text.toUpperCase())||element.modelo.contains(text.toUpperCase()))
+          .where((element) =>
+              element.marca.contains(text.toUpperCase()) ||
+              element.modelo.contains(text.toUpperCase()))
           .toList();
       vehicles.value = _list;
     }
