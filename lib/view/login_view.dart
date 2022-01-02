@@ -14,11 +14,11 @@ class LoginView extends GetView<LoginController> {
           padding: const EdgeInsets.symmetric(horizontal: 45),
           child: Center(
             child: SingleChildScrollView(
-                child: Obx(()=>
-                   Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+                child: Obx(
+              () => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
                   const Text(
                     'CAR SYSTEM',
                     style: TextStyle(
@@ -32,14 +32,14 @@ class LoginView extends GetView<LoginController> {
                   ),
                   CustomInput(
                       labelText: 'Celular',
-                      prefixIcon: Icon(Icons.phone_android),
+                      prefixIcon: const Icon(Icons.phone_android),
                       textEditingController: controller.phone),
                   const SizedBox(
                     height: 6,
                   ),
                   CustomInput(
                       labelText: 'Contraseña',
-                      prefixIcon: Icon(Icons.lock_outline_rounded),
+                      prefixIcon: const Icon(Icons.lock_outline_rounded),
                       textEditingController: controller.password),
                   const SizedBox(
                     height: 22,
@@ -49,10 +49,11 @@ class LoginView extends GetView<LoginController> {
                       : CustomButton(
                           'ENTRAR',
                           () async => await controller.fetchLogin(),
-                          ColorPalette.PRIMARY,withShadow: false)
-              ],
-            ),
-                )),
+                          ColorPalette.PRIMARY,
+                          withShadow: false)
+                ],
+              ),
+            )),
           ),
         ),
       );

@@ -1,21 +1,21 @@
 class RegisterClient {
   RegisterClient({
-    required this.idEmpresa,
-    required this.idSucursal,
-    required this.cliente,
-    required this.ci,
-    required this.celular,
-    required this.direccion,
-    required this.ciudad,
+    this.idEmpresa,
+    this.idSucursal,
+    this.cliente,
+    this.ci,
+    this.celular,
+    this.direccion,
+    this.ciudad,
   });
 
-  late final int idEmpresa;
-  late final int idSucursal;
-  late final String cliente;
-  late final String ci;
-  late final String celular;
-  late final String direccion;
-  late final String ciudad;
+  int? idEmpresa;
+  int? idSucursal;
+  String? cliente;
+  String? ci;
+  String? celular;
+  String? direccion;
+  String? ciudad;
 
   RegisterClient.fromJson(Map<String, dynamic> json) {
     idEmpresa = json['id_empresa'];
