@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:car_system/colors.dart';
 import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/client_controller.dart';
@@ -26,61 +28,76 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: TypeAheadFormField<Brand>(
-                        itemBuilder: (context, suggestion) {
-                          return ListTile(
-                            leading: Icon(Icons.shopping_cart),
-                            title: Text(suggestion.marca),
-                            subtitle: Text('\$${suggestion.marca}'),
-                          );
-                        },
-                        textFieldConfiguration: TextFieldConfiguration(
-                          controller: controller.typeAheadController,
-                          decoration: InputDecoration(
-                            labelText: 'Buscar cliente',
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.clear),
-                              onPressed: () async {
-                                print('clean');
-                              },
+                    CustomSearch(
+                        controller.textBrandController,
+                        (context, suggestion) => ListTile(
+                              title: Text(suggestion.marca),
                             ),
-                          ),
+                        (pattern) async => controller.listBrand
+                            .where((item) => item.marca
+                                .toUpperCase()
+                                .contains(pattern.toUpperCase()))
+                            .toList(),
+                        (suggestion) => controller.textBrandController.text =
+                            suggestion.marca,
+                        'Marca'),
+                    CustomSearch(
+                        controller.textModelController,
+                            (context, suggestion) => ListTile(
+                          title: Text(suggestion.modelo),
                         ),
-                        suggestionsCallback: (pattern) async {
-                          print(pattern);
-                          return controller.listBrand
-                              .where((item) => item.marca.toUpperCase()
-                                  .contains(pattern.toUpperCase()))
-                              .toList();
-                        },
-                        onSuggestionSelected: (Object? suggestion) {
-                          print(suggestion);
-                        },
-                      ),
-                    ),
-                    CustomInput('', 'Marca', Icons.perm_identity,
-                        onSaved: (text) =>
-                            controller.registerClientModel?.cliente = text,
-                        isLoading: controller.isLoading.value,
-                        validator: validatorTreeCaracteressAndNull),
-                    CustomInput('', 'Modelo', Icons.wysiwyg,
-                        onSaved: (text) =>
-                            controller.registerClientModel?.ci = text,
-                        isLoading: controller.isLoading.value,
-                        validator: validatorTreeCaracteressAndNull,
-                        isNumber: true),
-                    CustomInput(
-                        '', 'Tipo combustible', Icons.location_city_outlined,
-                        onSaved: (text) =>
-                            controller.registerClientModel?.ciudad = text,
-                        isLoading: controller.isLoading.value,
-                        validator: validatorTreeCaracteressAndNull),
-                    CustomInput('', 'Color', Icons.location_city_outlined,
-                        onSaved: (text) =>
-                            controller.registerClientModel?.direccion = text,
-                        isLoading: controller.isLoading.value),
+                            (pattern) async => controller.listModel
+                            .where((item) => item.modelo
+                            .toUpperCase()
+                            .contains(pattern.toUpperCase()))
+                            .toList(),
+                            (suggestion) => controller.textModelController.text =
+                            suggestion.modelo,
+                        'Modelo'),
+
+                    CustomSearch(
+                        controller.textFuelController,
+                            (context, suggestion) => ListTile(
+                          title: Text(suggestion.combustible),
+                        ),
+                            (pattern) async => controller.listFuel
+                            .where((item) => item.combustible
+                            .toUpperCase()
+                            .contains(pattern.toUpperCase()))
+                            .toList(),
+                            (suggestion) => controller.textFuelController.text =
+                            suggestion.combustible,
+                        'Tipo combustible'),
+
+                    CustomSearch(
+                        controller.textColorController,
+                            (context, suggestion) => ListTile(
+                          title: Text(suggestion.color),
+                        ),
+                            (pattern) async => controller.listColor
+                            .where((item) => item.color
+                            .toUpperCase()
+                            .contains(pattern.toUpperCase()))
+                            .toList(),
+                            (suggestion) => controller.textColorController.text =
+                            suggestion.color,
+                        'Color'),
+
+                    CustomSearch(
+                        controller.textMotorController,
+                            (context, suggestion) => ListTile(
+                          title: Text(suggestion.motor),
+                        ),
+                            (pattern) async => controller.listMotor
+                            .where((item) => item.motor
+                            .toUpperCase()
+                            .contains(pattern.toUpperCase()))
+                            .toList(),
+                            (suggestion) => controller.textMotorController.text =
+                            suggestion.motor,
+                        'Motor'),
+
+
                     CustomInput('', 'Motor', Icons.phone_android,
                         onSaved: (text) =>
                             controller.registerClientModel?.celular = text,
@@ -150,6 +167,35 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
           )),
     );
   }
+}
+
+Widget CustomSearch(
+    TextEditingController textEditingController,
+    Function buildContext,
+    FutureOr<Iterable<dynamic>> Function(String) suggestionCallback,
+    Function onSuggestionSelected,
+    String labelText) {
+  return TypeAheadFormField<dynamic>(
+    itemBuilder: (context, sugge) => buildContext(BuildContext, sugge),
+    validator: (value) => value!.isEmpty ? 'Selecionar una marca' : null,
+// onSaved: (value) => this._selectedCity = value,
+    textFieldConfiguration: TextFieldConfiguration(
+      controller: textEditingController,
+      decoration: InputDecoration(
+        labelText: labelText,
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () async {
+            textEditingController.text = '';
+          },
+        ),
+      ),
+    ),
+    suggestionsCallback: (pattern) async {
+      return suggestionCallback(pattern);
+    },
+    onSuggestionSelected: (suggestion) => onSuggestionSelected(suggestion),
+  );
 }
 
 String? validatorTreeCaracteressAndNull(String text) {

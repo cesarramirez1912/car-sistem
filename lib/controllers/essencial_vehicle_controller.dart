@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:car_system/controllers/user_controller.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
+import 'package:car_system/models/essencial_vehicle_models/color.dart';
+import 'package:car_system/models/essencial_vehicle_models/fuel.dart';
+import 'package:car_system/models/essencial_vehicle_models/model.dart';
+import 'package:car_system/models/essencial_vehicle_models/motor.dart';
 import 'package:car_system/models/register_client_model.dart';
 import 'package:car_system/models/user_model.dart';
 import 'package:car_system/repositories/essencial_vehicle_repository.dart';
@@ -22,9 +26,16 @@ class EssencialVehicleController extends GetxController {
   RegisterClient? registerClientModel = RegisterClient();
 
   RxList<Brand> listBrand = <Brand>[].obs;
+  RxList<Model> listModel = <Model>[].obs;
+  RxList<Fuel> listFuel = <Fuel>[].obs;
+  RxList<Color> listColor = <Color>[].obs;
+  RxList<Motor> listMotor = <Motor>[].obs;
 
-  TextEditingController typeAheadController = new TextEditingController();
-  TextEditingController textController = new TextEditingController();
+  TextEditingController textBrandController = TextEditingController();
+  TextEditingController textModelController = TextEditingController();
+  TextEditingController textFuelController = TextEditingController();
+  TextEditingController textColorController = TextEditingController();
+  TextEditingController textMotorController = TextEditingController();
 
   @override
   void onInit() async {
@@ -38,9 +49,14 @@ class EssencialVehicleController extends GetxController {
   Future<void> fetchEssencialsDatas() async {
     listBrand = await essencialVehicleRepository?.fetchVehicleInformation(
         listBrand, Rest.BRANDS, Brand.fromJson);
-    for (var br in listBrand) {
-      print(br.toJson());
-    }
+    listModel = await essencialVehicleRepository?.fetchVehicleInformation(
+        listModel, Rest.MODELS, Model.fromJson);
+    listFuel = await essencialVehicleRepository?.fetchVehicleInformation(
+        listFuel, Rest.FUELS, Fuel.fromJson);
+    listColor = await essencialVehicleRepository?.fetchVehicleInformation(
+        listColor, Rest.COLORS, Color.fromJson);
+    listMotor = await essencialVehicleRepository?.fetchVehicleInformation(
+        listMotor, Rest.MOTORS, Motor.fromJson);
   }
 
   void registerVehicle() async {

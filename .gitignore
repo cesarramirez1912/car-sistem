@@ -9,6 +9,8 @@
 .history
 .svn/
 
+pubspec.yaml
+
 # IntelliJ related
 *.iml
 *.ipr
