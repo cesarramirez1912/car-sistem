@@ -16,5 +16,10 @@ class Rest {
   // api routes
   static String LOGIN = BASE_URL + "/login";
   static String CLIENTS = BASE_URL + "/clients";
+  static String MOTORS = BASE_URL + "/motors";
+  static String BRANDS = BASE_URL + "/brands";
+  static String FUELS = BASE_URL + "/fuels";
+  static String MODELS = BASE_URL + "/models";
+  static String COLORS = BASE_URL + "/colors";
   static String VEHICLES_BRANCH = BASE_URL + VEHICLES + "/branch=";
 }

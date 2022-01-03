@@ -1,7 +1,7 @@
 import 'package:car_system/colors.dart';
 import 'package:car_system/controllers/login_controller.dart';
 import 'package:car_system/widgets/button.dart';
-import 'package:car_system/widgets/input.dart';
+import 'package:car_system/widgets/input_login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,14 +30,14 @@ class LoginView extends GetView<LoginController> {
                   const SizedBox(
                     height: 20,
                   ),
-                  CustomInput(
+                  CustomInputLogin(
                       labelText: 'Celular',
                       prefixIcon: const Icon(Icons.phone_android),
                       textEditingController: controller.phone),
                   const SizedBox(
                     height: 6,
                   ),
-                  CustomInput(
+                  CustomInputLogin(
                       labelText: 'Contraseña',
                       prefixIcon: const Icon(Icons.lock_outline_rounded),
                       textEditingController: controller.password),

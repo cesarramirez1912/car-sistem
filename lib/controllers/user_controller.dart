@@ -10,10 +10,6 @@ class UserController extends GetxController {
   void onInit() {
     loginController = Get.find<LoginController>();
     user = loginController.user?.value;
-    print(user?.toJson());
     super.onInit();
   }
-
-
-
 }

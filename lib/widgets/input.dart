@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 
-Widget CustomInput({String? labelText, Widget? prefixIcon, TextEditingController? textEditingController}) {
-  return Container(
-    padding: const EdgeInsets.only(top: 4),
-    decoration:const BoxDecoration(
-        color: Color.fromRGBO(248, 248, 248, 1),
-        borderRadius: const BorderRadius.only(topLeft: Radius.circular(8),topRight: Radius.circular(8))),
-    child: TextFormField(
-      controller: textEditingController,
-      decoration: InputDecoration(
-        prefixIcon: prefixIcon ?? prefixIcon,
-        labelText: labelText,
-      ),
+Widget CustomInput(String? hintText, String? labelText, IconData iconData,
+    {Function? onSaved,
+    Function? validator,
+    bool isLoading = false,
+    bool isNumber = false,
+    bool isPhone = false}) {
+  return TextFormField(
+    textCapitalization: TextCapitalization.sentences,
+    onSaved: (text) => onSaved?.call(text),
+    validator: (value) => validator?.call(value),
+    enabled: isLoading ? false : true,
+    keyboardType: isNumber
+        ? TextInputType.number
+        : isPhone
+            ? TextInputType.phone
+            : TextInputType.text,
+    autovalidateMode: AutovalidateMode.always,
+    decoration: InputDecoration(
+      icon: Icon(iconData),
+      hintText: hintText,
+      labelText: labelText,
     ),
   );
 }

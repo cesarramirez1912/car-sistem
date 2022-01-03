@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ListVehiclesView extends GetView<ListVehicleController> {
-
   @override
   Widget build(context) => Scaffold(
         appBar: AppBar(
@@ -90,12 +89,7 @@ class ListVehiclesView extends GetView<ListVehicleController> {
               ),
               ListTile(
                 title: const Text('Registrar Vehiculo'),
-                onTap: () {
-                  // Update the state of the app
-                  // ...
-                  // Then close the drawer
-                  Navigator.pop(context);
-                },
+                onTap: () => Get.toNamed(RouterManager.REGISTER),
               ),
             ],
           ),
