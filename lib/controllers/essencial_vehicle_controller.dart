@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:car_system/controllers/user_controller.dart';
+import 'package:car_system/models/create_vehicle.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
 import 'package:car_system/models/essencial_vehicle_models/color.dart';
 import 'package:car_system/models/essencial_vehicle_models/fuel.dart';
@@ -23,7 +24,10 @@ class EssencialVehicleController extends GetxController {
   Rx<bool> isLoading = false.obs;
   EssencialVehicleRepository? essencialVehicleRepository;
 
-  RegisterClient? registerClientModel = RegisterClient();
+  Rx<CreateVehicle> createVehicle = CreateVehicle().obs;
+
+  FocusNode myFocusNode = FocusNode();
+  FocusNode myFocusNode2 = FocusNode();
 
   RxList<Brand> listBrand = <Brand>[].obs;
   RxList<Model> listModel = <Model>[].obs;
@@ -66,13 +70,15 @@ class EssencialVehicleController extends GetxController {
       isLoading.value = true;
       try {
         formKey.currentState!.save();
-        registerClientModel?.idSucursal = user?.idSucursal;
-        registerClientModel?.idEmpresa = user?.idEmpresa;
+        print('entro ca');
+        createVehicle.value.idSucursal = user?.idSucursal;
+        createVehicle.value.idEmpresa = user?.idEmpresa;
+        print(createVehicle.toJson());
         // var clientId = await registerClientRepository
         //     ?.createClient(registerClientModel!.toJson());
         //  print(clientId);
-        CustomSnackBarSuccess(
-            'CLIENTE ${registerClientModel?.cliente} REGISTRADO CON EXITO!');
+        // CustomSnackBarSuccess(
+        //     'CLIENTE ${registerClientModel?.cliente} REGISTRADO CON EXITO!');
         formKey.currentState!.reset();
         isLoading.value = false;
       } catch (e) {
