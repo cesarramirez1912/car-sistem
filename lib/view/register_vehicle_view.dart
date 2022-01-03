@@ -98,45 +98,40 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                         'Motor'),
 
 
-                    CustomInput('', 'Motor', Icons.phone_android,
+                    CustomInput('', 'Ano', Icons.calendar_today,
                         onSaved: (text) =>
                             controller.registerClientModel?.celular = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
                         isPhone: true),
-                    CustomInput('', 'Ano', Icons.phone_android,
+
+                    CustomInput('', 'Tipo de cambio', Icons.format_list_numbered,
                         onSaved: (text) =>
                             controller.registerClientModel?.celular = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
                         isPhone: true),
-                    CustomInput('', 'Tipo de cambio', Icons.phone_android,
+                    CustomInput('', 'Numero de chapa', Icons.confirmation_num_outlined,
                         onSaved: (text) =>
                             controller.registerClientModel?.celular = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
                         isPhone: true),
-                    CustomInput('', 'Numero de chapa', Icons.phone_android,
-                        onSaved: (text) =>
-                            controller.registerClientModel?.celular = text,
-                        isLoading: controller.isLoading.value,
-                        validator: validatorTreeCaracteressAndNull,
-                        isPhone: true),
-                    CustomInput('', 'Numero de chassis', Icons.phone_android,
-                        onSaved: (text) =>
-                            controller.registerClientModel?.celular = text,
-                        isLoading: controller.isLoading.value,
-                        validator: validatorTreeCaracteressAndNull,
-                        isPhone: true),
-                    CustomInput(
-                        '', 'Costo vehiculo guaranies', Icons.phone_android,
+                    CustomInput('', 'Numero de chassis', Icons.confirmation_num_outlined,
                         onSaved: (text) =>
                             controller.registerClientModel?.celular = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
                         isPhone: true),
                     CustomInput(
-                        '', 'Costo vehiculo dolares', Icons.phone_android,
+                        '', 'Costo vehiculo guaranies', Icons.price_change_outlined,
+                        onSaved: (text) =>
+                            controller.registerClientModel?.celular = text,
+                        isLoading: controller.isLoading.value,
+                        validator: validatorTreeCaracteressAndNull,
+                        isPhone: true),
+                    CustomInput(
+                        '', 'Costo vehiculo dolares', Icons.price_change_outlined,
                         onSaved: (text) =>
                             controller.registerClientModel?.celular = text,
                         isLoading: controller.isLoading.value,
