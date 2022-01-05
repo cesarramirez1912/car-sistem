@@ -6,10 +6,16 @@ import 'package:car_system/controllers/client_controller.dart';
 import 'package:car_system/controllers/essencial_vehicle_controller.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
 import 'package:car_system/models/essencial_vehicle_models/model.dart';
+import 'package:car_system/view/buildCity.dart';
+import 'package:car_system/view/buildFood.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/input.dart';
+import 'package:car_system/widgets/spacing.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 
@@ -33,8 +39,6 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    buildCity(controller),
-                    buildFood(controller),
                     // CustomAutoComplete(
                     //   (option) => option.marca,
                     //   'marca',
@@ -122,42 +126,63 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     //     'Motor',
                     //     onSaved: (value) =>
                     //         controller.createVehicle.value.motor = value),
-                    CustomInput('', 'Ano', Icons.calendar_today,
+                    CustomSpacing(),
+                     dropDowSearch(
+                       controller.listStringBrand,
+                       'Marca',
+                       onSaved: (text) =>
+                       controller.createVehicle.value.marca = text,
+                     ),
+                    CustomSpacing(),
+                    dropDowSearch(controller.listStringModel, 'Modelo', onSaved: (text) =>
+                    controller.createVehicle.value.modelo = text,),
+                    CustomSpacing(),
+                    dropDowSearch(
+                        controller.listStringFuel, 'Tipo combustible', onSaved: (text) =>
+                    controller.createVehicle.value.combustible = text),
+                    CustomSpacing(),
+                    dropDowSearch(controller.listStringColor, 'Color', onSaved: (text) =>
+                controller.createVehicle.value.color = text,),
+                    CustomSpacing(),
+                    dropDowSearch(controller.listStringMotor, 'Motor', onSaved: (text) =>
+                    controller.createVehicle.value.motor = text,),
+                    CustomSpacing(),
+                    CustomInput('', 'Ano',       iconData:Icons.calendar_today,
                         onSaved: (text) =>
                             controller.createVehicle.value.ano = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
                         isPhone: true),
                     CustomInput(
-                        '', 'Tipo de cambio', Icons.format_list_numbered,
+                        '', 'Tipo de cambio',       iconData:Icons.calendar_view_day_outlined,
                         onSaved: (text) =>
                             controller.createVehicle.value.cambio = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
                         isPhone: true),
                     CustomInput(
-                        '', 'Numero de chapa', Icons.confirmation_num_outlined,
+                        '', 'Numero de chapa',       iconData:Icons.confirmation_num_outlined,
                         onSaved: (text) =>
                             controller.createVehicle.value.chapa = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
                         isPhone: true),
                     CustomInput('', 'Numero de chassis',
-                        Icons.confirmation_num_outlined,
+                        iconData:Icons.confirmation_num_outlined,
                         onSaved: (text) =>
                             controller.createVehicle.value.chassis = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
                         isPhone: true),
                     CustomInput('', 'Costo vehiculo guaranies',
-                        Icons.price_change_outlined,
+                         iconData: Icons.price_change_outlined,
                         onSaved: (text) => controller
                             .createVehicle.value.costoGuaranies = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
                         isPhone: true),
                     CustomInput('', 'Costo vehiculo dolares',
-                        Icons.price_change_outlined,
+                        iconData: Icons.price_change_outlined,
                         onSaved: (text) =>
                             controller.createVehicle.value.costoDolares = text,
                         isLoading: controller.isLoading.value,
@@ -189,47 +214,269 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
     );
   }
 
-  Widget buildCity(EssencialVehicleController controller) =>
-      Container(
-        child: TypeAheadFormField<String?>(
-          textFieldConfiguration: TextFieldConfiguration(
-            controller: controller.textBrandController,
-            decoration: InputDecoration(
-              labelText: 'City',
-              border: OutlineInputBorder(),
+  Widget layout(
+      FutureOr<Iterable<Brand>> Function(TextEditingValue) optionsBuilder) {
+    return Autocomplete<Brand>(
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        return controller.listBrand
+            .where((Brand brand) => brand.marca
+                .toLowerCase()
+                .startsWith(textEditingValue.text.toLowerCase()))
+            .toList();
+      },
+      displayStringForOption: (Brand option) => option.marca,
+      fieldViewBuilder: (BuildContext context,
+          TextEditingController fieldTextEditingController,
+          FocusNode fieldFocusNode,
+          VoidCallback onFieldSubmitted) {
+        return TextField(
+          controller: fieldTextEditingController,
+          focusNode: fieldFocusNode,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        );
+      },
+      onSelected: (Brand brand) {
+        print('Selected: ${brand.marca}');
+      },
+      optionsViewBuilder: (BuildContext context,
+          AutocompleteOnSelected<Brand> onSelected, Iterable<Brand> options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            child: Container(
+              width: 300,
+              color: Colors.teal,
+              child: ListView.builder(
+                itemCount: options.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final Brand option = options.elementAt(index);
+
+                  return GestureDetector(
+                    onTap: () {
+                      onSelected(option);
+                    },
+                    child: ListTile(
+                      title: Text(option.marca,
+                          style: const TextStyle(color: Colors.white)),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-          suggestionsCallback: CityData.getSuggestions,
-          itemBuilder: (context, String? suggestion) => ListTile(
-            title: Text(suggestion!),
-          ),
-          onSuggestionSelected: (String? suggestion) =>
-              controller.textBrandController.text = suggestion!,
-          validator: (value) =>
-              value != null && value.isEmpty ? 'Please select a city' : null,
-          onSaved: (value) => selectedCity = value,
-        ),
-      );
+        );
+      },
+    );
+  }
 
-  Widget buildFood(EssencialVehicleController controller) =>
-      TypeAheadFormField<String?>(
-        textFieldConfiguration: TextFieldConfiguration(
-          controller: controller.textModelController,
-          decoration: InputDecoration(
-            labelText: 'Food',
-            border: OutlineInputBorder(),
+  Widget dropDowSearch(List<String> list, String label, {IconData? iconData,Function? onSaved,bool isRequired = true}) {
+    return DropdownSearch<String>(
+      showSearchBox: true,
+      showSelectedItems: true,
+      showAsSuffixIcons: true,
+      dropdownSearchDecoration: const InputDecoration(
+        prefixIcon: Icon(Icons.car_rental),
+        contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+        border: OutlineInputBorder(
+        ),
+      ),
+      searchFieldProps: TextFieldProps(
+        decoration: const InputDecoration(
+          filled: true,
+          label: Text('Buscar')
+        ),
+      ),
+      validator: (value)=> isRequired ? ( value == null ?  'Campo obligatorio.' : null ): null,
+      onSaved: (value) => isRequired ? onSaved != null? onSaved(value) ?? true : true : false,
+      mode: Mode.DIALOG,
+      items: list,
+      label: label,
+    );
+  }
+
+  Widget layout4() {
+    return DropdownSearch<Brand>(
+      validator: (u) => u?.marca ?? "user field is required ",
+      onFind: (String? filter) => getData(filter!),
+      dropdownSearchDecoration: const InputDecoration(
+        labelText: "Marca",
+        contentPadding: EdgeInsets.fromLTRB(12, 12, 0, 0),
+        border: OutlineInputBorder(),
+      ),
+      searchFieldProps: TextFieldProps(
+        decoration: InputDecoration(
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () => controller.textBrandController.clear(),
           ),
         ),
-        suggestionsCallback: FoodData.getSuggestions,
-        itemBuilder: (context, String? suggestion) => ListTile(
-          title: Text(suggestion!),
+      ),
+      onChanged: print,
+      dropdownBuilder: (BuildContext context, Brand? brand) {
+        return ListTile(
+          title: Text(brand?.marca ?? 's'),
+        );
+      },
+      popupItemBuilder: (BuildContext context, Brand? item, bool isSelected) {
+        return ListTile(
+          selected: isSelected,
+          title: Text(item?.marca ?? 'si'),
+        );
+      },
+      showSearchBox: true,
+    );
+  }
+
+  Future<List<Brand>> getData(String filter) async {
+    List<Brand> newList = [];
+    if (filter.isEmpty) {
+      return controller.listBrand;
+    } else {
+      newList.addAll(controller.listBrand
+          .where(
+              (item) => item.marca.toUpperCase().contains(filter.toUpperCase()))
+          .toList());
+      return newList;
+    }
+  }
+
+  Widget layout3() {
+    return LayoutBuilder(builder: (context, constraints) {
+      return DropdownSearch<Brand>(
+        validator: (v) => v == null ? "required field" : null,
+        dropdownSearchDecoration: const InputDecoration(
+          hintText: "Select a country",
+          labelText: "Menu mode with helper *",
+          helperText: 'positionCallback example usage',
+          contentPadding: EdgeInsets.fromLTRB(12, 12, 0, 0),
+          border: OutlineInputBorder(),
         ),
-        onSuggestionSelected: (String? suggestion) =>
-            controller.textModelController.text = suggestion!,
-        validator: (value) =>
-            value != null && value.isEmpty ? 'Please select a food' : null,
-        onSaved: (value) => selectedFood = value,
+        showSearchBox: true,
+        mode: Mode.DIALOG,
+        showSelectedItems: false,
+        items: controller.listBrand,
+        onChanged: print,
+        positionCallback: (popupButtonObject, overlay) {
+          final decorationBox = _findBorderBox(popupButtonObject);
+
+          double translateOffset = 0;
+          if (decorationBox != null) {
+            translateOffset =
+                decorationBox.size.height - popupButtonObject.size.height;
+          }
+
+          // Get the render object of the overlay used in `Navigator` / `MaterialApp`, i.e. screen size reference
+          final RenderBox overlay =
+              Overlay.of(context)!.context.findRenderObject() as RenderBox;
+          // Calculate the show-up area for the dropdown using button's size & position based on the `overlay` used as the coordinate space.
+          return RelativeRect.fromSize(
+            Rect.fromPoints(
+              popupButtonObject
+                  .localToGlobal(popupButtonObject.size.bottomLeft(Offset.zero),
+                      ancestor: overlay)
+                  .translate(0, translateOffset),
+              popupButtonObject.localToGlobal(
+                  popupButtonObject.size.bottomRight(Offset.zero),
+                  ancestor: overlay),
+            ),
+            Size(overlay.size.width, overlay.size.height),
+          );
+        },
       );
+    });
+  }
+
+  RenderBox? _findBorderBox(RenderBox box) {
+    RenderBox? borderBox;
+
+    box.visitChildren((child) {
+      if (child is RenderCustomPaint) {
+        borderBox = child;
+      }
+
+      final box = _findBorderBox(child as RenderBox);
+      if (box != null) {
+        borderBox = box;
+      }
+    });
+
+    return borderBox;
+  }
+
+  Widget layout2() {
+    return LayoutBuilder(builder: (context, constraints) {
+      return RawAutocomplete<Model>(
+        textEditingController: controller.textModelController,
+        focusNode: FocusNode(onKey: (node, event) {
+          if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+            print('aca entro');
+            // Do something
+            // Next 2 line needed If you don't want to update the text field with new line.
+            node.unfocus();
+          }
+          return KeyEventResult.values.first;
+        }),
+        optionsBuilder: (TextEditingValue textEditingValue) {
+          return controller.listModel
+              .where((Model model) => model.modelo
+                  .toLowerCase()
+                  .startsWith(textEditingValue.text.toLowerCase()))
+              .toList();
+        },
+        displayStringForOption: (Model option) => option.modelo,
+        fieldViewBuilder: (BuildContext context,
+            TextEditingController fieldTextEditingController,
+            FocusNode fieldFocusNode,
+            VoidCallback onFieldSubmitted) {
+          return TextField(
+            controller: controller.textModelController,
+            focusNode: fieldFocusNode,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          );
+        },
+        onSelected: (Model model) {
+          print('Selected: ${model.modelo}');
+        },
+        optionsViewBuilder: (BuildContext context,
+            AutocompleteOnSelected<Model> onSelected, Iterable<Model> options) {
+          return Align(
+            alignment: Alignment.topLeft,
+            child: Material(
+              shape: const RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(4.0)),
+              ),
+              child: Container(
+                color: Colors.grey[200],
+                height: 52.0 * options.length,
+                width: constraints.biggest.width,
+                child: ListView.builder(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: false,
+                  itemCount: options.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Model option = options.elementAt(index);
+
+                    return GestureDetector(
+                      onTap: () {
+                        onSelected(option);
+                      },
+                      child: ListTile(
+                        title: Text(option.modelo,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500)),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    });
+  }
 }
 
 // Widget CustomAutoComplete(
@@ -366,34 +613,4 @@ Widget inputCuote(String labelText, String labelText2) {
       )
     ],
   );
-}
-
-class CityData {
-  static final faker = Faker();
-
-  static final List<String> cities =
-      List.generate(20, (index) => faker.address.city());
-
-  static List<String> getSuggestions(String query) =>
-      List.of(cities).where((city) {
-        final cityLower = city.toLowerCase();
-        final queryLower = query.toLowerCase();
-
-        return cityLower.contains(queryLower);
-      }).toList();
-}
-
-class FoodData {
-  static final faker = Faker();
-
-  static final List<String> foods =
-      List.generate(20, (index) => faker.food.dish());
-
-  static List<String> getSuggestions(String query) =>
-      List.of(foods).where((food) {
-        final foodLower = food.toLowerCase();
-        final queryLower = query.toLowerCase();
-
-        return foodLower.contains(queryLower);
-      }).toList();
 }

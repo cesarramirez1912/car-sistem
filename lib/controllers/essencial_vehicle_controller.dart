@@ -29,6 +29,12 @@ class EssencialVehicleController extends GetxController {
   FocusNode myFocusNode = FocusNode();
   FocusNode myFocusNode2 = FocusNode();
 
+  RxList<String> listStringBrand = <String>[].obs;
+  RxList<String> listStringModel = <String>[].obs;
+  RxList<String> listStringFuel = <String>[].obs;
+  RxList<String> listStringColor = <String>[].obs;
+  RxList<String> listStringMotor = <String>[].obs;
+
   RxList<Brand> listBrand = <Brand>[].obs;
   RxList<Model> listModel = <Model>[].obs;
   RxList<Fuel> listFuel = <Fuel>[].obs;
@@ -51,16 +57,26 @@ class EssencialVehicleController extends GetxController {
   }
 
   Future<void> fetchEssencialsDatas() async {
-    listBrand = await essencialVehicleRepository?.fetchVehicleInformation(
-        listBrand, Rest.BRANDS, Brand.fromJson);
-    listModel = await essencialVehicleRepository?.fetchVehicleInformation(
+    List resListBrand = await essencialVehicleRepository
+        ?.fetchVehicleInformation(listBrand, Rest.BRANDS, Brand.fromJson);
+    listBrand.value = resListBrand[0];
+    listStringBrand.value = resListBrand[1];
+    List resListModel = await essencialVehicleRepository?.fetchVehicleInformation(
         listModel, Rest.MODELS, Model.fromJson);
-    listFuel = await essencialVehicleRepository?.fetchVehicleInformation(
+    listModel.value = resListModel[0];
+    listStringModel.value  = resListModel[1];
+    List resListFuel = await essencialVehicleRepository?.fetchVehicleInformation(
         listFuel, Rest.FUELS, Fuel.fromJson);
-    listColor = await essencialVehicleRepository?.fetchVehicleInformation(
+    listFuel.value = resListFuel[0];
+    listStringFuel.value  = resListFuel[1];
+    List resListColor = await essencialVehicleRepository?.fetchVehicleInformation(
         listColor, Rest.COLORS, Color.fromJson);
-    listMotor = await essencialVehicleRepository?.fetchVehicleInformation(
+    listColor.value = resListColor[0];
+    listStringColor.value  = resListColor[1];
+    List resListMotor = await essencialVehicleRepository?.fetchVehicleInformation(
         listMotor, Rest.MOTORS, Motor.fromJson);
+    listMotor.value = resListMotor[0];
+    listStringMotor.value  = resListMotor[1];
   }
 
   void registerVehicle() async {

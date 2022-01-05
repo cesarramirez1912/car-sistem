@@ -27,15 +27,17 @@ class EssencialVehicleRepository extends GetConnect {
   Future<dynamic> fetchVehicleInformation(
       List listType, String url, dynamic fromJson) async {
     final response = await get(url);
-    print(response);
+    List<String> _listString = [];
     if (response.status.hasError) {
       return Future.error(
           'Ocurrio un error al traer los datos, pruebe de nuevo');
     } else {
       for (var i in response.body['response']) {
+        String key = response.body['response'][0].keys.elementAt(0);
+        _listString.add(i[key]);
         listType.add(fromJson(i));
       }
-      return listType;
+      return [listType,_listString];
     }
   }
 }

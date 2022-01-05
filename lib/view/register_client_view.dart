@@ -3,6 +3,7 @@ import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/client_controller.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/input.dart';
+import 'package:car_system/widgets/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,27 +24,33 @@ class RegisterClientView extends GetView<ClientController> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomInput('', 'Nombre', Icons.perm_identity,
+                    CustomSpacing(),
+                    CustomInput('', 'Nombre',
+                        iconData: Icons.person,
                         onSaved: (text) =>
                             controller.registerClientModel?.cliente = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull),
-                    CustomInput('', 'CI', Icons.wysiwyg,
+                    CustomInput('', 'CI',
+                        iconData: Icons.wysiwyg,
                         onSaved: (text) =>
                             controller.registerClientModel?.ci = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
                         isNumber: true),
-                    CustomInput('', 'Ciudad', Icons.location_city_outlined,
+                    CustomInput('', 'Ciudad',
+                        iconData: Icons.location_city_outlined,
                         onSaved: (text) =>
                             controller.registerClientModel?.ciudad = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull),
-                    CustomInput('', 'Dirección', Icons.location_city_outlined,
+                    CustomInput('', 'Dirección',
+                        iconData: Icons.location_city_outlined,
                         onSaved: (text) =>
                             controller.registerClientModel?.direccion = text,
                         isLoading: controller.isLoading.value),
-                    CustomInput('', 'Celular', Icons.phone_android,
+                    CustomInput('', 'Celular',
+                        iconData: Icons.phone_android,
                         onSaved: (text) =>
                             controller.registerClientModel?.celular = text,
                         isLoading: controller.isLoading.value,
