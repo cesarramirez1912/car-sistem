@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:intl/intl.dart';
 
 class MoneyFormat {
@@ -14,4 +16,5 @@ class MoneyFormat {
           .replaceAll(',00', '');
     }
   }
+
 }

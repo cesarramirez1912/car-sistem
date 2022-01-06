@@ -37,8 +37,7 @@ dependencies:
   get: ^4.6.1
   intl: ^0.17.0
   dropdown_search: ^2.0.1
-  flutter_typeahead: ^3.2.4
-  faker: ^2.0.0-rc.2
+  flutter_masked_text2: ^0.9.1
 
 dev_dependencies:
   flutter_test:

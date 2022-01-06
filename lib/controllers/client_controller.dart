@@ -7,6 +7,7 @@ import 'package:car_system/repositories/register_client_repository.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
 
 class ClientController extends GetxController {
@@ -17,6 +18,9 @@ class ClientController extends GetxController {
   RegisterClientRepository? registerClientRepository;
 
   RegisterClient? registerClientModel = RegisterClient();
+
+  MaskedTextController textCiController =  MaskedTextController(text: '', mask: '0.000.000-00');
+  MaskedTextController textPhoneController =  MaskedTextController(text: '', mask: '(0000)000-000');
 
   @override
   void onInit() {
@@ -35,6 +39,8 @@ class ClientController extends GetxController {
         formKey.currentState!.save();
         registerClientModel?.idSucursal = user?.idSucursal;
         registerClientModel?.idEmpresa = user?.idEmpresa;
+        registerClientModel?.celular = registerClientModel?.celular?.replaceAll('(','').replaceAll(')', '').replaceAll('-', '');
+        registerClientModel?.ci = registerClientModel?.ci?.replaceAll('.','').replaceAll('-', '');
         var clientId = await registerClientRepository
             ?.createClient(registerClientModel!.toJson());
         print(clientId);

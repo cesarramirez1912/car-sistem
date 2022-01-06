@@ -1,5 +1,5 @@
-class Cuotas {
-  Cuotas({
+class Cuota {
+  Cuota({
     this.cantidadCuotas,
     this.cuotaGuaranies,
     this.cuotaDolares,
@@ -11,17 +11,17 @@ class Cuotas {
     this.entradaDolares,
   });
 
-  int? cantidadCuotas;
+  dynamic? cantidadCuotas;
   dynamic? cuotaGuaranies;
   dynamic? cuotaDolares;
   int? idVehiculoSucursal;
-  int? cantidadRefuerzo;
+  dynamic? cantidadRefuerzo;
   dynamic? refuerzoGuaranies;
   dynamic? refuerzoDolares;
   dynamic? entradaGuaranies;
   dynamic? entradaDolares;
 
-  Cuotas.fromJson(Map<String, dynamic> json) {
+  Cuota.fromJson(Map<String, dynamic> json) {
     cantidadCuotas = json['cantidad_cuotas'];
     cuotaGuaranies = json['cuota_guaranies'];
     cuotaDolares = json['cuota_dolares'];

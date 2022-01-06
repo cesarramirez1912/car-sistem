@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:car_system/controllers/user_controller.dart';
 import 'package:car_system/models/create_vehicle.dart';
+import 'package:car_system/models/cuotes.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
 import 'package:car_system/models/essencial_vehicle_models/color.dart';
 import 'package:car_system/models/essencial_vehicle_models/fuel.dart';
@@ -15,16 +16,20 @@ import 'package:car_system/rest.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
 
 class EssencialVehicleController extends GetxController {
   User? user = User();
   UserController userController = UserController();
   final formKey = GlobalKey<FormState>();
+  final formKeyDialog = GlobalKey<FormState>();
   Rx<bool> isLoading = false.obs;
   EssencialVehicleRepository? essencialVehicleRepository;
 
   Rx<CreateVehicle> createVehicle = CreateVehicle().obs;
+  RxList<Cuota> listCuota = <Cuota>[].obs;
+  Rx<Cuota> cuota = Cuota().obs;
 
   FocusNode myFocusNode = FocusNode();
   FocusNode myFocusNode2 = FocusNode();
@@ -41,11 +46,35 @@ class EssencialVehicleController extends GetxController {
   RxList<Color> listColor = <Color>[].obs;
   RxList<Motor> listMotor = <Motor>[].obs;
 
+  //VEHICULO REGISTRO
   TextEditingController textBrandController = TextEditingController();
   TextEditingController textModelController = TextEditingController();
   TextEditingController textFuelController = TextEditingController();
   TextEditingController textColorController = TextEditingController();
   TextEditingController textMotorController = TextEditingController();
+  MoneyMaskedTextController textGuaraniesCosto = MoneyMaskedTextController(
+      leftSymbol: 'G\$ ', precision: 0, decimalSeparator: '');
+  MoneyMaskedTextController textDolaresCosto =
+      MoneyMaskedTextController(leftSymbol: 'U\$ ');
+  MoneyMaskedTextController textGuaraniesVenta = MoneyMaskedTextController(
+      leftSymbol: 'G\$ ', precision: 0, decimalSeparator: '');
+  MoneyMaskedTextController textDolaresVenta =
+      MoneyMaskedTextController(leftSymbol: 'U\$ ');
+  MaskedTextController textNumeroChapa = MaskedTextController(mask: '********');
+  MaskedTextController maskTextNumeroChapa =
+      MaskedTextController(mask: '000.000.000-00');
+
+  //PLANES FINANCIACION DIALOG
+  TextEditingController textCantidadCuotas = TextEditingController();
+  TextEditingController textCantidadRefuerzos = TextEditingController();
+  MoneyMaskedTextController textCuotaGuaranies = MoneyMaskedTextController(
+      leftSymbol: 'G\$ ', precision: 0, decimalSeparator: '');
+  MoneyMaskedTextController textCuotaDolares =
+      MoneyMaskedTextController(leftSymbol: 'U\$ ');
+  MoneyMaskedTextController textRefuezoGuaranies = MoneyMaskedTextController(
+      leftSymbol: 'G\$ ', precision: 0, decimalSeparator: '');
+  MoneyMaskedTextController textRefuezoDolares =
+      MoneyMaskedTextController(leftSymbol: 'U\$ ');
 
   @override
   void onInit() async {
@@ -57,26 +86,30 @@ class EssencialVehicleController extends GetxController {
   }
 
   Future<void> fetchEssencialsDatas() async {
-    List resListBrand = await essencialVehicleRepository
-        ?.fetchVehicleInformation(listBrand, Rest.BRANDS, Brand.fromJson);
-    listBrand.value = resListBrand[0];
-    listStringBrand.value = resListBrand[1];
-    List resListModel = await essencialVehicleRepository?.fetchVehicleInformation(
-        listModel, Rest.MODELS, Model.fromJson);
-    listModel.value = resListModel[0];
-    listStringModel.value  = resListModel[1];
-    List resListFuel = await essencialVehicleRepository?.fetchVehicleInformation(
-        listFuel, Rest.FUELS, Fuel.fromJson);
-    listFuel.value = resListFuel[0];
-    listStringFuel.value  = resListFuel[1];
-    List resListColor = await essencialVehicleRepository?.fetchVehicleInformation(
-        listColor, Rest.COLORS, Color.fromJson);
-    listColor.value = resListColor[0];
-    listStringColor.value  = resListColor[1];
-    List resListMotor = await essencialVehicleRepository?.fetchVehicleInformation(
-        listMotor, Rest.MOTORS, Motor.fromJson);
-    listMotor.value = resListMotor[0];
-    listStringMotor.value  = resListMotor[1];
+    try{
+      List resListBrand = await essencialVehicleRepository
+          ?.fetchVehicleInformation(listBrand, Rest.BRANDS, Brand.fromJson);
+      listBrand.value = resListBrand[0];
+      listStringBrand.value = resListBrand[1];
+      List resListModel = await essencialVehicleRepository
+          ?.fetchVehicleInformation(listModel, Rest.MODELS, Model.fromJson);
+      listModel.value = resListModel[0];
+      listStringModel.value = resListModel[1];
+      List resListFuel = await essencialVehicleRepository
+          ?.fetchVehicleInformation(listFuel, Rest.FUELS, Fuel.fromJson);
+      listFuel.value = resListFuel[0];
+      listStringFuel.value = resListFuel[1];
+      List resListColor = await essencialVehicleRepository
+          ?.fetchVehicleInformation(listColor, Rest.COLORS, Color.fromJson);
+      listColor.value = resListColor[0];
+      listStringColor.value = resListColor[1];
+      List resListMotor = await essencialVehicleRepository
+          ?.fetchVehicleInformation(listMotor, Rest.MOTORS, Motor.fromJson);
+      listMotor.value = resListMotor[0];
+      listStringMotor.value = resListMotor[1];
+    }catch(e){
+      CustomSnackBarError(e.toString());
+    }
   }
 
   void registerVehicle() async {
@@ -86,21 +119,118 @@ class EssencialVehicleController extends GetxController {
       isLoading.value = true;
       try {
         formKey.currentState!.save();
-        print('entro ca');
         createVehicle.value.idSucursal = user?.idSucursal;
         createVehicle.value.idEmpresa = user?.idEmpresa;
+
+        createVehicle.value.chapa = createVehicle.value.chapa
+            .toString()
+            .replaceAll('-', '')
+            .replaceAll(' ', '');
+
+        createVehicle.value.costoGuaranies = createVehicle.value.costoGuaranies
+            .toString()
+            .replaceAll('G\$', '')
+            .replaceAll('.', '')
+            .replaceAll(' ', '');
+
+        createVehicle.value.costoDolares = createVehicle.value.costoDolares
+            .toString()
+            .replaceAll('U\$', '')
+            .replaceAll('.', '')
+            .replaceAll(',', '.')
+            .replaceAll(' ', '');
+
+        createVehicle.value.contadoGuaranies = createVehicle
+            .value.contadoGuaranies
+            .toString()
+            .replaceAll('G\$', '')
+            .replaceAll('.', '')
+            .replaceAll(' ', '');
+
+        createVehicle.value.contadoDolares = createVehicle.value.contadoDolares
+            .toString()
+            .replaceAll('U\$', '')
+            .replaceAll('.', '')
+            .replaceAll(',', '.')
+            .replaceAll(' ', '');
+
+        if (createVehicle.value.chapa == '') {
+          createVehicle.value.chapa = null;
+        }
+        if (createVehicle.value.chassis == '') {
+          createVehicle.value.chassis = null;
+        }
+        if (double.parse(createVehicle.value.contadoDolares.toString()) ==
+            0.0) {
+          createVehicle.value.contadoDolares = null;
+        }
+        if (int.parse(createVehicle.value.contadoGuaranies) == 0) {
+          createVehicle.value.contadoGuaranies = null;
+        }
+        if (double.parse(createVehicle.value.costoDolares) == 0.0) {
+          createVehicle.value.costoDolares = null;
+        }
+        if (int.parse(createVehicle.value.costoGuaranies) == 0) {
+          createVehicle.value.costoGuaranies = null;
+        }
+
         print(createVehicle.toJson());
         // var clientId = await registerClientRepository
         //     ?.createClient(registerClientModel!.toJson());
         //  print(clientId);
         // CustomSnackBarSuccess(
         //     'CLIENTE ${registerClientModel?.cliente} REGISTRADO CON EXITO!');
-        formKey.currentState!.reset();
+        //formKey.currentState!.reset();
         isLoading.value = false;
       } catch (e) {
         CustomSnackBarError(e.toString());
         isLoading.value = false;
       }
+    }
+  }
+
+  void registerCuota() async {
+    if (formKeyDialog.currentState == null) {
+      print("formKeyDialog.currentState is null!");
+    } else if (formKeyDialog.currentState!.validate()) {
+      formKeyDialog.currentState!.save();
+
+      cuota.value.cuotaGuaranies = cuota.value.cuotaGuaranies
+          .toString()
+          .replaceAll('G\$', '')
+          .replaceAll('.', '')
+          .replaceAll(' ', '');
+      cuota.value.refuerzoGuaranies = cuota.value.refuerzoGuaranies
+          .toString()
+          .replaceAll('G\$', '')
+          .replaceAll('.', '')
+          .replaceAll(' ', '');
+      cuota.value.cuotaDolares = cuota.value.cuotaDolares
+          .toString()
+          .replaceAll('U\$', '')
+          .replaceAll('.', '')
+          .replaceAll(',', '.')
+          .replaceAll(' ', '');
+      cuota.value.refuerzoDolares = cuota.value.refuerzoDolares
+          .toString()
+          .replaceAll('U\$', '')
+          .replaceAll('.', '')
+          .replaceAll(',', '.')
+          .replaceAll(' ', '');
+
+      if (double.parse(cuota.value.cuotaDolares) == 0.0) {
+        cuota.value.cuotaDolares = null;
+      }
+      if (double.parse(cuota.value.refuerzoDolares) == 0.0) {
+        cuota.value.refuerzoDolares = null;
+      }
+      if (int.parse(cuota.value.cuotaGuaranies) == 0) {
+        cuota.value.cuotaGuaranies = null;
+      }
+      if (int.parse(cuota.value.refuerzoGuaranies) == 0) {
+        cuota.value.refuerzoGuaranies = null;
+      }
+      listCuota.add(cuota.value);
     }
   }
 }

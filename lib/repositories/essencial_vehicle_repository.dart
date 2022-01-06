@@ -30,7 +30,7 @@ class EssencialVehicleRepository extends GetConnect {
     List<String> _listString = [];
     if (response.status.hasError) {
       return Future.error(
-          'Ocurrio un error al traer los datos, pruebe de nuevo');
+          'Ocurrio un error al traer los datos de INFORMACIONES DE VEHICULO, pruebe de nuevo');
     } else {
       for (var i in response.body['response']) {
         String key = response.body['response'][0].keys.elementAt(0);

@@ -35,7 +35,7 @@ class CreateVehicle {
   dynamic? costoDolares;
   dynamic? contadoGuaranies;
   dynamic? contadoDolares;
-  List<Cuotas>? cuotas;
+  List<Cuota>? cuotas;
 
   CreateVehicle.fromJson(Map<String, dynamic> json) {
     idEmpresa = json['id_empresa'];
@@ -53,7 +53,7 @@ class CreateVehicle {
     costoDolares = json['costo_dolares'];
     contadoGuaranies = json['contado_guaranies'];
     contadoDolares = json['contado_dolares'];
-    cuotas = List.from(json['cuotas']).map((e) => Cuotas.fromJson(e)).toList();
+    cuotas = List.from(json['cuotas']).map((e) => Cuota.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
