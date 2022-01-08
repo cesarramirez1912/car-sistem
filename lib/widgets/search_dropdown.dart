@@ -11,7 +11,7 @@ Widget CustomDropDowSearch(List<String> list, String label,
     showSelectedItems: true,
     showAsSuffixIcons: true,
     dropdownSearchDecoration: const InputDecoration(
-      prefixIcon: Icon(Icons.car_rental),
+      prefixIcon: Icon(Icons.directions_car_outlined),
       contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       border: OutlineInputBorder(),
     ),

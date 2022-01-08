@@ -6,6 +6,7 @@ import 'package:car_system/models/cuotes.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
 import 'package:car_system/models/essencial_vehicle_models/color.dart';
 import 'package:car_system/models/essencial_vehicle_models/fuel.dart';
+import 'package:car_system/models/essencial_vehicle_models/gear.dart';
 import 'package:car_system/models/essencial_vehicle_models/model.dart';
 import 'package:car_system/models/essencial_vehicle_models/motor.dart';
 import 'package:car_system/models/register_client_model.dart';
@@ -39,12 +40,14 @@ class EssencialVehicleController extends GetxController {
   RxList<String> listStringFuel = <String>[].obs;
   RxList<String> listStringColor = <String>[].obs;
   RxList<String> listStringMotor = <String>[].obs;
+  RxList<String> listStringCambio = <String>[].obs;
 
   RxList<Brand> listBrand = <Brand>[].obs;
   RxList<Model> listModel = <Model>[].obs;
   RxList<Fuel> listFuel = <Fuel>[].obs;
   RxList<Color> listColor = <Color>[].obs;
   RxList<Motor> listMotor = <Motor>[].obs;
+  RxList<Gear> listGear = <Gear>[].obs;
 
   //VEHICULO REGISTRO
   TextEditingController textBrandController = TextEditingController();
@@ -67,8 +70,12 @@ class EssencialVehicleController extends GetxController {
   //PLANES FINANCIACION DIALOG
   TextEditingController textCantidadCuotas = TextEditingController();
   TextEditingController textCantidadRefuerzos = TextEditingController();
+  MoneyMaskedTextController textEntradaGuaranies = MoneyMaskedTextController(
+      leftSymbol: 'G\$ ', precision: 0, decimalSeparator: '');
   MoneyMaskedTextController textCuotaGuaranies = MoneyMaskedTextController(
       leftSymbol: 'G\$ ', precision: 0, decimalSeparator: '');
+  MoneyMaskedTextController textEntradaDolares =
+      MoneyMaskedTextController(leftSymbol: 'U\$ ');
   MoneyMaskedTextController textCuotaDolares =
       MoneyMaskedTextController(leftSymbol: 'U\$ ');
   MoneyMaskedTextController textRefuezoGuaranies = MoneyMaskedTextController(
@@ -86,7 +93,7 @@ class EssencialVehicleController extends GetxController {
   }
 
   Future<void> fetchEssencialsDatas() async {
-    try{
+    try {
       List resListBrand = await essencialVehicleRepository
           ?.fetchVehicleInformation(listBrand, Rest.BRANDS, Brand.fromJson);
       listBrand.value = resListBrand[0];
@@ -107,7 +114,11 @@ class EssencialVehicleController extends GetxController {
           ?.fetchVehicleInformation(listMotor, Rest.MOTORS, Motor.fromJson);
       listMotor.value = resListMotor[0];
       listStringMotor.value = resListMotor[1];
-    }catch(e){
+      List resListCambio = await essencialVehicleRepository
+          ?.fetchVehicleInformation(listGear, Rest.GEARS, Gear.fromJson);
+      listGear.value = resListCambio[0];
+      listStringCambio.value = resListCambio[1];
+    } catch (e) {
       CustomSnackBarError(e.toString());
     }
   }
@@ -174,6 +185,8 @@ class EssencialVehicleController extends GetxController {
           createVehicle.value.costoGuaranies = null;
         }
 
+        createVehicle.value.cuotas = listCuota;
+
         print(createVehicle.toJson());
         // var clientId = await registerClientRepository
         //     ?.createClient(registerClientModel!.toJson());
@@ -195,6 +208,11 @@ class EssencialVehicleController extends GetxController {
     } else if (formKeyDialog.currentState!.validate()) {
       formKeyDialog.currentState!.save();
 
+      cuota.value.entradaGuaranies = cuota.value.entradaGuaranies
+          .toString()
+          .replaceAll('G\$', '')
+          .replaceAll('.', '')
+          .replaceAll(' ', '');
       cuota.value.cuotaGuaranies = cuota.value.cuotaGuaranies
           .toString()
           .replaceAll('G\$', '')
@@ -204,6 +222,12 @@ class EssencialVehicleController extends GetxController {
           .toString()
           .replaceAll('G\$', '')
           .replaceAll('.', '')
+          .replaceAll(' ', '');
+      cuota.value.entradaDolares = cuota.value.entradaDolares
+          .toString()
+          .replaceAll('U\$', '')
+          .replaceAll('.', '')
+          .replaceAll(',', '.')
           .replaceAll(' ', '');
       cuota.value.cuotaDolares = cuota.value.cuotaDolares
           .toString()
@@ -217,12 +241,17 @@ class EssencialVehicleController extends GetxController {
           .replaceAll('.', '')
           .replaceAll(',', '.')
           .replaceAll(' ', '');
-
+      if (double.parse(cuota.value.entradaDolares) == 0.0) {
+        cuota.value.cuotaDolares = null;
+      }
       if (double.parse(cuota.value.cuotaDolares) == 0.0) {
         cuota.value.cuotaDolares = null;
       }
       if (double.parse(cuota.value.refuerzoDolares) == 0.0) {
         cuota.value.refuerzoDolares = null;
+      }
+      if (int.parse(cuota.value.entradaGuaranies) == 0) {
+        cuota.value.cuotaGuaranies = null;
       }
       if (int.parse(cuota.value.cuotaGuaranies) == 0) {
         cuota.value.cuotaGuaranies = null;
@@ -231,6 +260,7 @@ class EssencialVehicleController extends GetxController {
         cuota.value.refuerzoGuaranies = null;
       }
       listCuota.add(cuota.value);
+      Get.back();
     }
   }
 }

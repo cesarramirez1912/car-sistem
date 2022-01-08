@@ -37,7 +37,7 @@ class EssencialVehicleRepository extends GetConnect {
         _listString.add(i[key]);
         listType.add(fromJson(i));
       }
-      return [listType,_listString];
+      return [listType, _listString];
     }
   }
 }

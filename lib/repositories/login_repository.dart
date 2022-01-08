@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 
 class LoginRepository extends GetConnect {
   Future<dynamic> fetchLogin(Map<String, String> _body) async {
-    final response = await post(Rest.LOGIN, _body);
-    print(response.statusText);
+    final response =
+        await post(Rest.LOGIN, _body).timeout(const Duration(seconds: 5));
     if (response.status.hasError) {
       return Future.error(
           'Ocurrio un error al traer los datos, pruebe de nuevo');

@@ -152,17 +152,17 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                           controller.createVehicle.value.motor = text,
                     ),
                     CustomSpacing(),
+                    CustomDropDowSearch(
+                      controller.listStringCambio,
+                      'Tipo de cambio',
+                      onSaved: (text) =>
+                          controller.createVehicle.value.cambio = text,
+                    ),
+                    CustomSpacing(),
                     CustomInput('', 'Ano',
-                        iconData: Icons.calendar_today,
+                        iconData: Icons.directions_car_outlined,
                         onSaved: (text) =>
                             controller.createVehicle.value.ano = text,
-                        isLoading: controller.isLoading.value,
-                        validator: validatorTreeCaracteressAndNull,
-                        isPhone: true),
-                    CustomInput('', 'Tipo de cambio',
-                        iconData: Icons.calendar_view_day_outlined,
-                        onSaved: (text) =>
-                            controller.createVehicle.value.cambio = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
                         isPhone: true),
@@ -180,7 +180,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                           }
                         }
                       },
-                      iconData: Icons.confirmation_num_outlined,
+                      iconData: Icons.directions_car_outlined,
                       isNumber: true,
                       onSaved: (text) =>
                           controller.createVehicle.value.chapa = text,
@@ -189,7 +189,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     CustomInput(
                       '',
                       'Numero de chassis',
-                      iconData: Icons.confirmation_num_outlined,
+                      iconData: Icons.directions_car_outlined,
                       onSaved: (text) =>
                           controller.createVehicle.value.chassis = text,
                       isLoading: controller.isLoading.value,
@@ -379,6 +379,15 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     CustomSpacing(),
                     CustomInput(
                       '',
+                      'Entrada',
+                      validator: validatorPriceSelGuaranies,
+                      iconData: Icons.price_change_outlined,
+                      textEditingController: controller.textEntradaGuaranies,
+                      onSaved: (text) =>
+                          controller.cuota.value.entradaGuaranies = text,
+                    ),
+                    CustomInput(
+                      '',
                       'Cuota',
                       validator: validatorPriceSelGuaranies,
                       iconData: Icons.price_change_outlined,
@@ -396,6 +405,11 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     ),
                     CustomTitle('Plan dólares'),
                     CustomSpacing(),
+                    CustomInput('', 'Entrada',
+                        iconData: Icons.price_change_outlined,
+                        onSaved: (text) =>
+                            controller.cuota.value.entradaDolares = text,
+                        textEditingController: controller.textEntradaDolares),
                     CustomInput('', 'Cuota',
                         iconData: Icons.price_change_outlined,
                         onSaved: (text) =>

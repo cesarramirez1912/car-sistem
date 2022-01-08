@@ -34,6 +34,13 @@ Widget CustomPlan(int index, Cuota cuota) {
             ),
             CustomTitle('Plan guaranies'),
             planText(
+              'Entrada',
+              'G\$ ' +
+                  MoneyFormat().formatCommaToDot(
+                    cuota.entradaGuaranies,
+                  ),
+            ),
+            planText(
               'Cuota',
               'G\$ ' +
                   MoneyFormat().formatCommaToDot(
@@ -48,6 +55,8 @@ Widget CustomPlan(int index, Cuota cuota) {
                   ),
             ),
             CustomTitle('Plan dólares'),
+            planText('Entrada',
+                'U\$ ' + MoneyFormat().formatCommaToDot(cuota.entradaDolares)),
             planText('Cuota',
                 'U\$ ' + MoneyFormat().formatCommaToDot(cuota.cuotaDolares)),
             planText(
