@@ -1,3 +1,4 @@
+import 'package:car_system/models/create_vehicle.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
 import 'package:car_system/models/user_model.dart';
 import 'package:car_system/rest.dart';
@@ -24,8 +25,8 @@ class EssencialVehicleRepository extends GetConnect {
     }
   }
 
-  Future<dynamic> fetchVehicleInformation(
-      List listType, String url, dynamic fromJson) async {
+  Future<dynamic> fetchVehicleInformation(List listType, String url,
+      dynamic fromJson) async {
     final response = await get(url);
     List<String> _listString = [];
     if (response.status.hasError) {
@@ -38,6 +39,23 @@ class EssencialVehicleRepository extends GetConnect {
         listType.add(fromJson(i));
       }
       return [listType, _listString];
+    }
+  }
+
+  Future<dynamic> createVehicle(Map<String, dynamic> _body) async {
+    print(_body);
+    final response = await post(Rest.VEHICLES, _body);
+    //response = {id_vehiculo_sucursal: 4, arrayIds: [{id_cuota: 12}]}
+    if (response.status.hasError) {
+      return Future.error(
+          'Ocurrió un error al registrar vehiculo, intente de nuevo.');
+    } else {
+      if (response.body['response'].length == 0) {
+        return Future.error(
+            'Ocurrió un error al registrar vehiculo, intente de nuevo.');
+      } else {
+        return response.body['response'];
+      }
     }
   }
 }

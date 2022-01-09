@@ -159,7 +159,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                           controller.createVehicle.value.cambio = text,
                     ),
                     CustomSpacing(),
-                    CustomInput('', 'Ano',
+                    CustomInput('', 'Año',
                         iconData: Icons.directions_car_outlined,
                         onSaved: (text) =>
                             controller.createVehicle.value.ano = text,
@@ -380,7 +380,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     CustomInput(
                       '',
                       'Entrada',
-                      validator: validatorPriceSelGuaranies,
+
                       iconData: Icons.price_change_outlined,
                       textEditingController: controller.textEntradaGuaranies,
                       onSaved: (text) =>

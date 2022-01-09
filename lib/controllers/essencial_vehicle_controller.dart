@@ -184,16 +184,14 @@ class EssencialVehicleController extends GetxController {
         if (int.parse(createVehicle.value.costoGuaranies) == 0) {
           createVehicle.value.costoGuaranies = null;
         }
-
         createVehicle.value.cuotas = listCuota;
 
-        print(createVehicle.toJson());
-        // var clientId = await registerClientRepository
-        //     ?.createClient(registerClientModel!.toJson());
-        //  print(clientId);
-        // CustomSnackBarSuccess(
-        //     'CLIENTE ${registerClientModel?.cliente} REGISTRADO CON EXITO!');
-        //formKey.currentState!.reset();
+        var vehicleResponse = await essencialVehicleRepository?.createVehicle(createVehicle.toJson());
+        print(vehicleResponse);
+        CustomSnackBarSuccess(
+            ' ${createVehicle.value.modelo} REGISTRADO CON EXITO!');
+        formKey.currentState!.reset();
+        formKeyDialog.currentState!.reset();
         isLoading.value = false;
       } catch (e) {
         CustomSnackBarError(e.toString());
@@ -241,8 +239,9 @@ class EssencialVehicleController extends GetxController {
           .replaceAll('.', '')
           .replaceAll(',', '.')
           .replaceAll(' ', '');
+
       if (double.parse(cuota.value.entradaDolares) == 0.0) {
-        cuota.value.cuotaDolares = null;
+        cuota.value.entradaDolares = null;
       }
       if (double.parse(cuota.value.cuotaDolares) == 0.0) {
         cuota.value.cuotaDolares = null;
@@ -251,7 +250,7 @@ class EssencialVehicleController extends GetxController {
         cuota.value.refuerzoDolares = null;
       }
       if (int.parse(cuota.value.entradaGuaranies) == 0) {
-        cuota.value.cuotaGuaranies = null;
+        cuota.value.entradaGuaranies = null;
       }
       if (int.parse(cuota.value.cuotaGuaranies) == 0) {
         cuota.value.cuotaGuaranies = null;
@@ -259,6 +258,7 @@ class EssencialVehicleController extends GetxController {
       if (int.parse(cuota.value.refuerzoGuaranies) == 0) {
         cuota.value.refuerzoGuaranies = null;
       }
+
       listCuota.add(cuota.value);
       Get.back();
     }
