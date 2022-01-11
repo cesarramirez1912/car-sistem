@@ -420,6 +420,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                         onSaved: (text) =>
                             controller.cuota.value.refuerzoDolares = text,
                         textEditingController: controller.textRefuezoDolares),
+
                   ],
                 )),
           ),

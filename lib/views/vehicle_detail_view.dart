@@ -1,6 +1,9 @@
+import 'package:car_system/colors.dart';
 import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/vehicle_detail_controller.dart';
 import 'package:car_system/models/cuotes.dart';
+import 'package:car_system/route_manager.dart';
+import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/plan.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:car_system/widgets/vehicle_details.dart';
@@ -54,7 +57,14 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                                   controller.vehicles[index].toJson());
                               return CustomPlan(index, cuota);
                             },
-                          )
+                          ),
+                          CustomButton(
+                              'Vender vehiculo',
+                              (){
+                                controller.seletVehicleToSel();
+                                Get.toNamed(RouterManager.SEL_VEHICLE);
+                              },
+                              ColorPalette.GREEN)
                         ],
                       )
                     ],
