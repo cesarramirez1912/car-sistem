@@ -1,71 +1,22 @@
 import 'package:car_system/common/money_format.dart';
 import 'package:car_system/models/cuotes.dart';
+import 'package:car_system/widgets/renders_cards_plan/render_cuotas.dart';
+import 'package:car_system/widgets/renders_cards_plan/render_dolares_plan.dart';
+import 'package:car_system/widgets/renders_cards_plan/render_guaranies_plan.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:flutter/material.dart';
 
 // ignore: non_constant_identifier_names
-Widget CustomPlan(int index, Cuota cuota) {
+Widget CustomPlan(int index, Cuota cuota,
+    {String? textRender, bool withTitle = true}) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      CustomTitle('Plan n° ${(index + 1).toString()}', fontSize: 17),
-      Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(4),
-            ),
-            border: Border.all(width: 1, color: Colors.grey)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            CustomTitle('Cant. Cuotas | Refuerzos'),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                planText('Cant. de cuotas',
-                    MoneyFormat().formatCommaToDot(cuota.cantidadCuotas)),
-                planText('Cant. de refuerzos',
-                    MoneyFormat().formatCommaToDot(cuota.cantidadRefuerzo)),
-              ],
-            ),
-            CustomTitle('Plan guaranies'),
-            planText(
-              'Entrada',
-              'G\$ ' +
-                  MoneyFormat().formatCommaToDot(
-                    cuota.entradaGuaranies,
-                  ),
-            ),
-            planText(
-              'Cuota',
-              'G\$ ' +
-                  MoneyFormat().formatCommaToDot(
-                    cuota.cuotaGuaranies,
-                  ),
-            ),
-            planText(
-              'Refuerzo',
-              'G\$ ' +
-                  MoneyFormat().formatCommaToDot(
-                    cuota.refuerzoGuaranies,
-                  ),
-            ),
-            CustomTitle('Plan dólares'),
-            planText('Entrada',
-                'U\$ ' + MoneyFormat().formatCommaToDot(cuota.entradaDolares)),
-            planText('Cuota',
-                'U\$ ' + MoneyFormat().formatCommaToDot(cuota.cuotaDolares)),
-            planText(
-              'Refuerzo',
-              'U\$ ' + MoneyFormat().formatCommaToDot(cuota.refuerzoDolares),
-            ),
-          ],
-        ),
-      ),
+      withTitle
+          ? CustomTitle('Plan n° ${(index + 1).toString()}', fontSize: 17)
+          : Container(),
+      renderCuotas(cuota, textRender: textRender),
       const SizedBox(
         height: 10,
       )

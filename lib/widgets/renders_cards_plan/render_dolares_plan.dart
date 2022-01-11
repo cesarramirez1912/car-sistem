@@ -5,29 +5,16 @@ import 'package:flutter/material.dart';
 import '../plan.dart';
 import '../title.dart';
 
-List<Widget> guaraniesRender(Cuota cuota) {
+List<Widget> dolaresRender(Cuota cuota) {
   return [
-    CustomTitle('Plan guaranies'),
+    CustomTitle('Plan dólares'),
+    planText('Entrada',
+        'U\$ ' + MoneyFormat().formatCommaToDot(cuota.entradaDolares)),
     planText(
-      'Entrada',
-      'G\$ ' +
-          MoneyFormat().formatCommaToDot(
-            cuota.entradaGuaranies,
-          ),
-    ),
-    planText(
-      'Cuota',
-      'G\$ ' +
-          MoneyFormat().formatCommaToDot(
-            cuota.cuotaGuaranies,
-          ),
-    ),
+        'Cuota', 'U\$ ' + MoneyFormat().formatCommaToDot(cuota.cuotaDolares)),
     planText(
       'Refuerzo',
-      'G\$ ' +
-          MoneyFormat().formatCommaToDot(
-            cuota.refuerzoGuaranies,
-          ),
-    ),
+      'U\$ ' + MoneyFormat().formatCommaToDot(cuota.refuerzoDolares),
+    )
   ];
 }

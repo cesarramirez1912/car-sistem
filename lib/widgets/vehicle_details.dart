@@ -1,9 +1,10 @@
 import 'package:car_system/common/money_format.dart';
 import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/widgets/title.dart';
+import 'package:car_system/widgets/vehicle_detail_card.dart';
 import 'package:flutter/material.dart';
 
-Widget VehicleDetails(Vehicle? _vehicle) {
+Widget VehicleDetails(Vehicle vehicle) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,14 +30,14 @@ Widget VehicleDetails(Vehicle? _vehicle) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "G\$ ${MoneyFormat().formatCommaToDot(_vehicle?.contadoGuaranies)}",
+              "G\$ ${MoneyFormat().formatCommaToDot(vehicle.contadoGuaranies)}",
               style: const TextStyle(
                   color: Color.fromRGBO(72, 72, 72, 1),
                   fontSize: 18,
                   fontWeight: FontWeight.w700),
             ),
             Text(
-              "U\$ ${MoneyFormat().formatCommaToDot(_vehicle?.contadoDolares)}",
+              "U\$ ${MoneyFormat().formatCommaToDot(vehicle.contadoDolares)}",
               style: const TextStyle(
                   color: Color.fromRGBO(72, 72, 72, 1),
                   fontSize: 18,
@@ -51,72 +52,8 @@ Widget VehicleDetails(Vehicle? _vehicle) {
             const SizedBox(
               height: 10,
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  _vehicle?.marca ?? '-',
-                  style: const TextStyle(
-                    color: Color.fromRGBO(72, 72, 72, 1),
-                  ),
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                CustomTitle(_vehicle?.modelo ?? '-',)
-              ],
-            ),
-            const SizedBox(
-              height: 6,
-            ),
-            SizedBox(
-              height: 100,
-              child: GridView(
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisExtent: 50,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 1.0,
-                ),
-                children: [
-                  gridElement(_vehicle?.cambio ?? '-', 'cambio'),
-                  gridElement(_vehicle?.ano ?? '-', 'año'),
-                  gridElement(_vehicle?.motor ?? '-', 'motor'),
-                  gridElement(_vehicle?.color ?? '-', 'color'),
-                  gridElement(_vehicle?.combustible ?? '-', 'combustible'),
-                  gridElement(_vehicle?.chapa ?? '-', 'chapa'),
-                ],
-              ),
-            ),
+            CustomVehicleDetailCard(vehicle)
           ],
-        ),
-      )
-    ],
-  );
-}
-
-Widget gridElement(String text, String title) {
-  return Column(
-    children: [
-      Text(
-        title,
-        style: const TextStyle(fontSize: 11),
-      ),
-      Container(
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
-          border: Border.all(
-            color: Colors.grey,
-            width: 1,
-          ),
-        ),
-        child: Text(
-          text.toUpperCase(),
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         ),
       )
     ],

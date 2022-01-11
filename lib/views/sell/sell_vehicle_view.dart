@@ -1,5 +1,7 @@
+import 'package:car_system/common/date_format.dart';
 import 'package:car_system/controllers/vehicle_detail_controller.dart';
 import 'package:car_system/models/cuotes.dart';
+import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/input.dart';
 import 'package:car_system/widgets/plan.dart';
@@ -63,7 +65,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                       CustomSpacing(),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: listRender(),
+                        children: listRender(context),
                       ),
                     ],
                   ),
@@ -76,7 +78,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
     );
   }
 
-  List<Widget> listRender() {
+  List<Widget> listRender(BuildContext context) {
     switch (controller.typeSellSelected.value) {
       case 'CONTADO':
         return [
@@ -155,29 +157,62 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomSpacing(),
           CustomTitle('Fechas vencimiento'),
           Padding(
-            padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
+            padding: const EdgeInsets.only(right: 10, left: 10),
             child: CustomTitle('Cuota', fontSize: 15),
           ),
-          CustomInput(
-            '',
-            'Dia vencimiento cuota',
-            isNumber: true,
-            textEditingController: controller.textDiaVencimientoCuota,
-          ),
+          textInputContainer('Primera cuota en:',
+              DateFormat().formatBr(controller.firstDateCuoteSelected.value),
+              onTap: () => controller.firstDateCuote(context)),
+          CustomButton('FECHAS CUOTAS', () {
+            controller.generatedDates();
+            Get.toNamed(RouterManager.DATES_VEN);
+          }, ColorPalette.SECUNDARY, iconData: Icons.calendar_today_rounded),
           Padding(
-            padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
+            padding: const EdgeInsets.only(right: 10, left: 10),
             child: CustomTitle('Refuerzo', fontSize: 15),
           ),
-          CustomInput(
-            '',
-            'Dia vencimiento refuerzo',
-            isNumber: true,
-            textEditingController: controller.textDiaVencimientoRefuerzo,
-          ),
+          textInputContainer('Primer refuerzo en:',
+              DateFormat().formatBr(controller.firstDateCuoteSelected.value),
+              onTap: () => controller.firstDateCuote(context)),
+          CustomButton('FECHAS REFUERZO', () {
+            controller.generatedDates();
+            Get.toNamed(RouterManager.DATES_VEN);
+          }, ColorPalette.SECUNDARY, iconData: Icons.calendar_today_rounded),
         ];
       default:
         return [];
     }
+  }
+
+  Widget textInputContainer(String text, String value, {Function? onTap}) {
+    return GestureDetector(
+      onTap: () => onTap!(),
+      child: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            margin: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(4)),
+                border: Border.all(color: Colors.grey)),
+            child: Text(value, style: TextStyle(fontSize: 16)),
+          ),
+          Positioned(
+            top: 0,
+            left: 10,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              color: Colors.white,
+              child: Text(
+                text,
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget expanded(Widget body) {

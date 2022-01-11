@@ -6,14 +6,16 @@ Widget CustomInput(String? hintText, String? labelText,
     {Function? onSaved,
     IconData? iconData,
     Function? validator,
-      List<TextInputFormatter>? inputFormatters,
+    List<TextInputFormatter>? inputFormatters,
     bool isLoading = false,
     bool isNumber = false,
-    bool isPhone = false,Function? onChanged,TextEditingController? textEditingController}) {
+    bool isPhone = false,
+    Function? onChanged,
+    TextEditingController? textEditingController}) {
   return Column(
     children: [
       TextFormField(
-        onChanged: (value)=>onChanged?.call(value),
+        onChanged: (value) => onChanged?.call(value),
         textCapitalization: TextCapitalization.sentences,
         onSaved: (text) => onSaved?.call(text),
         inputFormatters: inputFormatters,
@@ -29,10 +31,7 @@ Widget CustomInput(String? hintText, String? labelText,
         decoration: InputDecoration(
           fillColor: Colors.white,
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.blue,
-              width: 2.0
-            ),
+            borderSide: BorderSide(color: Colors.blue, width: 2.0),
           ),
           contentPadding: const EdgeInsets.all(12),
           border: const OutlineInputBorder(),
