@@ -11,7 +11,7 @@ Widget CustomDropDowSearch(List<String> list, String label,
   return DropdownSearch<String>(
     showSearchBox: true,
     selectedItem: selectedItem,
-    onChanged: (value) => onChanged!(value),
+    onChanged: (value) =>onChanged!=null ?  onChanged(value) :null,
     showSelectedItems: true,
     showAsSuffixIcons: true,
     dropdownSearchDecoration: InputDecoration(

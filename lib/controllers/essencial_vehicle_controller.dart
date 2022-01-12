@@ -190,10 +190,11 @@ class EssencialVehicleController extends GetxController {
         print(vehicleResponse);
         CustomSnackBarSuccess(
             ' ${createVehicle.value.modelo} REGISTRADO CON EXITO!');
-        formKey.currentState!.reset();
-        formKeyDialog.currentState!.reset();
+        formKey.currentState?.reset();
+        formKeyDialog.currentState?.reset();
         isLoading.value = false;
       } catch (e) {
+        print(e);
         CustomSnackBarError(e.toString());
         isLoading.value = false;
       }

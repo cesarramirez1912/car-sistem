@@ -164,19 +164,19 @@ class SellVehicleView extends GetView<VehicleDetailController> {
               DateFormat().formatBr(controller.firstDateCuoteSelected.value),
               onTap: () => controller.firstDateCuote(context)),
           CustomButton('FECHAS CUOTAS', () {
-            controller.generatedDates();
-            Get.toNamed(RouterManager.DATES_VEN);
+            controller.generatedDatesCuotes();
+            Get.toNamed(RouterManager.DATES_VEN,parameters: {'isCuote':'true'});
           }, ColorPalette.SECUNDARY, iconData: Icons.calendar_today_rounded),
           Padding(
             padding: const EdgeInsets.only(right: 10, left: 10),
             child: CustomTitle('Refuerzo', fontSize: 15),
           ),
           textInputContainer('Primer refuerzo en:',
-              DateFormat().formatBr(controller.firstDateCuoteSelected.value),
+              DateFormat().formatBr(controller.firstDateRefuerzoSelected.value),
               onTap: () => controller.firstDateCuote(context)),
           CustomButton('FECHAS REFUERZO', () {
-            controller.generatedDates();
-            Get.toNamed(RouterManager.DATES_VEN);
+            controller.generatedDatesRefuerzos();
+            Get.toNamed(RouterManager.DATES_VEN,parameters: {'isCuote':'false'});
           }, ColorPalette.SECUNDARY, iconData: Icons.calendar_today_rounded),
         ];
       default:

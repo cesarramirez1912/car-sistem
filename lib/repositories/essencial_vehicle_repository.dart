@@ -25,8 +25,8 @@ class EssencialVehicleRepository extends GetConnect {
     }
   }
 
-  Future<dynamic> fetchVehicleInformation(List listType, String url,
-      dynamic fromJson) async {
+  Future<dynamic> fetchVehicleInformation(
+      List listType, String url, dynamic fromJson) async {
     final response = await get(url);
     List<String> _listString = [];
     if (response.status.hasError) {
@@ -43,19 +43,12 @@ class EssencialVehicleRepository extends GetConnect {
   }
 
   Future<dynamic> createVehicle(Map<String, dynamic> _body) async {
-    print(_body);
     final response = await post(Rest.VEHICLES, _body);
     //response = {id_vehiculo_sucursal: 4, arrayIds: [{id_cuota: 12}]}
     if (response.status.hasError) {
-      return Future.error(
-          'Ocurrió un error al registrar vehiculo, intente de nuevo.');
+      return Future.error(response.body['message']);
     } else {
-      if (response.body['response'].length == 0) {
-        return Future.error(
-            'Ocurrió un error al registrar vehiculo, intente de nuevo.');
-      } else {
-        return response.body['response'];
-      }
+      return response.body['response'];
     }
   }
 }

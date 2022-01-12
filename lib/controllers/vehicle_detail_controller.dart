@@ -25,8 +25,12 @@ class VehicleDetailController extends GetxController {
   RxList<String> typesMoney = ['GUARANIES', 'DOLARES'].obs;
   RxString typesMoneySelected = ''.obs;
 
-  RxList<DateTime> listDateGenerated = <DateTime>[].obs;
+  RxList<DateTime> listDateGeneratedCuotas = <DateTime>[].obs;
+  RxList<DateTime> listDateGeneratedRefuerzos = <DateTime>[].obs;
   Rx<DateTime> firstDateCuoteSelected = DateTime.utc(
+          DateTime.now().year, DateTime.now().month + 1, DateTime.now().day)
+      .obs;
+  Rx<DateTime> firstDateRefuerzoSelected = DateTime.utc(
           DateTime.now().year, DateTime.now().month + 1, DateTime.now().day)
       .obs;
 
@@ -66,6 +70,8 @@ class VehicleDetailController extends GetxController {
     typesMoneySelected.value = typesMoney.first;
     firstDateCuoteSelected.value = DateTime.utc(
         DateTime.now().year, DateTime.now().month + 1, DateTime.now().day);
+    firstDateRefuerzoSelected.value = DateTime.utc(
+        DateTime.now().year, DateTime.now().month + 1, DateTime.now().day);
     idVehiculoSucursal = args['idVehiculoSucursal'];
     listVehicleController = Get.find<ListVehicleController>();
     vehicles
@@ -82,7 +88,7 @@ class VehicleDetailController extends GetxController {
     Get.back();
   }
 
-  Future<void> selectDate(
+  Future<void> selectDateCuote(
       BuildContext context, DateTime dateTime, int index) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -90,12 +96,22 @@ class VehicleDetailController extends GetxController {
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != dateTime) {
-      listDateGenerated[index] = picked;
+      listDateGeneratedCuotas[index] = picked;
+    }
+  }
+  Future<void> selectDateRefuerzo(
+      BuildContext context, DateTime dateTime, int index) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: dateTime,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != dateTime) {
+      listDateGeneratedRefuerzos[index] = picked;
     }
   }
 
   Future<void> firstDateCuote(BuildContext context) async {
-    print('acaes');
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: firstDateCuoteSelected.value,
@@ -106,9 +122,30 @@ class VehicleDetailController extends GetxController {
     }
   }
 
-  void generatedDates() {
-    listDateGenerated.value = List<DateTime>.generate(
+  Future<void> firstDateRefuerzo(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: firstDateRefuerzoSelected.value,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != firstDateRefuerzoSelected) {
+      firstDateRefuerzoSelected.value = picked;
+    }
+  }
+
+  void generatedDatesCuotes() {
+    listDateGeneratedCuotas.value = List<DateTime>.generate(
         cuota.value.cantidadCuotas,
+        (i) => DateTime.utc(
+              firstDateCuoteSelected.value.year,
+              firstDateCuoteSelected.value.month + i,
+              firstDateCuoteSelected.value.day,
+            ));
+  }
+
+  void generatedDatesRefuerzos() {
+    listDateGeneratedRefuerzos.value = List<DateTime>.generate(
+        cuota.value.cantidadRefuerzo,
         (i) => DateTime.utc(
               firstDateCuoteSelected.value.year,
               firstDateCuoteSelected.value.month + i,
