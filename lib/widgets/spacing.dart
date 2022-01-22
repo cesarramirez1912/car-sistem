@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 
-
-Widget CustomSpacing(){
-  return const SizedBox(height: 16,);
+Widget CustomSpacing({double height = 16}) {
+  return SizedBox(
+    height: height,
+  );
 }

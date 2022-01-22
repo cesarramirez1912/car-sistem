@@ -5,15 +5,20 @@ Widget CustomButton(String text, Function onPressed, Color color,
     {bool withShadow = false,
     bool isLoading = false,
     IconData? iconData,
-      double? fontSize,
+    double? fontSize,
     EdgeInsetsGeometry? edgeInsets}) {
   return ElevatedButton(
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(text,style: TextStyle(fontSize: fontSize),),
-        iconData != null
+        text.isEmpty
+            ? Container()
+            : Text(
+                text,
+                style: TextStyle(fontSize: fontSize),
+              ),
+        iconData != null && text.isNotEmpty
             ? const SizedBox(
                 width: 5,
               )

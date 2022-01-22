@@ -9,19 +9,26 @@ import 'package:flutter/material.dart';
 // ignore: non_constant_identifier_names
 Widget CustomPlan(int index, Cuota cuota,
     {String? textRender, bool withTitle = true}) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      withTitle
-          ? CustomTitle('Plan n° ${(index + 1).toString()}', fontSize: 17)
-          : Container(),
-      renderCuotas(cuota, textRender: textRender),
-      const SizedBox(
-        height: 10,
-      )
-    ],
-  );
+  if (cuota.cantidadCuotas == 0 || cuota.cantidadCuotas == null) {
+    return Container(
+        alignment: Alignment.center,
+        margin: const EdgeInsets.only(bottom: 10),
+        child: const Text('Sin planes para este vehiculo.'));
+  } else {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        withTitle
+            ? CustomTitle('Plan n° ${(index + 1).toString()}', fontSize: 17)
+            : Container(),
+        renderCuotas(cuota, textRender: textRender),
+        const SizedBox(
+          height: 10,
+        )
+      ],
+    );
+  }
 }
 
 Widget planText(String left, String rigth) {

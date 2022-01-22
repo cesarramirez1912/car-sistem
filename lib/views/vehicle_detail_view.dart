@@ -55,16 +55,21 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                             itemBuilder: (BuildContext context, int index) {
                               Cuota cuota = Cuota.fromJson(
                                   controller.vehicles[index].toJson());
-                              return CustomPlan(index, cuota);
+                              if (cuota.cantidadCuotas != null) {
+                                return CustomPlan(index, cuota);
+                              } else {
+                                return Container(
+                                    alignment: Alignment.center,
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    child: const Text(
+                                        'Sin planes para este vehiculo.'));
+                              }
                             },
                           ),
-                          CustomButton(
-                              'Vender vehiculo',
-                              (){
-                                controller.seletVehicleToSel();
-                                Get.toNamed(RouterManager.SEL_VEHICLE);
-                              },
-                              ColorPalette.GREEN)
+                          CustomButton('Vender vehiculo', () {
+                            controller.seletVehicleToSel();
+                            Get.toNamed(RouterManager.SEL_VEHICLE);
+                          }, ColorPalette.GREEN)
                         ],
                       )
                     ],

@@ -1,6 +1,8 @@
 import 'package:car_system/common/date_format.dart';
 import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/vehicle_detail_controller.dart';
+import 'package:car_system/widgets/search_dropdown.dart';
+import 'package:car_system/widgets/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,103 +12,70 @@ class DatesVencView extends GetView<VehicleDetailController> {
     Map<dynamic, dynamic>? args = Get.parameters;
     print(args['isCuote']);
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Fechas generadas'),
-        ),
-        body: Obx(
-          () => Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+      appBar: AppBar(
+        title: const Text('Fechas generadas'),
+      ),
+      body: Obx(
+        () => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
             children: [
+              CustomSpacing(),
               args['isCuote'] == 'true'
-                  ? Expanded(
-                      child: SingleChildScrollView(
-                        child: DataTable(
-                          columnSpacing: 20,
-                          showCheckboxColumn: false,
-                          rows: List.generate(
-                            controller.listDateGeneratedCuotas.length,
-                            (i) => DataRow(
-                                onSelectChanged: (selected) {
-                                  controller.selectDateCuote(context,
-                                      controller.listDateGeneratedCuotas[i], i);
-                                },
-                                cells: [
-                                  DataCell(Text((i + 1).toString())),
-                                  DataCell(Text(
-                                    DateFormat().formatBr(
-                                        controller.listDateGeneratedCuotas[i]),
-                                  )),
-                                  DataCell(
-                                    Text(MoneyFormat().formatCommaToDot(
-                                        controller.cuota.value.cuotaGuaranies
-                                            .toString())),
-                                  ),
-                                  DataCell(
-                                    Text('-'),
-                                  ),
-                                ]),
-                          ),
-                          columns: const <DataColumn>[
-                            DataColumn(
-                              label: Text('Nº'),
-                            ),
-                            DataColumn(
-                              label: Text('Fecha'),
-                            ),
-                            DataColumn(
-                              label: Text('Cuota'),
-                            ),
-                            DataColumn(
-                              label: Text('Refuerzo'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : Expanded(
-                      child: SingleChildScrollView(
-                        child: DataTable(
-                          columnSpacing: 20,
-                          showCheckboxColumn: false,
-                          rows: List.generate(
-                            controller.listDateGeneratedRefuerzos.length,
-                            (i) => DataRow(
-                                onSelectChanged: (selected) {
-                                  controller.selectDateRefuerzo(
-                                      context,
-                                      controller.listDateGeneratedRefuerzos[i],
-                                      i);
-                                },
-                                cells: [
-                                  DataCell(Text((i + 1).toString())),
-                                  DataCell(Text(
-                                    DateFormat().formatBr(controller
-                                        .listDateGeneratedRefuerzos[i]),
-                                  )),
-                                  DataCell(
-                                    Text(MoneyFormat().formatCommaToDot(
-                                        controller.cuota.value.refuerzoGuaranies
-                                            .toString())),
-                                  ),
-                                ]),
-                          ),
-                          columns: const <DataColumn>[
-                            DataColumn(
-                              label: Text('Nº'),
-                            ),
-                            DataColumn(
-                              label: Text('Fecha'),
-                            ),
-                            DataColumn(
-                              label: Text('Refuerzo'),
-                            ),
-                          ],
-                        ),
-                      ),
+                  ? Container()
+                  : CustomDropDowSearch(
+                      controller.typesCobroMensuales, 'ENTRE MESES',
+                      iconData: Icons.date_range,
+                      selectedItem: controller.typeCobroMensualSelected.value,
+                      onChanged: (value) {
+                      controller.typeCobroMensualSelected.value = value;
+                      controller.generatedDatesRefuerzos();
+                    }),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: DataTable(
+                    showCheckboxColumn: false,
+                    rows: List.generate(
+                      args['isCuote'] == 'true'
+                          ? controller.listDateGeneratedCuotas.length
+                          : controller.listDateGeneratedRefuerzos.length,
+                      (i) => DataRow(
+                          onSelectChanged: (selected) {
+                            args['isCuote'] == 'true'
+                                ? controller.selectDateCuote(context,
+                                    controller.listDateGeneratedCuotas[i], i)
+                                : controller.selectDateRefuerzo(
+                                    context,
+                                    controller.listDateGeneratedRefuerzos[i],
+                                    i);
+                          },
+                          cells: [
+                            DataCell(Text((i + 1).toString())),
+                            DataCell(Text(
+                              DateFormat().formatBr(args['isCuote'] == 'true'
+                                  ? controller.listDateGeneratedCuotas[i]
+                                  : controller.listDateGeneratedRefuerzos[i]),
+                            )),
+                          ]),
                     ),
+                    columns: const <DataColumn>[
+                      DataColumn(
+                        label: Text('Nº'),
+                      ),
+                      DataColumn(
+                        label: Text('Fecha'),
+                      ),
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

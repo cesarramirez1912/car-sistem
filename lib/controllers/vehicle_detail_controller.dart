@@ -19,6 +19,9 @@ class VehicleDetailController extends GetxController {
   RxBool isLoading = false.obs;
   RxList<Vehicle> vehicleSelected = <Vehicle>[].obs;
 
+  RxList<String> typesCobroMensuales = ['3 MESES', '6 MESES', '12 MESES'].obs;
+  RxString typeCobroMensualSelected = '3 MESES'.obs;
+
   RxList<String> typesSell = ['CONTADO', 'CREDITO'].obs;
   RxString typeSellSelected = ''.obs;
 
@@ -99,6 +102,7 @@ class VehicleDetailController extends GetxController {
       listDateGeneratedCuotas[index] = picked;
     }
   }
+
   Future<void> selectDateRefuerzo(
       BuildContext context, DateTime dateTime, int index) async {
     final DateTime? picked = await showDatePicker(
@@ -135,22 +139,36 @@ class VehicleDetailController extends GetxController {
 
   void generatedDatesCuotes() {
     listDateGeneratedCuotas.value = List<DateTime>.generate(
-        cuota.value.cantidadCuotas,
-        (i) => DateTime.utc(
-              firstDateCuoteSelected.value.year,
-              firstDateCuoteSelected.value.month + i,
-              firstDateCuoteSelected.value.day,
-            ));
+      cuota.value.cantidadCuotas,
+      (i) => DateTime.utc(
+        firstDateCuoteSelected.value.year,
+        firstDateCuoteSelected.value.month + i,
+        firstDateCuoteSelected.value.day,
+      ),
+    );
   }
 
   void generatedDatesRefuerzos() {
-    listDateGeneratedRefuerzos.value = List<DateTime>.generate(
-        cuota.value.cantidadRefuerzo,
-        (i) => DateTime.utc(
-              firstDateCuoteSelected.value.year,
-              firstDateCuoteSelected.value.month + i,
-              firstDateCuoteSelected.value.day,
-            ));
+    String valueFromString = typeCobroMensualSelected.value.substring(0, 2);
+    int typeCobroMensualSelectedInt = int.parse(valueFromString);
+    List<DateTime> listGeneratedAux = List<DateTime>.generate(
+      cuota.value.cantidadRefuerzo * typeCobroMensualSelectedInt,
+      (i) => DateTime.utc(
+        firstDateRefuerzoSelected.value.year,
+        firstDateRefuerzoSelected.value.month + i,
+        firstDateRefuerzoSelected.value.day,
+      ),
+    );
+    listDateGeneratedRefuerzos.clear();
+    for (int i = 0; i < listGeneratedAux.length; i++) {
+      if (i != 0) {
+        if ((i % typeCobroMensualSelectedInt) == 0) {
+          listDateGeneratedRefuerzos.add(listGeneratedAux[i]);
+        }
+      } else {
+        listDateGeneratedRefuerzos.add(listGeneratedAux[i]);
+      }
+    }
   }
 
   void registerCuota() async {

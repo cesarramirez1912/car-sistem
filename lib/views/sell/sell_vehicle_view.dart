@@ -97,25 +97,28 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomPlan(0, controller.cuota.value,
               textRender: controller.typesMoneySelected.value,
               withTitle: false),
-          expanded(CustomButton(
-              'ELEGIR PLAN',
-              () => Get.defaultDialog(
-                      title: 'ELEGIR PLAN ${controller.typesMoneySelected}',
-                      content: dialogSelectPlan(),
-                      actions: [
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: CustomButton('CANCELAR', () => Get.back(),
-                              ColorPalette.PRIMARY,
-                              edgeInsets: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              fontSize: 12,
-                              isLoading: controller.isLoading.value),
-                        ),
-                      ]),
-              ColorPalette.YELLOW,
-              iconData: Icons.list,
-              isLoading: controller.isLoading.value)),
+          controller.vehicleSelected.first.cantidadCuotas == null ||
+                  controller.vehicleSelected.first.cantidadCuotas == 0
+              ? Container()
+              : expanded(CustomButton(
+                  'ELEGIR PLAN',
+                  () => Get.defaultDialog(
+                          title: 'ELEGIR PLAN ${controller.typesMoneySelected}',
+                          content: dialogSelectPlan(),
+                          actions: [
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: CustomButton('CANCELAR', () => Get.back(),
+                                  ColorPalette.PRIMARY,
+                                  edgeInsets: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  fontSize: 12,
+                                  isLoading: controller.isLoading.value),
+                            ),
+                          ]),
+                  ColorPalette.YELLOW,
+                  iconData: Icons.list,
+                  isLoading: controller.isLoading.value)),
           expanded(CustomButton(
               'NUEVO PLAN',
               () => Get.defaultDialog(
@@ -155,33 +158,95 @@ class SellVehicleView extends GetView<VehicleDetailController> {
             color: Colors.grey,
           ),
           CustomSpacing(),
-          CustomTitle('Fechas vencimiento'),
-          Padding(
-            padding: const EdgeInsets.only(right: 10, left: 10),
-            child: CustomTitle('Cuota', fontSize: 15),
-          ),
-          textInputContainer('Primera cuota en:',
-              DateFormat().formatBr(controller.firstDateCuoteSelected.value),
-              onTap: () => controller.firstDateCuote(context)),
-          CustomButton('FECHAS CUOTAS', () {
-            controller.generatedDatesCuotes();
-            Get.toNamed(RouterManager.DATES_VEN,parameters: {'isCuote':'true'});
-          }, ColorPalette.SECUNDARY, iconData: Icons.calendar_today_rounded),
-          Padding(
-            padding: const EdgeInsets.only(right: 10, left: 10),
-            child: CustomTitle('Refuerzo', fontSize: 15),
-          ),
-          textInputContainer('Primer refuerzo en:',
-              DateFormat().formatBr(controller.firstDateRefuerzoSelected.value),
-              onTap: () => controller.firstDateCuote(context)),
-          CustomButton('FECHAS REFUERZO', () {
-            controller.generatedDatesRefuerzos();
-            Get.toNamed(RouterManager.DATES_VEN,parameters: {'isCuote':'false'});
-          }, ColorPalette.SECUNDARY, iconData: Icons.calendar_today_rounded),
+          controller.cuota.value.cantidadCuotas == null ||
+                  controller.cuota.value.cantidadCuotas == 0
+              ? Container()
+              : vencimientosSection(context),
+          CustomSpacing()
         ];
       default:
         return [];
     }
+  }
+
+  Widget vencimientosSection(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        CustomTitle('Fechas vencimiento'),
+        Padding(
+          padding: const EdgeInsets.only(right: 10, left: 10),
+          child: CustomTitle('Cuota', fontSize: 15),
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: textInputContainer(
+                  'Primera cuota en:',
+                  DateFormat()
+                      .formatBr(controller.firstDateCuoteSelected.value),
+                  onTap: () async => controller.firstDateCuote(context)),
+            ),
+            const SizedBox(
+              width: 6,
+            ),
+            Column(
+              children: [
+                CustomSpacing(height: 7),
+                CustomButton('', () {
+                  controller.generatedDatesCuotes();
+                  Get.toNamed(RouterManager.DATES_VEN,
+                      parameters: {'isCuote': 'true'});
+                }, ColorPalette.SECUNDARY,
+                    iconData: Icons.calendar_today_rounded),
+              ],
+            )
+          ],
+        ),
+        CustomSpacing(height: 10),
+        controller.cuota.value.cantidadRefuerzo == null ||
+                controller.cuota.value.cantidadRefuerzo == 0
+            ? Container()
+            : Padding(
+                padding: const EdgeInsets.only(right: 10, left: 10),
+                child: CustomTitle('Refuerzo', fontSize: 15),
+              ),
+        controller.cuota.value.cantidadRefuerzo == null ||
+                controller.cuota.value.cantidadRefuerzo == 0
+            ? Container()
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: textInputContainer(
+                        'Primer refuerzo en:',
+                        DateFormat().formatBr(
+                            controller.firstDateRefuerzoSelected.value),
+                        onTap: () => controller.firstDateRefuerzo(context)),
+                  ),
+                  const SizedBox(
+                    width: 6,
+                  ),
+                  Column(
+                    children: [
+                      CustomSpacing(height: 7),
+                      CustomButton('', () {
+                        controller.generatedDatesRefuerzos();
+                        Get.toNamed(RouterManager.DATES_VEN,
+                            parameters: {'isCuote': 'false'});
+                      }, ColorPalette.SECUNDARY,
+                          iconData: Icons.calendar_today_rounded),
+                    ],
+                  )
+                ],
+              ),
+      ],
+    );
   }
 
   Widget textInputContainer(String text, String value, {Function? onTap}) {
@@ -281,8 +346,8 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                       '',
                       'Cantidad cuotas',
                       isNumber: true,
-                      onSaved: (text) =>
-                          controller.cuota.value.cantidadCuotas = text,
+                      onSaved: (text) => controller.cuota.value.cantidadCuotas =
+                          int.parse(text),
                       validator: (String text) {
                         if (text.isEmpty) {
                           return 'Campo obligatorio.';
@@ -306,7 +371,8 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                           if (text == '') {
                             controller.cuota.value.cantidadRefuerzo = null;
                           } else {
-                            controller.cuota.value.cantidadRefuerzo = text;
+                            controller.cuota.value.cantidadRefuerzo =
+                                int.parse(text);
                           }
                         },
                         textEditingController:
