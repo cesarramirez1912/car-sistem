@@ -1,12 +1,16 @@
 import 'package:car_system/colors.dart';
+import 'package:car_system/controllers/client_controller.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
-import 'package:car_system/models/vehicle.dart';
+import 'package:car_system/controllers/user_controller.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/vehicle_details.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ListVehiclesView extends GetView<ListVehicleController> {
+  UserController userController = Get.put(UserController());
+  ClientController clientController = Get.put(ClientController());
+
   @override
   Widget build(context) => Scaffold(
         appBar: AppBar(

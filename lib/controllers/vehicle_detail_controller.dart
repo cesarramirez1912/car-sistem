@@ -1,17 +1,24 @@
 import 'dart:math';
 
+import 'package:car_system/common/date_format.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/controllers/login_controller.dart';
 import 'package:car_system/models/cuotes.dart';
+import 'package:car_system/models/register_client_model.dart';
+import 'package:car_system/models/resument_model.dart';
+import 'package:car_system/models/sell_vehicle_model.dart';
 import 'package:car_system/models/user_model.dart';
 import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/repositories/home_repository.dart';
+import 'package:car_system/repositories/sell_vehicle_repository.dart';
+import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
 
 class VehicleDetailController extends GetxController {
   ListVehicleController listVehicleController = ListVehicleController();
+  SellVehicleRepository sellVehicleRepository = SellVehicleRepository();
   RxList<Vehicle> vehicles = <Vehicle>[].obs;
   Rx<Vehicle>? vehicleDetail;
   String idVehiculoSucursal = '';
@@ -25,8 +32,13 @@ class VehicleDetailController extends GetxController {
   RxList<String> typesSell = ['CONTADO', 'CREDITO'].obs;
   RxString typeSellSelected = ''.obs;
 
+  RxString typeClientSelectedString = ''.obs;
+  Rx<ClientModel> typeClientSelected = ClientModel().obs;
+
   RxList<String> typesMoney = ['GUARANIES', 'DOLARES'].obs;
   RxString typesMoneySelected = ''.obs;
+
+  RxList<Resumen> listResumen = <Resumen>[].obs;
 
   RxList<DateTime> listDateGeneratedCuotas = <DateTime>[].obs;
   RxList<DateTime> listDateGeneratedRefuerzos = <DateTime>[].obs;
@@ -171,6 +183,20 @@ class VehicleDetailController extends GetxController {
     }
   }
 
+  void generatedDatesResumen() {
+    listResumen.clear();
+    for (int i = 0; i < listDateGeneratedCuotas.length; i++) {
+      listResumen.add(
+        Resumen(
+          fechaCuota: DateFormat().formatBr(listDateGeneratedRefuerzos[i]),
+          fechaRefuerzo: DateFormat().formatBr(listDateGeneratedRefuerzos[i]),
+          valorCuota: cuota.value.cuotaGuaranies,
+          valorRefuerzo: cuota.value.cuotaGuaranies,
+        ),
+      );
+    }
+  }
+
   void registerCuota() async {
     if (formKeyDialog.currentState == null) {
       print("formKeyDialog.currentState is null!");
@@ -260,6 +286,22 @@ class VehicleDetailController extends GetxController {
       cuota.refresh();
 
       Get.back();
+    }
+  }
+
+  void sellVehicle() {
+    try {
+      SellVehicleModel sellVehicleModel = SellVehicleModel(
+          idVehiculoSucursal: vehicleDetail?.value.idVehiculoSucursal,
+          entradaGuaranies: 10,
+          entradaDolares: 20,
+          idCliente: 1,
+          idColaborador: vehicleDetail?.value.idVehiculoSucursal,
+          idEmpresa: vehicleDetail?.value.idVehiculoSucursal,
+          idSucursal: vehicleDetail?.value.idSucursal);
+      //  sellVehicleRepository.sellVehicle(_body);
+    } catch (e) {
+      CustomSnackBarError(e.toString());
     }
   }
 }

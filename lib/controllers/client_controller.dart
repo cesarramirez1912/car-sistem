@@ -15,37 +15,63 @@ class ClientController extends GetxController {
   UserController userController = UserController();
   final formKey = GlobalKey<FormState>();
   Rx<bool> isLoading = false.obs;
-  RegisterClientRepository? registerClientRepository;
+  ClientRepository? clientRepository;
 
-  RegisterClient? registerClientModel = RegisterClient();
+  ClientModel? clientModel = ClientModel();
 
-  MaskedTextController textCiController =  MaskedTextController(text: '', mask: '0.000.000-00');
-  MaskedTextController textPhoneController =  MaskedTextController(text: '', mask: '(0000)000-000');
+  RxList<String> listClientsString = <String>[].obs;
+  RxList<ClientModel> listClients = <ClientModel>[].obs;
+
+  MaskedTextController textCiController =
+      MaskedTextController(text: '', mask: '0.000.000-00');
+  MaskedTextController textPhoneController =
+      MaskedTextController(text: '', mask: '(0000)000-000');
 
   @override
-  void onInit() {
+  void onInit() async {
     userController = Get.find<UserController>();
-    registerClientRepository = RegisterClientRepository();
+    clientRepository = ClientRepository();
     user = userController.user;
+    await requestClients();
     super.onInit();
+  }
+
+  Future<void> requestClients() async {
+    try {
+      List<ClientModel> listClientsRequest =
+          await clientRepository?.requestClients(user!.idEmpresa);
+      listClientsString.clear();
+      for (var client in listClientsRequest) {
+        if (client.cliente != null) {
+          listClientsString.add(client.cliente ?? '');
+        }
+      }
+      listClients.clear();
+      listClients.addAll(listClientsRequest);
+    } catch (e) {
+      print(e);
+    }
   }
 
   void registerClient() async {
     if (formKey.currentState == null) {
-      print("_formKey.currentState is null!");
     } else if (formKey.currentState!.validate()) {
       isLoading.value = true;
       try {
         formKey.currentState!.save();
-        registerClientModel?.idSucursal = user?.idSucursal;
-        registerClientModel?.idEmpresa = user?.idEmpresa;
-        registerClientModel?.celular = registerClientModel?.celular?.replaceAll('(','').replaceAll(')', '').replaceAll('-', '');
-        registerClientModel?.ci = registerClientModel?.ci?.replaceAll('.','').replaceAll('-', '');
-        var clientId = await registerClientRepository
-            ?.createClient(registerClientModel!.toJson());
-        print(clientId);
+        clientModel?.idSucursal = user?.idSucursal;
+        clientModel?.idEmpresa = user?.idEmpresa;
+        clientModel?.celular = clientModel?.celular
+            ?.replaceAll('(', '')
+            .replaceAll(')', '')
+            .replaceAll('-', '');
+        clientModel?.ci =
+            clientModel?.ci?.replaceAll('.', '').replaceAll('-', '');
+        var clientId =
+            await clientRepository?.createClient(clientModel!.toJson());
+        await requestClients();
         CustomSnackBarSuccess(
-            'CLIENTE ${registerClientModel?.cliente} REGISTRADO CON EXITO!');
+            'CLIENTE ${clientModel?.cliente} REGISTRADO CON EXITO!');
         formKey.currentState!.reset();
         isLoading.value = false;
       } catch (e) {

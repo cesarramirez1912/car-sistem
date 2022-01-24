@@ -1,7 +1,8 @@
-class RegisterClient {
-  RegisterClient({
+class ClientModel {
+  ClientModel({
     this.idEmpresa,
     this.idSucursal,
+    this.idCliente,
     this.cliente,
     this.ci,
     this.celular,
@@ -11,15 +12,17 @@ class RegisterClient {
 
   int? idEmpresa;
   int? idSucursal;
+  int? idCliente;
   String? cliente;
   String? ci;
   String? celular;
   String? direccion;
   String? ciudad;
 
-  RegisterClient.fromJson(Map<String, dynamic> json) {
+  ClientModel.fromJson(Map<String, dynamic> json) {
     idEmpresa = json['id_empresa'];
     idSucursal = json['id_sucursal'];
+    idCliente = json['id_cliente'];
     cliente = json['cliente'];
     ci = json['ci'];
     celular = json['celular'];
@@ -31,6 +34,7 @@ class RegisterClient {
     final _data = <String, dynamic>{};
     _data['id_empresa'] = idEmpresa;
     _data['id_sucursal'] = idSucursal;
+    _data['id_cliente'] = idCliente;
     _data['cliente'] = cliente;
     _data['ci'] = ci;
     _data['celular'] = celular;

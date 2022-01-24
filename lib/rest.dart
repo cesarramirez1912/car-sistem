@@ -1,5 +1,6 @@
 class Rest {
   static const String BASE_URL_TEST = "http://192.168.0.4:3000";
+
   //static const String BASE_URL_TEST = "http://192.168.88.112:3000";
   static const String BASE_URL_PRODUCTION =
       "https://matrisoja-crm.herokuapp.com";
@@ -16,6 +17,7 @@ class Rest {
   // api routes
   static String LOGIN = BASE_URL + "/login";
   static String CLIENTS = BASE_URL + "/clients";
+  static String CLIENTS_FROM_COMPANY = CLIENTS + "/company=";
   static String MOTORS = BASE_URL + "/motors";
   static String GEARS = BASE_URL + "/gears";
   static String BRANDS = BASE_URL + "/brands";
@@ -23,5 +25,6 @@ class Rest {
   static String VEHICLES = BASE_URL + '/vehicles';
   static String MODELS = BASE_URL + "/models";
   static String COLORS = BASE_URL + "/colors";
-  static String VEHICLES_BRANCH =  VEHICLES + "/branch=";
+  static String VEHICLES_BRANCH = VEHICLES + "/branch=";
+  static String SELLS = BASE_URL + "/sells";
 }

@@ -1,6 +1,8 @@
 import 'package:car_system/common/date_format.dart';
+import 'package:car_system/controllers/client_controller.dart';
 import 'package:car_system/controllers/vehicle_detail_controller.dart';
 import 'package:car_system/models/cuotes.dart';
+import 'package:car_system/models/register_client_model.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/input.dart';
@@ -11,10 +13,13 @@ import 'package:car_system/widgets/title.dart';
 import 'package:car_system/widgets/vehicle_detail_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import '../../colors.dart';
 
 class SellVehicleView extends GetView<VehicleDetailController> {
+  ClientController clientController = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +42,62 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                     children: [
                       CustomSpacing(),
                       CustomVehicleDetailCard(controller.vehicleSelected.first),
+                      CustomSpacing(),
+                      const Divider(
+                        color: Colors.grey,
+                      ),
+                      CustomSpacing(height: 10),
+                      CustomTitle('CLIENTE'),
+                      CustomSpacing(),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: DropdownSearch<ClientModel>(
+                              showSearchBox: true,
+                              compareFn: (item, selectedItem) =>
+                                  item?.idCliente == selectedItem?.idCliente,
+                              onChanged: (value) =>
+                                  controller.typeClientSelected.value = value!,
+                              showSelectedItems: true,
+                              validator: (u) => u?.idCliente == null
+                                  ? "user field is required "
+                                  : null,
+                              itemAsString: (ClientModel? item) =>
+                                  item?.cliente ?? '',
+                              dropdownBuilder:
+                                  _customDropDownExampleMultiSelection,
+                              showAsSuffixIcons: true,
+                              dropdownSearchDecoration: const InputDecoration(
+                                prefixIcon: Icon(Icons.person_outline),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                border: OutlineInputBorder(),
+                              ),
+                              searchFieldProps: TextFieldProps(
+                                keyboardType: TextInputType.text,
+                                decoration: const InputDecoration(
+                                    filled: true,
+                                    label: Text('Buscar por nombre')),
+                              ),
+                              popupItemBuilder: _customPopupItemBuilderExample2,
+                              onSaved: (value) {
+                                print(value?.toJson());
+                              },
+                              mode: Mode.DIALOG,
+                              items: clientController.listClients,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 6,
+                          ),
+                          CustomButton('', () {
+                            Get.toNamed(RouterManager.REGISTER_CLIENT);
+                          }, ColorPalette.SECUNDARY,
+                              iconData: Icons.person_add_alt),
+                        ],
+                      ),
                       CustomSpacing(),
                       const Divider(
                         color: Colors.grey,
@@ -162,6 +223,10 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                   controller.cuota.value.cantidadCuotas == 0
               ? Container()
               : vencimientosSection(context),
+          CustomSpacing(),
+          const Divider(
+            color: Colors.grey,
+          ),
           CustomSpacing()
         ];
       default:
@@ -317,6 +382,33 @@ class SellVehicleView extends GetView<VehicleDetailController> {
               }),
         ),
       ),
+    );
+  }
+
+  Widget _customDropDownExampleMultiSelection(
+      BuildContext context, ClientModel? itemSelected) {
+    if (itemSelected?.idCliente == null) {
+      return const ListTile(
+        contentPadding: EdgeInsets.all(0),
+        title: Text("Ningun cliente seleccionado"),
+      );
+    }
+
+    return ListTile(
+      contentPadding: const EdgeInsets.all(0),
+      title: Text(itemSelected?.cliente ?? ''),
+      subtitle: Text(
+        itemSelected?.ci.toString() ?? '',
+      ),
+    );
+  }
+
+  Widget _customPopupItemBuilderExample2(
+      BuildContext context, ClientModel? item, bool isSelected) {
+    return ListTile(
+      selected: isSelected,
+      title: Text(item?.cliente ?? ''),
+      subtitle: Text(item?.ci?.toString() ?? ''),
     );
   }
 
