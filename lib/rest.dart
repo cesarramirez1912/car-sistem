@@ -27,4 +27,9 @@ class Rest {
   static String COLORS = BASE_URL + "/colors";
   static String VEHICLES_BRANCH = VEHICLES + "/branch=";
   static String SELLS = BASE_URL + "/sells";
+  static String SELLS_CUOTE = SELLS + "/cuote";
+  static String SELLS_REFUERZO = SELLS + "/refuerzo";
+  static String SELLS_COLLABORATOR = SELLS + "/collaborator=";
+  static String SELLS_CUOTES_DETAILS = SELLS + "/detail/cuote/idVenta=";
+  static String SELLS_REFUERZOS_DETAILS = SELLS + "/detail/refuerzo/idVenta=";
 }

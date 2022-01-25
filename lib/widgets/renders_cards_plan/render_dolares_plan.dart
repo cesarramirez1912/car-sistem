@@ -8,13 +8,15 @@ import '../title.dart';
 List<Widget> dolaresRender(Cuota cuota) {
   return [
     CustomTitle('Plan dólares'),
-    planText('Entrada',
-        'U\$ ' + MoneyFormat().formatCommaToDot(cuota.entradaDolares)),
     planText(
-        'Cuota', 'U\$ ' + MoneyFormat().formatCommaToDot(cuota.cuotaDolares)),
+        'Entrada',
+        MoneyFormat()
+            .formatCommaToDot(cuota.entradaDolares, isGuaranies: false)),
+    planText('Cuota',
+        MoneyFormat().formatCommaToDot(cuota.cuotaDolares, isGuaranies: false)),
     planText(
       'Refuerzo',
-      'U\$ ' + MoneyFormat().formatCommaToDot(cuota.refuerzoDolares),
+      MoneyFormat().formatCommaToDot(cuota.refuerzoDolares, isGuaranies: false),
     )
   ];
 }

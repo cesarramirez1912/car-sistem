@@ -1,6 +1,17 @@
-class DateFormat {
+import 'package:intl/intl.dart';
+
+class DateFormatBr {
   String formatBr(DateTime dateTime) {
     return '${_verifyDateAndMonth(dateTime.day)}/${_verifyDateAndMonth(dateTime.month)}/${_verifyDateAndMonth(dateTime.year)}';
+  }
+
+  String formatBrFromString(String dateString) {
+    return DateFormat('dd/MM/yyyy')
+        .format(DateTime.parse(dateString).toLocal());
+  }
+  String formatBrWithTime(String dateString) {
+    return DateFormat('dd/MM/yyyy - hh:mm a')
+        .format(DateTime.parse(dateString).toLocal());
   }
 
   String _verifyDateAndMonth(int dayOrMonth) {

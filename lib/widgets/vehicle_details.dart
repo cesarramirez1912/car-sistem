@@ -30,14 +30,14 @@ Widget VehicleDetails(Vehicle vehicle) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "G\$ ${MoneyFormat().formatCommaToDot(vehicle.contadoGuaranies)}",
+              MoneyFormat().formatCommaToDot(vehicle.contadoGuaranies),
               style: const TextStyle(
                   color: Color.fromRGBO(72, 72, 72, 1),
                   fontSize: 18,
                   fontWeight: FontWeight.w700),
             ),
             Text(
-              "U\$ ${MoneyFormat().formatCommaToDot(vehicle.contadoDolares)}",
+              MoneyFormat().formatCommaToDot(vehicle.contadoDolares,isGuaranies: false),
               style: const TextStyle(
                   color: Color.fromRGBO(72, 72, 72, 1),
                   fontSize: 18,

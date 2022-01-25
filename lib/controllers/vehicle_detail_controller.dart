@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:car_system/common/date_format.dart';
+import 'package:car_system/common/remove_money_format.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/controllers/login_controller.dart';
 import 'package:car_system/models/cuotes.dart';
@@ -12,6 +13,7 @@ import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/repositories/home_repository.dart';
 import 'package:car_system/repositories/sell_vehicle_repository.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
+import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
@@ -22,6 +24,8 @@ class VehicleDetailController extends GetxController {
   RxList<Vehicle> vehicles = <Vehicle>[].obs;
   Rx<Vehicle>? vehicleDetail;
   String idVehiculoSucursal = '';
+
+  final formKey = GlobalKey<FormState>();
 
   RxBool isLoading = false.obs;
   RxList<Vehicle> vehicleSelected = <Vehicle>[].obs;
@@ -78,6 +82,9 @@ class VehicleDetailController extends GetxController {
   MoneyMaskedTextController textContadoDolares =
       MoneyMaskedTextController(leftSymbol: 'U\$ ');
 
+  Rx<SellVehicleModel> sellVehicleModel =
+      SellVehicleModel(cuotas: [], refuerzos: []).obs;
+
   @override
   void onInit() async {
     Map<dynamic, dynamic>? args = Get.parameters;
@@ -92,6 +99,10 @@ class VehicleDetailController extends GetxController {
     vehicles
         .addAll(listVehicleController.getVehiclesFromId(idVehiculoSucursal));
     vehicleDetail?.value = vehicles.first;
+    textContadoGuaranies.text = vehicles.first.contadoGuaranies.toString();
+    textContadoDolares.text = vehicles.first.contadoDolares.toString() + '00';
+    sellVehicleModel.value.idVehiculoSucursal =
+        vehicles.first.idVehiculoSucursal;
   }
 
   void seletVehicleToSel() {
@@ -162,23 +173,25 @@ class VehicleDetailController extends GetxController {
 
   void generatedDatesRefuerzos() {
     String valueFromString = typeCobroMensualSelected.value.substring(0, 2);
-    int typeCobroMensualSelectedInt = int.parse(valueFromString);
-    List<DateTime> listGeneratedAux = List<DateTime>.generate(
-      cuota.value.cantidadRefuerzo * typeCobroMensualSelectedInt,
-      (i) => DateTime.utc(
-        firstDateRefuerzoSelected.value.year,
-        firstDateRefuerzoSelected.value.month + i,
-        firstDateRefuerzoSelected.value.day,
-      ),
-    );
-    listDateGeneratedRefuerzos.clear();
-    for (int i = 0; i < listGeneratedAux.length; i++) {
-      if (i != 0) {
-        if ((i % typeCobroMensualSelectedInt) == 0) {
+    if (cuota.value.cantidadRefuerzo != null) {
+      int typeCobroMensualSelectedInt = int.parse(valueFromString);
+      List<DateTime> listGeneratedAux = List<DateTime>.generate(
+        cuota.value.cantidadRefuerzo * typeCobroMensualSelectedInt,
+        (i) => DateTime.utc(
+          firstDateRefuerzoSelected.value.year,
+          firstDateRefuerzoSelected.value.month + i,
+          firstDateRefuerzoSelected.value.day,
+        ),
+      );
+      listDateGeneratedRefuerzos.clear();
+      for (int i = 0; i < listGeneratedAux.length; i++) {
+        if (i != 0) {
+          if ((i % typeCobroMensualSelectedInt) == 0) {
+            listDateGeneratedRefuerzos.add(listGeneratedAux[i]);
+          }
+        } else {
           listDateGeneratedRefuerzos.add(listGeneratedAux[i]);
         }
-      } else {
-        listDateGeneratedRefuerzos.add(listGeneratedAux[i]);
       }
     }
   }
@@ -188,8 +201,8 @@ class VehicleDetailController extends GetxController {
     for (int i = 0; i < listDateGeneratedCuotas.length; i++) {
       listResumen.add(
         Resumen(
-          fechaCuota: DateFormat().formatBr(listDateGeneratedRefuerzos[i]),
-          fechaRefuerzo: DateFormat().formatBr(listDateGeneratedRefuerzos[i]),
+          fechaCuota: DateFormatBr().formatBr(listDateGeneratedRefuerzos[i]),
+          fechaRefuerzo: DateFormatBr().formatBr(listDateGeneratedRefuerzos[i]),
           valorCuota: cuota.value.cuotaGuaranies,
           valorRefuerzo: cuota.value.cuotaGuaranies,
         ),
@@ -199,94 +212,151 @@ class VehicleDetailController extends GetxController {
 
   void registerCuota() async {
     if (formKeyDialog.currentState == null) {
-      print("formKeyDialog.currentState is null!");
     } else if (formKeyDialog.currentState!.validate()) {
       formKeyDialog.currentState!.save();
+      cuota.value.entradaGuaranies =
+          RemoveMoneyFormat().format(cuota.value.entradaGuaranies);
+      cuota.value.cuotaGuaranies =
+          RemoveMoneyFormat().format(cuota.value.cuotaGuaranies);
+      cuota.value.refuerzoGuaranies =
+          RemoveMoneyFormat().format(cuota.value.refuerzoGuaranies);
+      cuota.value.entradaDolares =
+          RemoveMoneyFormat().format(cuota.value.entradaDolares);
+      cuota.value.cuotaDolares =
+          RemoveMoneyFormat().format(cuota.value.cuotaDolares);
+      cuota.value.refuerzoDolares =
+          RemoveMoneyFormat().format(cuota.value.refuerzoDolares);
 
-      cuota.value.entradaGuaranies = cuota.value.entradaGuaranies
-          .toString()
-          .replaceAll('G\$', '')
-          .replaceAll('.', '')
-          .replaceAll(' ', '');
-      cuota.value.cuotaGuaranies = cuota.value.cuotaGuaranies
-          .toString()
-          .replaceAll('G\$', '')
-          .replaceAll('.', '')
-          .replaceAll(' ', '');
-      cuota.value.refuerzoGuaranies = cuota.value.refuerzoGuaranies
-          .toString()
-          .replaceAll('G\$', '')
-          .replaceAll('.', '')
-          .replaceAll(' ', '');
-      cuota.value.entradaDolares = cuota.value.entradaDolares
-          .toString()
-          .replaceAll('U\$', '')
-          .replaceAll('.', '')
-          .replaceAll(',', '.')
-          .replaceAll(' ', '');
-      cuota.value.cuotaDolares = cuota.value.cuotaDolares
-          .toString()
-          .replaceAll('U\$', '')
-          .replaceAll('.', '')
-          .replaceAll(',', '.')
-          .replaceAll(' ', '');
-      cuota.value.refuerzoDolares = cuota.value.refuerzoDolares
-          .toString()
-          .replaceAll('U\$', '')
-          .replaceAll('.', '')
-          .replaceAll(',', '.')
-          .replaceAll(' ', '');
-
-      if (cuota.value.entradaDolares != 'null') {
+      if (cuota.value.entradaDolares != null) {
         if (double.parse(cuota.value.entradaDolares) == 0.0) {
           cuota.value.entradaDolares = null;
         }
-      } else {
-        cuota.value.entradaDolares = null;
       }
 
-      if (cuota.value.cuotaDolares != 'null') {
+      if (cuota.value.cuotaDolares != null) {
         if (double.parse(cuota.value.cuotaDolares) == 0.0) {
           cuota.value.cuotaDolares = null;
         }
-      } else {
-        cuota.value.cuotaDolares = null;
       }
 
-      if (cuota.value.refuerzoDolares != 'null') {
+      if (cuota.value.refuerzoDolares != null) {
         if (double.parse(cuota.value.refuerzoDolares) == 0.0) {
           cuota.value.refuerzoDolares = null;
         }
-      } else {
-        cuota.value.refuerzoDolares = null;
       }
 
-      if (cuota.value.entradaGuaranies != 'null') {
+      if (cuota.value.entradaGuaranies != null) {
         if (int.parse(cuota.value.entradaGuaranies) == 0) {
           cuota.value.entradaGuaranies = null;
         }
-      } else {
-        cuota.value.entradaGuaranies = null;
       }
-      if (cuota.value.cuotaGuaranies != 'null') {
+
+      if (cuota.value.cuotaGuaranies != null) {
         if (int.parse(cuota.value.cuotaGuaranies) == 0) {
           cuota.value.cuotaGuaranies = null;
         }
-      } else {
-        cuota.value.cuotaGuaranies = null;
       }
 
-      if (cuota.value.refuerzoGuaranies != 'null') {
+      if (cuota.value.refuerzoGuaranies != null) {
         if (int.parse(cuota.value.refuerzoGuaranies) == 0) {
           cuota.value.refuerzoGuaranies = null;
         }
-      } else {
-        cuota.value.refuerzoGuaranies = null;
       }
+
       cuota.refresh();
 
       Get.back();
     }
+  }
+
+  void registerSale() async {
+    if (formKey.currentState == null) {
+    } else if (formKey.currentState!.validate()) {
+      isLoading.value = true;
+      try {
+        formKey.currentState!.save();
+        sellVehicleModel.value.fechaVenta = DateTime.now().toString();
+
+        if (textCantidadRefuerzos.text.isNotEmpty) {
+          generatedDatesRefuerzos();
+        }
+        if (textCantidadCuotas.text.isNotEmpty) {
+          generatedDatesCuotes();
+        }
+
+        if (typeSellSelected != 'CONTADO') {
+
+          sellVehicleModel.value.entradaDolares = RemoveMoneyFormat()
+              .format(cuota.value.entradaDolares);
+          sellVehicleModel.value.entradaGuaranies =
+              RemoveMoneyFormat().format(cuota.value.entradaGuaranies);
+
+          if (listDateGeneratedCuotas.isNotEmpty) {
+            sellVehicleModel.value.cuotas?.clear();
+            for (var fecha in listDateGeneratedCuotas) {
+              sellVehicleModel.value.cuotas?.add(Cuotas(
+                  cuotaGuaranies: cuota.value.cuotaGuaranies.toString(),
+                  cuotaDolares: cuota.value.cuotaDolares.toString(),
+                  fechaCuota: fecha.toString()));
+            }
+          }
+          if (listDateGeneratedRefuerzos.isNotEmpty) {
+            sellVehicleModel.value.refuerzos?.clear();
+            for (var fecha in listDateGeneratedRefuerzos) {
+              sellVehicleModel.value.refuerzos?.add(Refuerzos(
+                  refuerzoGuaranies: cuota.value.refuerzoGuaranies.toString(),
+                  refuerzoDolares: cuota.value.refuerzoDolares.toString(),
+                  fechaRefuerzo: fecha.toString()));
+            }
+          }
+        } else {
+          sellVehicleModel.value.contadoGuaranies = RemoveMoneyFormat()
+              .format(sellVehicleModel.value.contadoGuaranies);
+          sellVehicleModel.value.contadoDolares =
+              RemoveMoneyFormat().format(sellVehicleModel.value.contadoDolares);
+        }
+        var responseSellVehicle = await sellVehicleRepository.sellVehicle(sellVehicleModel.toJson());
+        CustomSnackBarSuccess('VENTA REGISTRADA CON EXITO!');
+        Get.back();
+        formKey.currentState!.reset();
+        isLoading.value = false;
+      } catch (e) {
+        CustomSnackBarError(e.toString());
+        isLoading.value = false;
+      }
+    }
+  }
+
+  void cleanInputsCuotes() {
+    cuota.value.entradaGuaranies = null;
+    cuota.value.entradaDolares = null;
+
+    cuota.value.cuotaGuaranies = null;
+    cuota.value.cuotaDolares = null;
+
+    cuota.value.cantidadRefuerzo = null;
+    cuota.value.cantidadCuotas = null;
+
+    cuota.value.refuerzoDolares = null;
+    cuota.value.refuerzoGuaranies = null;
+
+    textCantidadRefuerzos.text = '';
+    textCantidadCuotas.text = '';
+
+    textCuotaGuaranies.text = '0';
+    textCuotaDolares.text = '000';
+
+    textRefuezoDolares.text = '000';
+    textRefuezoGuaranies.text = '00';
+
+    textEntradaGuaranies.text = '0';
+    textEntradaDolares.text = '000';
+
+    sellVehicleModel.value.refuerzos?.clear();
+    sellVehicleModel.value.cuotas?.clear();
+
+    listDateGeneratedCuotas.clear();
+    listDateGeneratedRefuerzos.clear();
   }
 
   void sellVehicle() {

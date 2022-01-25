@@ -1,5 +1,7 @@
 import 'package:car_system/common/date_format.dart';
+import 'package:car_system/common/remove_money_format.dart';
 import 'package:car_system/controllers/client_controller.dart';
+import 'package:car_system/controllers/user_controller.dart';
 import 'package:car_system/controllers/vehicle_detail_controller.dart';
 import 'package:car_system/models/cuotes.dart';
 import 'package:car_system/models/register_client_model.dart';
@@ -12,6 +14,7 @@ import 'package:car_system/widgets/spacing.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:car_system/widgets/vehicle_detail_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
@@ -19,119 +22,160 @@ import '../../colors.dart';
 
 class SellVehicleView extends GetView<VehicleDetailController> {
   ClientController clientController = Get.find();
+  UserController userController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    controller.sellVehicleModel.value.idEmpresa =
+        userController.user?.idEmpresa;
+    controller.sellVehicleModel.value.idSucursal =
+        userController.user?.idSucursal;
+    controller.sellVehicleModel.value.idColaborador =
+        userController.user?.idColaborador;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vender vehiculo'),
       ),
       body: Obx(
         () => SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            padding: const EdgeInsets.only(bottom: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomSpacing(),
-                      CustomVehicleDetailCard(controller.vehicleSelected.first),
-                      CustomSpacing(),
-                      const Divider(
-                        color: Colors.grey,
-                      ),
-                      CustomSpacing(height: 10),
-                      CustomTitle('CLIENTE'),
-                      CustomSpacing(),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: DropdownSearch<ClientModel>(
-                              showSearchBox: true,
-                              compareFn: (item, selectedItem) =>
-                                  item?.idCliente == selectedItem?.idCliente,
-                              onChanged: (value) =>
-                                  controller.typeClientSelected.value = value!,
-                              showSelectedItems: true,
-                              validator: (u) => u?.idCliente == null
-                                  ? "user field is required "
-                                  : null,
-                              itemAsString: (ClientModel? item) =>
-                                  item?.cliente ?? '',
-                              dropdownBuilder:
-                                  _customDropDownExampleMultiSelection,
-                              showAsSuffixIcons: true,
-                              dropdownSearchDecoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.person_outline),
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
-                                border: OutlineInputBorder(),
+          child: Form(
+            key: controller.formKey,
+            child: Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(bottom: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomSpacing(),
+                        CustomVehicleDetailCard(
+                            controller.vehicleSelected.first),
+                        CustomSpacing(),
+                        const Divider(
+                          color: Colors.grey,
+                        ),
+                        CustomSpacing(height: 10),
+                        CustomTitle('CLIENTE'),
+                        CustomSpacing(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              child: DropdownSearch<ClientModel>(
+                                showSearchBox: true,
+                                compareFn: (item, selectedItem) =>
+                                    item?.idCliente == selectedItem?.idCliente,
+                                onChanged: (value) {
+                                  controller.typeClientSelected.value = value!;
+                                  controller.sellVehicleModel.value.idCliente =
+                                      value.idCliente;
+                                },
+                                showSelectedItems: true,
+                                validator: (u) => u?.idCliente == null
+                                    ? "CLIENTE OBLIGATORIO PARA LA VENTA"
+                                    : null,
+                                itemAsString: (ClientModel? item) =>
+                                    item?.cliente ?? '',
+                                dropdownBuilder:
+                                    _customDropDownExampleMultiSelection,
+                                showAsSuffixIcons: true,
+                                dropdownSearchDecoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.person_outline),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  border: OutlineInputBorder(),
+                                ),
+                                searchFieldProps: TextFieldProps(
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                      filled: true,
+                                      label: Text('Buscar por nombre')),
+                                ),
+                                popupItemBuilder:
+                                    _customPopupItemBuilderExample2,
+                                onSaved: (value) => controller.sellVehicleModel
+                                    .value.idCliente = value?.idCliente,
+                                mode: Mode.DIALOG,
+                                items: clientController.listClients,
                               ),
-                              searchFieldProps: TextFieldProps(
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                    filled: true,
-                                    label: Text('Buscar por nombre')),
-                              ),
-                              popupItemBuilder: _customPopupItemBuilderExample2,
-                              onSaved: (value) {
-                                print(value?.toJson());
-                              },
-                              mode: Mode.DIALOG,
-                              items: clientController.listClients,
                             ),
-                          ),
-                          const SizedBox(
-                            width: 6,
-                          ),
-                          CustomButton('', () {
-                            Get.toNamed(RouterManager.REGISTER_CLIENT);
-                          }, ColorPalette.SECUNDARY,
-                              iconData: Icons.person_add_alt),
-                        ],
-                      ),
-                      CustomSpacing(),
-                      const Divider(
-                        color: Colors.grey,
-                      ),
-                      CustomSpacing(),
-                      CustomTitle('FILTROS'),
-                      CustomSpacing(),
-                      CustomDropDowSearch(
-                          controller.typesSell, 'ELEGIR TIPO DE VENTA',
-                          iconData:
-                              controller.typeSellSelected.value == 'CONTADO'
-                                  ? Icons.money
-                                  : Icons.credit_card_sharp,
-                          selectedItem: controller.typeSellSelected.value,
-                          onChanged: (value) =>
-                              controller.typeSellSelected.value = value),
-                      CustomSpacing(),
-                      CustomDropDowSearch(
-                          controller.typesMoney, 'ELEGIR TIPO DE MONEDA',
+                            const SizedBox(
+                              width: 6,
+                            ),
+                            CustomButton('', () {
+                              Get.toNamed(RouterManager.REGISTER_CLIENT);
+                            }, ColorPalette.SECUNDARY,
+                                iconData: Icons.person_add_alt),
+                          ],
+                        ),
+                        CustomSpacing(),
+                        const Divider(
+                          color: Colors.grey,
+                        ),
+                        CustomSpacing(),
+                        CustomTitle('FILTROS'),
+                        CustomSpacing(),
+                        CustomDropDowSearch(
+                            controller.typesSell, 'ELEGIR TIPO DE VENTA',
+                            iconData:
+                                controller.typeSellSelected.value == 'CONTADO'
+                                    ? Icons.money
+                                    : Icons.credit_card_sharp,
+                            selectedItem: controller.typeSellSelected.value,
+                            onChanged: (value) {
+                          controller.cleanInputsCuotes();
+                          if (value == 'CREDITO') {
+                            controller.sellVehicleModel.value.contadoGuaranies =
+                                null;
+                            controller.sellVehicleModel.value.contadoDolares =
+                                null;
+                          } else {
+                            controller.sellVehicleModel.value.entradaGuaranies =
+                                null;
+                            controller.sellVehicleModel.value.entradaDolares =
+                                null;
+                            controller.sellVehicleModel.value.cuotas?.clear();
+                            controller.sellVehicleModel.value.refuerzos
+                                ?.clear();
+                          }
+                          controller.typeSellSelected.value = value;
+                        }),
+                        CustomSpacing(),
+                        CustomDropDowSearch(
+                          controller.typesMoney,
+                          'ELEGIR TIPO DE MONEDA',
                           iconData: Icons.monetization_on_outlined,
                           selectedItem: controller.typesMoneySelected.value,
-                          onChanged: (value) =>
-                              controller.typesMoneySelected.value = value),
-                      CustomSpacing(),
-                      CustomTitle('PRECIO FINAL'),
-                      CustomSpacing(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: listRender(context),
-                      ),
-                    ],
+                          onChanged: (value) {
+                            controller.cleanInputsCuotes();
+                            if (value == 'GUARANIES') {
+                              controller.cuota.value.cuotaDolares = null;
+                            } else {
+                              controller.cuota.value.cuotaGuaranies = null;
+                            }
+                            controller.typesMoneySelected.value = value;
+                          },
+                        ),
+                        CustomSpacing(),
+                        CustomTitle('PRECIO FINAL'),
+                        CustomSpacing(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: listRender(context),
+                        ),
+                        CustomButton('FINALIZAR VENTA', controller.registerSale,
+                            ColorPalette.GREEN)
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -146,8 +190,14 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomInput('', 'PRECIO VENTA ${controller.typesMoneySelected.value}',
               iconData: Icons.price_change_outlined,
               onSaved: (text) => controller.typesMoneySelected == 'GUARANIES'
-                  ? controller.textContadoGuaranies.value = text
-                  : controller.textContadoDolares.value = text,
+                  ? {
+                      controller.sellVehicleModel.value.contadoGuaranies = text,
+                      controller.sellVehicleModel.value.contadoDolares = null
+                    }
+                  : {
+                      controller.sellVehicleModel.value.contadoDolares = text,
+                      controller.sellVehicleModel.value.contadoGuaranies = null
+                    },
               textEditingController:
                   controller.typesMoneySelected == 'GUARANIES'
                       ? controller.textContadoGuaranies
@@ -251,10 +301,10 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           children: [
             Expanded(
               child: textInputContainer(
-                  'Primera cuota en:',
-                  DateFormat()
-                      .formatBr(controller.firstDateCuoteSelected.value),
-                  onTap: () async => controller.firstDateCuote(context)),
+                'Primera cuota en:',
+                DateFormatBr().formatBr(controller.firstDateCuoteSelected.value),
+                onTap: () => controller.firstDateCuote(context),
+              ),
             ),
             const SizedBox(
               width: 6,
@@ -283,29 +333,44 @@ class SellVehicleView extends GetView<VehicleDetailController> {
         controller.cuota.value.cantidadRefuerzo == null ||
                 controller.cuota.value.cantidadRefuerzo == 0
             ? Container()
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
+            : Column(
                 children: [
-                  Expanded(
-                    child: textInputContainer(
-                        'Primer refuerzo en:',
-                        DateFormat().formatBr(
-                            controller.firstDateRefuerzoSelected.value),
-                        onTap: () => controller.firstDateRefuerzo(context)),
-                  ),
-                  const SizedBox(
-                    width: 6,
-                  ),
-                  Column(
+                  CustomSpacing(height: 10),
+                  CustomDropDowSearch(
+                      controller.typesCobroMensuales, 'ENTRE MESES',
+                      iconData: Icons.date_range,
+                      selectedItem: controller.typeCobroMensualSelected.value,
+                      onChanged: (value) {
+                    controller.typeCobroMensualSelected.value = value;
+                    controller.generatedDatesRefuerzos();
+                  }),
+                  CustomSpacing(height: 5),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
-                      CustomSpacing(height: 7),
-                      CustomButton('', () {
-                        controller.generatedDatesRefuerzos();
-                        Get.toNamed(RouterManager.DATES_VEN,
-                            parameters: {'isCuote': 'false'});
-                      }, ColorPalette.SECUNDARY,
-                          iconData: Icons.calendar_today_rounded),
+                      Expanded(
+                        child: textInputContainer(
+                          'Primer refuerzo en:',
+                          DateFormatBr().formatBr(
+                              controller.firstDateRefuerzoSelected.value),
+                          onTap: () => controller.firstDateRefuerzo(context),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 6,
+                      ),
+                      Column(
+                        children: [
+                          CustomSpacing(height: 7),
+                          CustomButton('', () {
+                            controller.generatedDatesRefuerzos();
+                            Get.toNamed(RouterManager.DATES_VEN,
+                                parameters: {'isCuote': 'false'});
+                          }, ColorPalette.SECUNDARY,
+                              iconData: Icons.calendar_today_rounded),
+                        ],
+                      )
                     ],
                   )
                 ],
@@ -387,6 +452,8 @@ class SellVehicleView extends GetView<VehicleDetailController> {
 
   Widget _customDropDownExampleMultiSelection(
       BuildContext context, ClientModel? itemSelected) {
+    MaskedTextController textCiController = MaskedTextController(
+        text: itemSelected?.ci?.toString() ?? '', mask: '0.000.000-00');
     if (itemSelected?.idCliente == null) {
       return const ListTile(
         contentPadding: EdgeInsets.all(0),
@@ -398,17 +465,19 @@ class SellVehicleView extends GetView<VehicleDetailController> {
       contentPadding: const EdgeInsets.all(0),
       title: Text(itemSelected?.cliente ?? ''),
       subtitle: Text(
-        itemSelected?.ci.toString() ?? '',
+        textCiController.text,
       ),
     );
   }
 
   Widget _customPopupItemBuilderExample2(
       BuildContext context, ClientModel? item, bool isSelected) {
+    MaskedTextController textCiController = MaskedTextController(
+        text: item?.ci?.toString() ?? '', mask: '0.000.000-00');
     return ListTile(
       selected: isSelected,
       title: Text(item?.cliente ?? ''),
-      subtitle: Text(item?.ci?.toString() ?? ''),
+      subtitle: Text(textCiController.text),
     );
   }
 
@@ -498,7 +567,17 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomInput(
             '',
             'Cuota',
-            validator: validatorPriceSelGuaranies,
+            validator: (String text) {
+              String newString = RemoveMoneyFormat().format(text);
+              if (text.isEmpty) return 'Informar cuota mensual.';
+              if (newString.isNum) {
+                if (double.parse(newString.toString()) == 0.0) {
+                  return 'Informar cuota mensual.';
+                }
+              } else {
+                return 'Informar cuota mensual.';
+              }
+            },
             iconData: Icons.price_change_outlined,
             textEditingController: controller.textCuotaGuaranies,
             onSaved: (text) => controller.cuota.value.cuotaGuaranies = text,
@@ -506,6 +585,18 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomInput(
             '',
             'Refuerzo',
+            validator: (String text) {
+              String newString = RemoveMoneyFormat().format(text);
+              if (controller.textCantidadRefuerzos.text.isNotEmpty) {
+                if (newString.isNum) {
+                  if (double.parse(newString.toString()) == 0.0) {
+                    return 'Informar cuota refuerzo.';
+                  }
+                } else {
+                  return 'Informar cuota refuerzo.';
+                }
+              }
+            },
             iconData: Icons.price_change_outlined,
             onSaved: (text) => controller.cuota.value.refuerzoGuaranies = text,
             textEditingController: controller.textRefuezoGuaranies,
@@ -520,10 +611,33 @@ class SellVehicleView extends GetView<VehicleDetailController> {
               onSaved: (text) => controller.cuota.value.entradaDolares = text,
               textEditingController: controller.textEntradaDolares),
           CustomInput('', 'Cuota',
+              validator: (String text) {
+                String newString = RemoveMoneyFormat().format(text);
+                if (text.isEmpty) return 'Informar cuota mensual.';
+                if (newString.isNum) {
+                  if (double.parse(newString.toString()) == 0.0) {
+                    return 'Informar cuota mensual.';
+                  }
+                } else {
+                  return 'Informar cuota mensual.';
+                }
+              },
               iconData: Icons.price_change_outlined,
               onSaved: (text) => controller.cuota.value.cuotaDolares = text,
               textEditingController: controller.textCuotaDolares),
           CustomInput('', 'Refuerzo',
+              validator: (String text) {
+                String newString = RemoveMoneyFormat().format(text);
+                if (controller.textCantidadRefuerzos.text.isNotEmpty) {
+                  if (newString.isNum) {
+                    if (double.parse(newString.toString()) == 0.0) {
+                      return 'Informar cuota refuerzo.';
+                    }
+                  } else {
+                    return 'Informar cuota refuerzo.';
+                  }
+                }
+              },
               iconData: Icons.price_change_outlined,
               onSaved: (text) => controller.cuota.value.refuerzoDolares = text,
               textEditingController: controller.textRefuezoDolares),

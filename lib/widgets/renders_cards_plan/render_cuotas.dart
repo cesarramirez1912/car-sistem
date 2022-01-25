@@ -37,9 +37,9 @@ Widget renderCuotas(Cuota cuota, {String? textRender}) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             planText('Cant. de cuotas',
-                MoneyFormat().formatCommaToDot(cuota.cantidadCuotas)),
+                cuota.cantidadCuotas.toString()),
             planText('Cant. de refuerzos',
-                MoneyFormat().formatCommaToDot(cuota.cantidadRefuerzo)),
+                cuota.cantidadRefuerzo.toString()),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,

@@ -1,9 +1,11 @@
+import 'package:car_system/views/dates_venc_cuotes_view.dart';
 import 'package:car_system/views/register_client_view.dart';
 import 'package:car_system/views/list_vehicles_view.dart';
 import 'package:car_system/views/login_view.dart';
 import 'package:car_system/views/register_vehicle_view.dart';
 import 'package:car_system/views/sell/dates_venc_view.dart';
 import 'package:car_system/views/sell/sell_vehicle_view.dart';
+import 'package:car_system/views/sells_from_collaborator_view.dart';
 import 'package:car_system/views/vehicle_detail_view.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +19,8 @@ class RouterManager {
   static const String REGISTER= '/register_vehicle';
   static const String SEL_VEHICLE= '/sel_vehicle';
   static const String DATES_VEN= '/dates_venc';
+  static const String SELLS_FROM_COLLABORATOR= '/sells_from_collaborator';
+  static const String SELLS_DETAILS_CUOTES= '/sells_details_cuotes';
 
   static List<GetPage> getRoutes() => [
     GetPage(name: LOGIN, page: () => LoginView(), binding: AllBinding()),
@@ -26,5 +30,7 @@ class RouterManager {
     GetPage(name: REGISTER, page: () => const RegisterVehicleView(), binding: AllBinding()),
     GetPage(name: SEL_VEHICLE, page: () => SellVehicleView(), binding: AllBinding()),
     GetPage(name: DATES_VEN, page: () => DatesVencView()),
+    GetPage(name: SELLS_FROM_COLLABORATOR, page: () => SellsFromCollaboratorView(),binding: AllBinding()),
+    GetPage(name: SELLS_DETAILS_CUOTES, page: () => DatesVencCuotesView(),),
   ];
 }

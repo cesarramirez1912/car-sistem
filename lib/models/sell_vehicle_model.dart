@@ -6,6 +6,9 @@ class SellVehicleModel {
   int? idVehiculoSucursal;
   dynamic? entradaDolares;
   dynamic? entradaGuaranies;
+  dynamic? contadoDolares;
+  dynamic? contadoGuaranies;
+  String? fechaVenta;
   List<Refuerzos>? refuerzos;
   List<Cuotas>? cuotas;
 
@@ -16,6 +19,9 @@ class SellVehicleModel {
       this.idColaborador,
       this.idVehiculoSucursal,
       this.entradaDolares,
+      this.contadoDolares,
+      this.contadoGuaranies,
+      this.fechaVenta,
       this.entradaGuaranies,
       this.refuerzos,
       this.cuotas});
@@ -28,6 +34,9 @@ class SellVehicleModel {
     idVehiculoSucursal = json['id_vehiculo_sucursal'];
     entradaDolares = json['entrada_dolares'];
     entradaGuaranies = json['entrada_guaranies'];
+    contadoDolares = json['contado_dolares'];
+    contadoGuaranies = json['contado_guaranies'];
+    fechaVenta = json['fecha_venta'];
     if (json['refuerzos'] != null) {
       refuerzos = <Refuerzos>[];
       json['refuerzos'].forEach((v) {
@@ -51,6 +60,9 @@ class SellVehicleModel {
     data['id_vehiculo_sucursal'] = this.idVehiculoSucursal;
     data['entrada_dolares'] = this.entradaDolares;
     data['entrada_guaranies'] = this.entradaGuaranies;
+    data['contado_dolares'] = this.contadoDolares;
+    data['contado_guaranies'] = this.contadoGuaranies;
+    data['fecha_venta'] = this.fechaVenta;
     if (this.refuerzos != null) {
       data['refuerzos'] = this.refuerzos!.map((v) => v.toJson()).toList();
     }
@@ -62,8 +74,8 @@ class SellVehicleModel {
 }
 
 class Refuerzos {
-  int? refuerzoDolares;
-  int? refuerzoGuaranies;
+  dynamic? refuerzoDolares;
+  dynamic? refuerzoGuaranies;
   String? fechaRefuerzo;
 
   Refuerzos({this.refuerzoDolares, this.refuerzoGuaranies, this.fechaRefuerzo});
@@ -84,8 +96,8 @@ class Refuerzos {
 }
 
 class Cuotas {
-  int? cuotaDolares;
-  int? cuotaGuaranies;
+  dynamic? cuotaDolares;
+  dynamic? cuotaGuaranies;
   String? fechaCuota;
 
   Cuotas({this.cuotaDolares, this.cuotaGuaranies, this.fechaCuota});

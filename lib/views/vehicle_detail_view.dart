@@ -50,7 +50,6 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                           ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            // ignore: invalid_use_of_protected_member
                             itemCount: controller.vehicles.value.length,
                             itemBuilder: (BuildContext context, int index) {
                               Cuota cuota = Cuota.fromJson(
@@ -66,7 +65,7 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                               }
                             },
                           ),
-                          CustomButton('Vender vehiculo', () {
+                          CustomButton('VENDER VEHICULO', () {
                             controller.seletVehicleToSel();
                             Get.toNamed(RouterManager.SEL_VEHICLE);
                           }, ColorPalette.GREEN)

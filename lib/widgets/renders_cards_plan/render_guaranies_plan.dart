@@ -10,21 +10,18 @@ List<Widget> guaraniesRender(Cuota cuota) {
     CustomTitle('Plan guaranies'),
     planText(
       'Entrada',
-      'G\$ ' +
           MoneyFormat().formatCommaToDot(
             cuota.entradaGuaranies,
           ),
     ),
     planText(
       'Cuota',
-      'G\$ ' +
           MoneyFormat().formatCommaToDot(
             cuota.cuotaGuaranies,
           ),
     ),
     planText(
       'Refuerzo',
-      'G\$ ' +
           MoneyFormat().formatCommaToDot(
             cuota.refuerzoGuaranies,
           ),

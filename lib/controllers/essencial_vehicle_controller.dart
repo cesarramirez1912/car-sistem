@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:car_system/common/remove_money_format.dart';
 import 'package:car_system/controllers/user_controller.dart';
 import 'package:car_system/models/create_vehicle.dart';
 import 'package:car_system/models/cuotes.dart';
@@ -138,32 +139,10 @@ class EssencialVehicleController extends GetxController {
             .replaceAll('-', '')
             .replaceAll(' ', '');
 
-        createVehicle.value.costoGuaranies = createVehicle.value.costoGuaranies
-            .toString()
-            .replaceAll('G\$', '')
-            .replaceAll('.', '')
-            .replaceAll(' ', '');
-
-        createVehicle.value.costoDolares = createVehicle.value.costoDolares
-            .toString()
-            .replaceAll('U\$', '')
-            .replaceAll('.', '')
-            .replaceAll(',', '.')
-            .replaceAll(' ', '');
-
-        createVehicle.value.contadoGuaranies = createVehicle
-            .value.contadoGuaranies
-            .toString()
-            .replaceAll('G\$', '')
-            .replaceAll('.', '')
-            .replaceAll(' ', '');
-
-        createVehicle.value.contadoDolares = createVehicle.value.contadoDolares
-            .toString()
-            .replaceAll('U\$', '')
-            .replaceAll('.', '')
-            .replaceAll(',', '.')
-            .replaceAll(' ', '');
+        createVehicle.value.costoGuaranies = RemoveMoneyFormat().format(createVehicle.value.costoGuaranies);
+        createVehicle.value.costoDolares = RemoveMoneyFormat().format(createVehicle.value.costoDolares);
+        createVehicle.value.contadoGuaranies = RemoveMoneyFormat().format(createVehicle.value.contadoGuaranies);
+        createVehicle.value.contadoDolares = RemoveMoneyFormat().format(createVehicle.value.contadoDolares);
 
         if (createVehicle.value.chapa == '') {
           createVehicle.value.chapa = null;
@@ -187,7 +166,6 @@ class EssencialVehicleController extends GetxController {
         createVehicle.value.cuotas = listCuota;
 
         var vehicleResponse = await essencialVehicleRepository?.createVehicle(createVehicle.toJson());
-        print(vehicleResponse);
         CustomSnackBarSuccess(
             ' ${createVehicle.value.modelo} REGISTRADO CON EXITO!');
         formKey.currentState?.reset();
@@ -203,43 +181,15 @@ class EssencialVehicleController extends GetxController {
 
   void registerCuota() async {
     if (formKeyDialog.currentState == null) {
-      print("formKeyDialog.currentState is null!");
     } else if (formKeyDialog.currentState!.validate()) {
       formKeyDialog.currentState!.save();
 
-      cuota.value.entradaGuaranies = cuota.value.entradaGuaranies
-          .toString()
-          .replaceAll('G\$', '')
-          .replaceAll('.', '')
-          .replaceAll(' ', '');
-      cuota.value.cuotaGuaranies = cuota.value.cuotaGuaranies
-          .toString()
-          .replaceAll('G\$', '')
-          .replaceAll('.', '')
-          .replaceAll(' ', '');
-      cuota.value.refuerzoGuaranies = cuota.value.refuerzoGuaranies
-          .toString()
-          .replaceAll('G\$', '')
-          .replaceAll('.', '')
-          .replaceAll(' ', '');
-      cuota.value.entradaDolares = cuota.value.entradaDolares
-          .toString()
-          .replaceAll('U\$', '')
-          .replaceAll('.', '')
-          .replaceAll(',', '.')
-          .replaceAll(' ', '');
-      cuota.value.cuotaDolares = cuota.value.cuotaDolares
-          .toString()
-          .replaceAll('U\$', '')
-          .replaceAll('.', '')
-          .replaceAll(',', '.')
-          .replaceAll(' ', '');
-      cuota.value.refuerzoDolares = cuota.value.refuerzoDolares
-          .toString()
-          .replaceAll('U\$', '')
-          .replaceAll('.', '')
-          .replaceAll(',', '.')
-          .replaceAll(' ', '');
+      cuota.value.entradaGuaranies = RemoveMoneyFormat().format(cuota.value.entradaGuaranies);
+      cuota.value.cuotaGuaranies = RemoveMoneyFormat().format(cuota.value.cuotaGuaranies);
+      cuota.value.refuerzoGuaranies = RemoveMoneyFormat().format(cuota.value.refuerzoGuaranies);
+      cuota.value.entradaDolares = RemoveMoneyFormat().format(cuota.value.entradaDolares);
+      cuota.value.cuotaDolares = RemoveMoneyFormat().format(cuota.value.cuotaDolares);
+      cuota.value.refuerzoDolares = RemoveMoneyFormat().format(cuota.value.refuerzoDolares);
 
       if (double.parse(cuota.value.entradaDolares) == 0.0) {
         cuota.value.entradaDolares = null;
