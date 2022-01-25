@@ -269,7 +269,7 @@ class VehicleDetailController extends GetxController {
     }
   }
 
-  void registerSale() async {
+  Future<void> registerSale() async {
     if (formKey.currentState == null) {
     } else if (formKey.currentState!.validate()) {
       isLoading.value = true;
@@ -285,9 +285,8 @@ class VehicleDetailController extends GetxController {
         }
 
         if (typeSellSelected != 'CONTADO') {
-
-          sellVehicleModel.value.entradaDolares = RemoveMoneyFormat()
-              .format(cuota.value.entradaDolares);
+          sellVehicleModel.value.entradaDolares =
+              RemoveMoneyFormat().format(cuota.value.entradaDolares);
           sellVehicleModel.value.entradaGuaranies =
               RemoveMoneyFormat().format(cuota.value.entradaGuaranies);
 
@@ -315,7 +314,8 @@ class VehicleDetailController extends GetxController {
           sellVehicleModel.value.contadoDolares =
               RemoveMoneyFormat().format(sellVehicleModel.value.contadoDolares);
         }
-        var responseSellVehicle = await sellVehicleRepository.sellVehicle(sellVehicleModel.toJson());
+        var responseSellVehicle =
+            await sellVehicleRepository.sellVehicle(sellVehicleModel.toJson());
         CustomSnackBarSuccess('VENTA REGISTRADA CON EXITO!');
         Get.back();
         formKey.currentState!.reset();

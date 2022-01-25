@@ -44,8 +44,13 @@ class ListVehicleController extends GetxController {
           }
         }
       }
-      vehicles.value = resFil;
-      vehiclesAux.value = resFil;
+      print(vehicles.length);
+      vehicles.clear();
+      vehiclesAux.clear();
+      print(vehicles.length);
+      vehicles.addAll(resFil);
+      print(resFil.length);
+      vehiclesAux.addAll(resFil);
     } catch (e) {
       print("error");
       print(e);

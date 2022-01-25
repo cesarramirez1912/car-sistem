@@ -1,6 +1,7 @@
 import 'package:car_system/common/date_format.dart';
 import 'package:car_system/common/remove_money_format.dart';
 import 'package:car_system/controllers/client_controller.dart';
+import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/controllers/user_controller.dart';
 import 'package:car_system/controllers/vehicle_detail_controller.dart';
 import 'package:car_system/models/cuotes.dart';
@@ -23,6 +24,7 @@ import '../../colors.dart';
 class SellVehicleView extends GetView<VehicleDetailController> {
   ClientController clientController = Get.find();
   UserController userController = Get.find();
+  ListVehicleController listVehicleController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -169,8 +171,10 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: listRender(context),
                         ),
-                        CustomButton('FINALIZAR VENTA', controller.registerSale,
-                            ColorPalette.GREEN)
+                        CustomButton('FINALIZAR VENTA', () async {
+                         await controller.registerSale();
+                          await listVehicleController.fetchVehicles();
+                        }, ColorPalette.GREEN)
                       ],
                     ),
                   ),
@@ -302,7 +306,8 @@ class SellVehicleView extends GetView<VehicleDetailController> {
             Expanded(
               child: textInputContainer(
                 'Primera cuota en:',
-                DateFormatBr().formatBr(controller.firstDateCuoteSelected.value),
+                DateFormatBr()
+                    .formatBr(controller.firstDateCuoteSelected.value),
                 onTap: () => controller.firstDateCuote(context),
               ),
             ),

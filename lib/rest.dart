@@ -1,5 +1,5 @@
 class Rest {
-  static const String BASE_URL_TEST = "http://192.168.0.4:3000";
+  static const String BASE_URL_TEST = "http://172.20.10.5:3000";
 
   //static const String BASE_URL_TEST = "http://192.168.88.112:3000";
   static const String BASE_URL_PRODUCTION =
