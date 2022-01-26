@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:car_system/controllers/user_controller.dart';
+import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/models/register_client_model.dart';
 import 'package:car_system/models/user_model.dart';
 import 'package:car_system/repositories/register_client_repository.dart';
@@ -12,7 +11,6 @@ import 'package:get/get.dart';
 
 class ClientController extends GetxController {
   User? user = User();
-  UserController userController = UserController();
   final formKey = GlobalKey<FormState>();
   Rx<bool> isLoading = false.obs;
   ClientRepository? clientRepository;
@@ -29,9 +27,10 @@ class ClientController extends GetxController {
 
   @override
   void onInit() async {
-    userController = Get.find<UserController>();
+    UserStorageController userStorageController =
+        Get.find<UserStorageController>();
     clientRepository = ClientRepository();
-    user = userController.user;
+    user = userStorageController.restoreModel();
     await requestClients();
     super.onInit();
   }

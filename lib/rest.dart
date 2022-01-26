@@ -1,7 +1,7 @@
 class Rest {
-  static const String BASE_URL_TEST = "http://172.20.10.5:3000";
+  //static const String BASE_URL_TEST = "http://172.20.10.5:3150";
 
-  //static const String BASE_URL_TEST = "http://192.168.88.112:3000";
+  static const String BASE_URL_TEST = "http://192.168.88.112:3150";
   static const String BASE_URL_PRODUCTION =
       "https://matrisoja-crm.herokuapp.com";
 
@@ -16,6 +16,7 @@ class Rest {
 
   // api routes
   static String LOGIN = BASE_URL + "/login";
+  static String USER_INFORMATION = BASE_URL + "/user=";
   static String CLIENTS = BASE_URL + "/clients";
   static String CLIENTS_FROM_COMPANY = CLIENTS + "/company=";
   static String MOTORS = BASE_URL + "/motors";

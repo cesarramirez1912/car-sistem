@@ -1,5 +1,6 @@
 import 'package:car_system/colors.dart';
 import 'package:car_system/controllers/essencial_vehicle_controller.dart';
+import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/input.dart';
@@ -11,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RegisterVehicleView extends GetView<EssencialVehicleController> {
-  const RegisterVehicleView({Key? key}) : super(key: key);
+  ListVehicleController listVehicleController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -212,8 +213,10 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        CustomButton('REGISTRAR', controller.registerVehicle,
-                            ColorPalette.GREEN,
+                        CustomButton('REGISTRAR', () async {
+                          await controller.registerVehicle();
+                          await listVehicleController.fetchVehicles();
+                        }, ColorPalette.GREEN,
                             isLoading: controller.isLoading.value),
                         const SizedBox(
                           width: 10,
@@ -293,7 +296,6 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     CustomInput(
                       '',
                       'Entrada',
-
                       iconData: Icons.price_change_outlined,
                       textEditingController: controller.textEntradaGuaranies,
                       onSaved: (text) =>
@@ -333,7 +335,6 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                         onSaved: (text) =>
                             controller.cuota.value.refuerzoDolares = text,
                         textEditingController: controller.textRefuezoDolares),
-
                   ],
                 )),
           ),

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:car_system/common/remove_money_format.dart';
-import 'package:car_system/controllers/user_controller.dart';
+import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/models/create_vehicle.dart';
 import 'package:car_system/models/cuotes.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
@@ -10,10 +10,8 @@ import 'package:car_system/models/essencial_vehicle_models/fuel.dart';
 import 'package:car_system/models/essencial_vehicle_models/gear.dart';
 import 'package:car_system/models/essencial_vehicle_models/model.dart';
 import 'package:car_system/models/essencial_vehicle_models/motor.dart';
-import 'package:car_system/models/register_client_model.dart';
 import 'package:car_system/models/user_model.dart';
 import 'package:car_system/repositories/essencial_vehicle_repository.dart';
-import 'package:car_system/repositories/register_client_repository.dart';
 import 'package:car_system/rest.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
@@ -23,7 +21,6 @@ import 'package:get/get.dart';
 
 class EssencialVehicleController extends GetxController {
   User? user = User();
-  UserController userController = UserController();
   final formKey = GlobalKey<FormState>();
   final formKeyDialog = GlobalKey<FormState>();
   Rx<bool> isLoading = false.obs;
@@ -86,9 +83,10 @@ class EssencialVehicleController extends GetxController {
 
   @override
   void onInit() async {
-    userController = Get.find<UserController>();
+    UserStorageController userStorageController =
+        Get.find<UserStorageController>();
     essencialVehicleRepository = EssencialVehicleRepository();
-    user = userController.user;
+    user = userStorageController.user!.value;
     await fetchEssencialsDatas();
     super.onInit();
   }
@@ -124,7 +122,7 @@ class EssencialVehicleController extends GetxController {
     }
   }
 
-  void registerVehicle() async {
+  Future<void> registerVehicle() async {
     if (formKey.currentState == null) {
       print("_formKey.currentState is null!");
     } else if (formKey.currentState!.validate()) {
@@ -139,10 +137,14 @@ class EssencialVehicleController extends GetxController {
             .replaceAll('-', '')
             .replaceAll(' ', '');
 
-        createVehicle.value.costoGuaranies = RemoveMoneyFormat().format(createVehicle.value.costoGuaranies);
-        createVehicle.value.costoDolares = RemoveMoneyFormat().format(createVehicle.value.costoDolares);
-        createVehicle.value.contadoGuaranies = RemoveMoneyFormat().format(createVehicle.value.contadoGuaranies);
-        createVehicle.value.contadoDolares = RemoveMoneyFormat().format(createVehicle.value.contadoDolares);
+        createVehicle.value.costoGuaranies =
+            RemoveMoneyFormat().format(createVehicle.value.costoGuaranies);
+        createVehicle.value.costoDolares =
+            RemoveMoneyFormat().format(createVehicle.value.costoDolares);
+        createVehicle.value.contadoGuaranies =
+            RemoveMoneyFormat().format(createVehicle.value.contadoGuaranies);
+        createVehicle.value.contadoDolares =
+            RemoveMoneyFormat().format(createVehicle.value.contadoDolares);
 
         if (createVehicle.value.chapa == '') {
           createVehicle.value.chapa = null;
@@ -165,7 +167,9 @@ class EssencialVehicleController extends GetxController {
         }
         createVehicle.value.cuotas = listCuota;
 
-        var vehicleResponse = await essencialVehicleRepository?.createVehicle(createVehicle.toJson());
+        var vehicleResponse = await essencialVehicleRepository
+            ?.createVehicle(createVehicle.toJson());
+        Get.back();
         CustomSnackBarSuccess(
             ' ${createVehicle.value.modelo} REGISTRADO CON EXITO!');
         formKey.currentState?.reset();
@@ -184,12 +188,18 @@ class EssencialVehicleController extends GetxController {
     } else if (formKeyDialog.currentState!.validate()) {
       formKeyDialog.currentState!.save();
 
-      cuota.value.entradaGuaranies = RemoveMoneyFormat().format(cuota.value.entradaGuaranies);
-      cuota.value.cuotaGuaranies = RemoveMoneyFormat().format(cuota.value.cuotaGuaranies);
-      cuota.value.refuerzoGuaranies = RemoveMoneyFormat().format(cuota.value.refuerzoGuaranies);
-      cuota.value.entradaDolares = RemoveMoneyFormat().format(cuota.value.entradaDolares);
-      cuota.value.cuotaDolares = RemoveMoneyFormat().format(cuota.value.cuotaDolares);
-      cuota.value.refuerzoDolares = RemoveMoneyFormat().format(cuota.value.refuerzoDolares);
+      cuota.value.entradaGuaranies =
+          RemoveMoneyFormat().format(cuota.value.entradaGuaranies);
+      cuota.value.cuotaGuaranies =
+          RemoveMoneyFormat().format(cuota.value.cuotaGuaranies);
+      cuota.value.refuerzoGuaranies =
+          RemoveMoneyFormat().format(cuota.value.refuerzoGuaranies);
+      cuota.value.entradaDolares =
+          RemoveMoneyFormat().format(cuota.value.entradaDolares);
+      cuota.value.cuotaDolares =
+          RemoveMoneyFormat().format(cuota.value.cuotaDolares);
+      cuota.value.refuerzoDolares =
+          RemoveMoneyFormat().format(cuota.value.refuerzoDolares);
 
       if (double.parse(cuota.value.entradaDolares) == 0.0) {
         cuota.value.entradaDolares = null;

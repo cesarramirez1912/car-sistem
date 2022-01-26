@@ -2,21 +2,23 @@ import 'package:car_system/colors.dart';
 import 'package:car_system/controllers/client_controller.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
-import 'package:car_system/controllers/user_controller.dart';
+import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/vehicle_details.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ListVehiclesView extends GetView<ListVehicleController> {
-  UserController userController = Get.put(UserController());
+  UserStorageController userStorageController = Get.find();
   ClientController clientController = Get.put(ClientController());
   SellsFromCollaboratorController sellsFromCollaboratorController =
       Get.put(SellsFromCollaboratorController());
 
   @override
   Widget build(context) {
-    sellsFromCollaboratorController.setUser(userController.user);
+    sellsFromCollaboratorController.setUser(userStorageController.user?.value);
+    controller.setUser(userStorageController.user!.value);
+    controller.fetchVehicles();
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
@@ -68,8 +70,8 @@ class ListVehiclesView extends GetView<ListVehicleController> {
         ),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             DrawerHeader(
               decoration: const BoxDecoration(
@@ -89,6 +91,19 @@ class ListVehiclesView extends GetView<ListVehicleController> {
                     controller.user?.colaborador ?? '-',
                     style: const TextStyle(color: Colors.white),
                   ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        userStorageController.packageInfo.value.version +
+                            "." +
+                            userStorageController.user!.value.dias.toString(),
+                        style: const TextStyle(
+                            color: Color.fromRGBO(141, 11, 11, 1.0),
+                            fontSize: 10),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -104,7 +119,27 @@ class ListVehiclesView extends GetView<ListVehicleController> {
               title: const Text('Registrar vehiculo'),
               onTap: () => Get.toNamed(RouterManager.REGISTER),
             ),
-
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ListTile(
+                    trailing: const Icon(Icons.exit_to_app),
+                    title: const Text(
+                      'Cerrar sesión',
+                      style:
+                          TextStyle(color: Color.fromRGBO(121, 121, 121, 1.0)),
+                    ),
+                    onTap: () {
+                      userStorageController.deleteStore();
+                      Get.offAndToNamed(RouterManager.LOGIN);
+                    },
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

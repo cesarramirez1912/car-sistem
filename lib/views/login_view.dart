@@ -1,11 +1,14 @@
 import 'package:car_system/colors.dart';
 import 'package:car_system/controllers/login_controller.dart';
+import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/input_login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginView extends GetView<LoginController> {
+  UserStorageController userStorageController = Get.find();
+
   @override
   Widget build(context) => Scaffold(
         body: Container(
@@ -50,7 +53,15 @@ class LoginView extends GetView<LoginController> {
                           'ENTRAR',
                           () async => await controller.fetchLogin(),
                           ColorPalette.PRIMARY,
-                          withShadow: false)
+                          withShadow: false),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  Text(
+                    userStorageController.packageInfo.value.version,
+                    style: const TextStyle(
+                        color: Colors.grey, fontSize: 9, letterSpacing: 2),
+                  ),
                 ],
               ),
             )),

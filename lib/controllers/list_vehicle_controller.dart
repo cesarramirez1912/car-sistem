@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:car_system/controllers/login_controller.dart';
-import 'package:car_system/controllers/user_controller.dart';
 import 'package:car_system/models/user_model.dart';
 import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/repositories/home_repository.dart';
@@ -9,8 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class ListVehicleController extends GetxController {
-  UserController userController = Get.put(UserController());
-  LoginController loginController = LoginController();
   HomeRepository _homeRepository = HomeRepository();
   RxList<Vehicle> vehiclesComplete = <Vehicle>[].obs;
   RxList<Vehicle> vehicles = <Vehicle>[].obs;
@@ -21,11 +18,12 @@ class ListVehicleController extends GetxController {
 
   @override
   void onInit() async {
-    loginController = Get.find<LoginController>();
     _homeRepository = HomeRepository();
-    user = loginController.user?.value;
-    await fetchVehicles();
     super.onInit();
+  }
+
+  setUser(User _user) {
+    user = _user;
   }
 
   Future<void> fetchVehicles() async {
@@ -44,12 +42,9 @@ class ListVehicleController extends GetxController {
           }
         }
       }
-      print(vehicles.length);
       vehicles.clear();
       vehiclesAux.clear();
-      print(vehicles.length);
       vehicles.addAll(resFil);
-      print(resFil.length);
       vehiclesAux.addAll(resFil);
     } catch (e) {
       print("error");

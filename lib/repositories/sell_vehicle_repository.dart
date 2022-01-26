@@ -1,6 +1,5 @@
 import 'package:car_system/models/cuote_detail_model.dart';
 import 'package:car_system/models/refuerzo_detail_model.dart';
-import 'package:car_system/models/register_client_model.dart';
 import 'package:car_system/models/sale_collaborator_model.dart';
 import 'package:car_system/rest.dart';
 import 'package:get/get.dart';

@@ -2,7 +2,8 @@ import 'package:car_system/common/date_format.dart';
 import 'package:car_system/common/remove_money_format.dart';
 import 'package:car_system/controllers/client_controller.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
-import 'package:car_system/controllers/user_controller.dart';
+import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
+import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/controllers/vehicle_detail_controller.dart';
 import 'package:car_system/models/cuotes.dart';
 import 'package:car_system/models/register_client_model.dart';
@@ -11,6 +12,7 @@ import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/input.dart';
 import 'package:car_system/widgets/plan.dart';
 import 'package:car_system/widgets/search_dropdown.dart';
+import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
 import 'package:car_system/widgets/spacing.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:car_system/widgets/vehicle_detail_card.dart';
@@ -23,17 +25,18 @@ import '../../colors.dart';
 
 class SellVehicleView extends GetView<VehicleDetailController> {
   ClientController clientController = Get.find();
-  UserController userController = Get.find();
+  UserStorageController userStorageController = Get.find();
   ListVehicleController listVehicleController = Get.find();
+  SellsFromCollaboratorController sellsFromCollaboratorController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     controller.sellVehicleModel.value.idEmpresa =
-        userController.user?.idEmpresa;
+        userStorageController.user!.value.idEmpresa;
     controller.sellVehicleModel.value.idSucursal =
-        userController.user?.idSucursal;
+        userStorageController.user!.value.idSucursal;
     controller.sellVehicleModel.value.idColaborador =
-        userController.user?.idColaborador;
+        userStorageController.user!.value.idColaborador;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vender vehiculo'),
@@ -172,8 +175,9 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                           children: listRender(context),
                         ),
                         CustomButton('FINALIZAR VENTA', () async {
-                         await controller.registerSale();
+                          await controller.registerSale();
                           await listVehicleController.fetchVehicles();
+                          await sellsFromCollaboratorController.requestSales();
                         }, ColorPalette.GREEN)
                       ],
                     ),

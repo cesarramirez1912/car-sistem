@@ -9,7 +9,7 @@ class ClientRepository extends GetConnect {
     if (response.status.hasError) {
       if (response.body['message'] != '') {
         return Future.error(
-            'Ocurrió un error al registrar cliente, intente de nuevo.');
+            'Ocurrió un error al traer los clientes, intente de nuevo.');
       } else {
         return Future.error(response.body['message']);
       }
