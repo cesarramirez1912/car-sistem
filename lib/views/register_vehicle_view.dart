@@ -235,6 +235,38 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
     );
   }
 
+  Future<void> openAndCloseLoadingDialog() async {
+    Get.dialog(
+      Center(
+        child: Card(
+          margin: EdgeInsets.symmetric(horizontal: Get.width * 0.15),
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Padding(
+                  padding:
+                      EdgeInsets.only(top: 15, bottom: 30, left: 8, right: 8),
+                  child: CircularProgressIndicator(),
+                ),
+                Flexible(
+                  child: Text(
+                    controller.textRequestEssencial.value,
+                    style: TextStyle(fontSize: 16),
+                    overflow: TextOverflow.clip,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
   Widget dialogPlan() {
     return SingleChildScrollView(
       child: Container(

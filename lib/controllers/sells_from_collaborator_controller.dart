@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/models/cuote_detail_model.dart';
 import 'package:car_system/models/refuerzo_detail_model.dart';
 import 'package:car_system/models/sale_collaborator_model.dart';
@@ -10,7 +11,9 @@ import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
 import 'package:get/get.dart';
 
 class SellsFromCollaboratorController extends GetxController {
+  UserStorageController userStorageController = Get.find();
   SellVehicleRepository sellVehicleRepository = SellVehicleRepository();
+
   RxList<SaleCollaboratorModel> sales = <SaleCollaboratorModel>[].obs;
   RxList<SaleCollaboratorModel> salesGeral = <SaleCollaboratorModel>[].obs;
   User? user = User();
@@ -33,6 +36,13 @@ class SellsFromCollaboratorController extends GetxController {
   Rx<String> textStringCuotaOrefuerzo = 'CUOTA'.obs;
 
   RxBool isGuaranies = true.obs;
+
+  @override
+  void onInit() async {
+    user = userStorageController.user?.value;
+    await requestSales();
+    super.onInit();
+  }
 
   Future<void> requestSales() async {
     List<SaleCollaboratorModel> _sales =
@@ -79,11 +89,6 @@ class SellsFromCollaboratorController extends GetxController {
       CustomSnackBarError(e.toString());
       isLoadingRequest.value = false;
     }
-  }
-
-  void setUser(User? _user) {
-    user = _user;
-    requestSales();
   }
 
   void filterList() {

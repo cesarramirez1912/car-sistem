@@ -1,12 +1,12 @@
 class Rest {
-  //static const String BASE_URL_TEST = "http://172.20.10.5:3150";
+  //static const String BASE_URL_TEST = "http://172.20.10.5:5480";
 
-  static const String BASE_URL_TEST = "http://192.168.88.112:3150";
+  static const String BASE_URL_TEST = "http://192.168.88.112:5480";
   static const String BASE_URL_PRODUCTION =
-      "https://matrisoja-crm.herokuapp.com";
+      "https://carsystembackend.herokuapp.com";
 
   static String get BASE_URL {
-    return BASE_URL_TEST;
+    return BASE_URL_PRODUCTION;
     /*  if(kReleaseMode){
       return RestRoutes.BASE_URL_PRODUCTION;
     } else {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:car_system/common/remove_money_format.dart';
 import 'package:car_system/controllers/user_storage_controller.dart';
@@ -25,6 +26,8 @@ class EssencialVehicleController extends GetxController {
   final formKeyDialog = GlobalKey<FormState>();
   Rx<bool> isLoading = false.obs;
   EssencialVehicleRepository? essencialVehicleRepository;
+
+  RxString textRequestEssencial = ''.obs;
 
   Rx<CreateVehicle> createVehicle = CreateVehicle().obs;
   RxList<Cuota> listCuota = <Cuota>[].obs;
@@ -81,42 +84,90 @@ class EssencialVehicleController extends GetxController {
   MoneyMaskedTextController textRefuezoDolares =
       MoneyMaskedTextController(leftSymbol: 'U\$ ');
 
+  Future<void> openAndCloseLoadingDialog() async {
+    Get.dialog(
+      Center(
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 60,vertical: 5),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Padding(
+                  padding:
+                      EdgeInsets.only(top: 15, bottom: 30, left: 8, right: 8),
+                  child: CircularProgressIndicator(),
+                ),
+                Flexible(
+                  child: Obx(
+                    () => Text(
+                      textRequestEssencial.value,
+                      style: const TextStyle(fontSize: 16),
+                      overflow: TextOverflow.clip,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+    await fetchEssencialsDatas();
+    Get.back();
+  }
+
   @override
   void onInit() async {
     UserStorageController userStorageController =
         Get.find<UserStorageController>();
     essencialVehicleRepository = EssencialVehicleRepository();
     user = userStorageController.user!.value;
-    await fetchEssencialsDatas();
     super.onInit();
+  }
+
+  @override
+  void onReady() async {
+    // TODO: implement onReady
+    await openAndCloseLoadingDialog();
+    super.onReady();
   }
 
   Future<void> fetchEssencialsDatas() async {
     try {
+      textRequestEssencial.value = 'MARCAS';
       List resListBrand = await essencialVehicleRepository
           ?.fetchVehicleInformation(listBrand, Rest.BRANDS, Brand.fromJson);
       listBrand.value = resListBrand[0];
       listStringBrand.value = resListBrand[1];
+      textRequestEssencial.value = 'MODELOS';
       List resListModel = await essencialVehicleRepository
           ?.fetchVehicleInformation(listModel, Rest.MODELS, Model.fromJson);
       listModel.value = resListModel[0];
       listStringModel.value = resListModel[1];
+      textRequestEssencial.value = 'TIPOS DE COMBUSTIBLES';
       List resListFuel = await essencialVehicleRepository
           ?.fetchVehicleInformation(listFuel, Rest.FUELS, Fuel.fromJson);
       listFuel.value = resListFuel[0];
       listStringFuel.value = resListFuel[1];
+      textRequestEssencial.value = 'COLORES';
       List resListColor = await essencialVehicleRepository
           ?.fetchVehicleInformation(listColor, Rest.COLORS, Color.fromJson);
       listColor.value = resListColor[0];
       listStringColor.value = resListColor[1];
+      textRequestEssencial.value = 'TIPOS DE MOTORES';
       List resListMotor = await essencialVehicleRepository
           ?.fetchVehicleInformation(listMotor, Rest.MOTORS, Motor.fromJson);
       listMotor.value = resListMotor[0];
       listStringMotor.value = resListMotor[1];
+      textRequestEssencial.value = 'TIPOS DE CAMBIO';
       List resListCambio = await essencialVehicleRepository
           ?.fetchVehicleInformation(listGear, Rest.GEARS, Gear.fromJson);
       listGear.value = resListCambio[0];
       listStringCambio.value = resListCambio[1];
+      textRequestEssencial.value = '';
     } catch (e) {
       CustomSnackBarError(e.toString());
     }

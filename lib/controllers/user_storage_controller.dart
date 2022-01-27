@@ -8,8 +8,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class UserStorageController extends GetxController {
-
-
   UserStorageRepository userStorageRepository = UserStorageRepository();
   Rx<PackageInfo> packageInfo = PackageInfo(
     appName: 'Unknown',

@@ -42,9 +42,17 @@ class EssencialVehicleRepository extends GetConnect {
     }
   }
 
+  Future<dynamic> postInformations(String url) async {
+    final response = await post(url, {});
+    if (response.status.hasError) {
+      return response.body['message'];
+    } else {
+      return 'ok';
+    }
+  }
+
   Future<dynamic> createVehicle(Map<String, dynamic> _body) async {
     final response = await post(Rest.VEHICLES, _body);
-    //response = {id_vehiculo_sucursal: 4, arrayIds: [{id_cuota: 12}]}
     if (response.status.hasError) {
       return Future.error(response.body['message']);
     } else {

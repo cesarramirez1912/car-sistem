@@ -12,8 +12,10 @@ class LoginController extends GetxController {
   Rx<User>? user = User().obs;
   LoginRepository _loginRepository = LoginRepository();
 
-  TextEditingController phone = TextEditingController(text: '0973412178');
-  TextEditingController password = TextEditingController(text: '12345');
+  TextEditingController phone = TextEditingController(text: '');
+  TextEditingController password = TextEditingController(text: '');
+
+  RxBool seePassword = true.obs;
 
   @override
   void onInit() {
@@ -30,7 +32,8 @@ class LoginController extends GetxController {
       user?.value = res.first;
       userStorageController.storePriceModel(user!.value);
       isFetching.value = false;
-      if (res.first.dias < Static.DAYS_PERMIT_APP_USE || res.first.activo == 0) {
+      if (res.first.dias < Static.DAYS_PERMIT_APP_USE ||
+          res.first.activo == 0) {
         CustomSnackBarError('Porfavor contactar al soporte.');
       } else {
         Get.offAndToNamed(RouterManager.HOME);

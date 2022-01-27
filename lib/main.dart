@@ -13,8 +13,10 @@ void main() async {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: userStorageController.user?.value.idColaborador == null ||
-              userStorageController.user?.value.dias < Static.DAYS_PERMIT_APP_USE || userStorageController.user?.value.activo == 0
+      initialRoute: userStorageController.restoreModel().idColaborador == null ||
+          userStorageController.restoreModel().dias <
+                  Static.DAYS_PERMIT_APP_USE ||
+          userStorageController.restoreModel().activo == 0
           ? RouterManager.LOGIN
           : RouterManager.HOME,
       theme: ThemeData(

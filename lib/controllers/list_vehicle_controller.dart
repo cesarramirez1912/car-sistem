@@ -1,6 +1,4 @@
-import 'dart:math';
-
-import 'package:car_system/controllers/login_controller.dart';
+import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/models/user_model.dart';
 import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/repositories/home_repository.dart';
@@ -8,22 +6,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class ListVehicleController extends GetxController {
+  UserStorageController userStorageController = Get.find();
   HomeRepository _homeRepository = HomeRepository();
   RxList<Vehicle> vehiclesComplete = <Vehicle>[].obs;
   RxList<Vehicle> vehicles = <Vehicle>[].obs;
   RxList<Vehicle> vehiclesAux = <Vehicle>[].obs;
   User? user = User();
 
+  RxBool isLoading = false.obs;
+
   TextEditingController searchTextController = TextEditingController(text: '');
 
   @override
   void onInit() async {
+    user = userStorageController.user?.value;
     _homeRepository = HomeRepository();
+    isLoading.value = true;
+    await fetchVehicles();
+    isLoading.value = false;
     super.onInit();
-  }
-
-  setUser(User _user) {
-    user = _user;
   }
 
   Future<void> fetchVehicles() async {

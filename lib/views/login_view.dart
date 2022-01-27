@@ -41,7 +41,19 @@ class LoginView extends GetView<LoginController> {
                     height: 6,
                   ),
                   CustomInputLogin(
+                    obscureText: controller.seePassword.value,
                       labelText: 'Contraseña',
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            if (controller.seePassword.value) {
+                              controller.seePassword.value = false;
+                            } else {
+                              controller.seePassword.value = true;
+                            }
+                          },
+                          icon: Icon(controller.seePassword.value
+                              ? Icons.visibility_off_outlined
+                              : Icons.remove_red_eye_outlined )),
                       prefixIcon: const Icon(Icons.lock_outline_rounded),
                       textEditingController: controller.password),
                   const SizedBox(
