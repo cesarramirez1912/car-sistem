@@ -31,9 +31,6 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
                       const Divider(
                         color: Colors.grey,
                       ),

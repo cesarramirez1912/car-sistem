@@ -196,6 +196,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
       case 'CONTADO':
         return [
           CustomInput('', 'PRECIO VENTA ${controller.typesMoneySelected.value}',
+              isNumber: true,
               iconData: Icons.price_change_outlined,
               onSaved: (text) => controller.typesMoneySelected == 'GUARANIES'
                   ? {
@@ -569,6 +570,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomInput(
             '',
             'Entrada',
+            isNumber: true,
             iconData: Icons.price_change_outlined,
             textEditingController: controller.textEntradaGuaranies,
             onSaved: (text) => controller.cuota.value.entradaGuaranies = text,
@@ -576,6 +578,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomInput(
             '',
             'Cuota',
+            isNumber: true,
             validator: (String text) {
               String newString = RemoveMoneyFormat().format(text);
               if (text.isEmpty) return 'Informar cuota mensual.';
@@ -594,6 +597,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomInput(
             '',
             'Refuerzo',
+            isNumber: true,
             validator: (String text) {
               String newString = RemoveMoneyFormat().format(text);
               if (controller.textCantidadRefuerzos.text.isNotEmpty) {
@@ -616,10 +620,12 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomTitle('Plan dólares'),
           CustomSpacing(),
           CustomInput('', 'Entrada',
+              isNumber: true,
               iconData: Icons.price_change_outlined,
               onSaved: (text) => controller.cuota.value.entradaDolares = text,
               textEditingController: controller.textEntradaDolares),
           CustomInput('', 'Cuota',
+              isNumber: true,
               validator: (String text) {
                 String newString = RemoveMoneyFormat().format(text);
                 if (text.isEmpty) return 'Informar cuota mensual.';
@@ -635,6 +641,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
               onSaved: (text) => controller.cuota.value.cuotaDolares = text,
               textEditingController: controller.textCuotaDolares),
           CustomInput('', 'Refuerzo',
+              isNumber: true,
               validator: (String text) {
                 String newString = RemoveMoneyFormat().format(text);
                 if (controller.textCantidadRefuerzos.text.isNotEmpty) {

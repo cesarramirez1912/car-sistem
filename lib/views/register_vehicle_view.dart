@@ -139,7 +139,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                             controller.createVehicle.value.ano = text,
                         isLoading: controller.isLoading.value,
                         validator: validatorTreeCaracteressAndNull,
-                        isPhone: true),
+                        isNumber: true),
                     CustomInput(
                       '',
                       'Numero de chapa',
@@ -155,7 +155,6 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                         }
                       },
                       iconData: Icons.directions_car_outlined,
-                      isNumber: true,
                       onSaved: (text) =>
                           controller.createVehicle.value.chapa = text,
                       isLoading: controller.isLoading.value,
@@ -209,14 +208,15 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                             controller.createVehicle.value.costoDolares = text,
                         isLoading: controller.isLoading.value,
                         isNumber: true),
-                    CustomTitle('Planes de financiacion'),
-                    CustomSpacing(),
+                    CustomTitle('PLANES DE FINANCIACIÓN'),
                     ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: controller.listCuota.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return CustomPlan(index, controller.listCuota[index]);
+                          return CustomPlan(index, controller.listCuota[index],
+                              onPressed: () =>
+                                  controller.listCuota.removeAt(index));
                         }),
                     CustomSpacing(),
                     Row(
@@ -313,7 +313,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                 Flexible(
                   child: Text(
                     controller.textRequestEssencial.value,
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                     overflow: TextOverflow.clip,
                     textAlign: TextAlign.center,
                   ),
@@ -388,6 +388,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     CustomInput(
                       '',
                       'Entrada',
+                      isNumber: true,
                       iconData: Icons.price_change_outlined,
                       textEditingController: controller.textEntradaGuaranies,
                       onSaved: (text) =>
@@ -396,6 +397,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     CustomInput(
                       '',
                       'Cuota',
+                      isNumber: true,
                       validator: validatorPriceSelGuaranies,
                       iconData: Icons.price_change_outlined,
                       textEditingController: controller.textCuotaGuaranies,
@@ -405,6 +407,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     CustomInput(
                       '',
                       'Refuerzo',
+                      isNumber: true,
                       iconData: Icons.price_change_outlined,
                       onSaved: (text) =>
                           controller.cuota.value.refuerzoGuaranies = text,
@@ -413,16 +416,19 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     CustomTitle('Plan dólares'),
                     CustomSpacing(),
                     CustomInput('', 'Entrada',
+                        isNumber: true,
                         iconData: Icons.price_change_outlined,
                         onSaved: (text) =>
                             controller.cuota.value.entradaDolares = text,
                         textEditingController: controller.textEntradaDolares),
                     CustomInput('', 'Cuota',
+                        isNumber: true,
                         iconData: Icons.price_change_outlined,
                         onSaved: (text) =>
                             controller.cuota.value.cuotaDolares = text,
                         textEditingController: controller.textCuotaDolares),
                     CustomInput('', 'Refuerzo',
+                        isNumber: true,
                         iconData: Icons.price_change_outlined,
                         onSaved: (text) =>
                             controller.cuota.value.refuerzoDolares = text,

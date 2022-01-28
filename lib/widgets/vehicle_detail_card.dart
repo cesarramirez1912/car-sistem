@@ -29,7 +29,7 @@ Column CustomVehicleDetailCard(Vehicle? _vehicle) {
         height: 6,
       ),
       SizedBox(
-        height: 100,
+        height: 110,
         child: GridView(
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

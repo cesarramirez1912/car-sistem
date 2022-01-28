@@ -236,7 +236,7 @@ class RegisterEssencialController extends GetxController {
       Map<String, dynamic> model = {};
       if (text.value == 'MODELOS') {
         model = {
-          "modelo": st,
+          "modelo": st.toUpperCase(),
           "id_marca": brandSelected.value.idMarca,
           "id_categoria": categorySelected.value.idCategoria
         };
