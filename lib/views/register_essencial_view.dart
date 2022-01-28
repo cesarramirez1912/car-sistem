@@ -279,7 +279,7 @@ class RegisterEssencialController extends GetxController {
                 ),
                 Flexible(
                   child: Text(
-                    'Registrando aguarde...',
+                    'Marcas y categorias...',
                     style: TextStyle(fontSize: 16),
                     overflow: TextOverflow.clip,
                     textAlign: TextAlign.center,

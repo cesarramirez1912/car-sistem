@@ -6,7 +6,7 @@ class Rest {
       "https://carsystembackend.herokuapp.com";
 
   static String get BASE_URL {
-    return BASE_URL_TEST;
+    return BASE_URL_PRODUCTION;
     /*  if(kReleaseMode){
       return RestRoutes.BASE_URL_PRODUCTION;
     } else {
