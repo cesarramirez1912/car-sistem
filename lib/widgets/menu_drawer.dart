@@ -25,7 +25,7 @@ Widget CustomMenuDrawer(ListVehicleController controller) {
 
   if (controller.user?.cargo == Roles.SUPER.name) {
     _defaultItems.add(ListTile(
-      title: const Text('Registro informaciones'),
+      title: const Text('Registrar informaciones'),
       onTap: () => Get.toNamed(RouterManager.REGISTER_ESSENCIAL),
     ));
   }

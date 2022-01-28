@@ -63,7 +63,7 @@ class EssencialVehicleController extends GetxController {
   MoneyMaskedTextController textDolaresCosto =
       MoneyMaskedTextController(leftSymbol: 'U\$ ');
   MoneyMaskedTextController textGuaraniesVenta = MoneyMaskedTextController(
-      leftSymbol: 'G\$ ', precision: 0, decimalSeparator: '');
+      leftSymbol: 'G\$ ',precision: 0,decimalSeparator: '');
   MoneyMaskedTextController textDolaresVenta =
       MoneyMaskedTextController(leftSymbol: 'U\$ ');
   MaskedTextController textNumeroChapa = MaskedTextController(mask: '********');

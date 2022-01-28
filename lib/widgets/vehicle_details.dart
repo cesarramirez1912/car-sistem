@@ -4,13 +4,13 @@ import 'package:car_system/widgets/title.dart';
 import 'package:car_system/widgets/vehicle_detail_card.dart';
 import 'package:flutter/material.dart';
 
-Widget VehicleDetails(Vehicle vehicle) {
+Widget VehicleDetails(Vehicle vehicle, {double heithImage = 180}) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
-        height: 180,
+        height: heithImage,
         color: const Color.fromRGBO(235, 235, 235, 1),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +37,8 @@ Widget VehicleDetails(Vehicle vehicle) {
                   fontWeight: FontWeight.w700),
             ),
             Text(
-              MoneyFormat().formatCommaToDot(vehicle.contadoDolares,isGuaranies: false),
+              MoneyFormat()
+                  .formatCommaToDot(vehicle.contadoDolares, isGuaranies: false),
               style: const TextStyle(
                   color: Color.fromRGBO(72, 72, 72, 1),
                   fontSize: 18,

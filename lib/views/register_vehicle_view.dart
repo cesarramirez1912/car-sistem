@@ -3,12 +3,11 @@ import 'package:car_system/controllers/essencial_vehicle_controller.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
 import 'package:car_system/models/essencial_vehicle_models/model.dart';
-import 'package:car_system/models/vehicle.dart';
+import 'package:car_system/responsive.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/input.dart';
 import 'package:car_system/widgets/plan.dart';
 import 'package:car_system/widgets/search_dropdown.dart';
-import 'package:car_system/widgets/search_dropdown_model.dart';
 import 'package:car_system/widgets/spacing.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -25,274 +24,325 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
         title: const Text('Registrar Vehiculo'),
       ),
       body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: SingleChildScrollView(
-            child: Form(
-              key: controller.formKey,
-              child: Obx(
-                () => Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomSpacing(),
-                    CustomTitle('Datos vehiculo'),
-                    CustomSpacing(),
-                    DropdownSearch<Brand>(
-                      label: 'Marca',
-                      showSearchBox: true,
-                      compareFn: (item, selectedItem) =>
-                          item?.idMarca == selectedItem?.idMarca,
-                      onChanged: (value) {
-                        controller.brandSelected.value = value!;
-                        controller.listModelAux.clear();
-                        controller.listModelAux.value = controller.listModel
-                            .where((el) => el.idMarca == value.idMarca)
-                            .toList();
-                        if (controller.listModelAux.isEmpty) {
-                          controller.modelSelected.value = Model();
-                        } else {
-                          controller.modelSelected.value =
-                              controller.listModelAux.first;
-                        }
-                      },
-                      showSelectedItems: true,
-                      selectedItem: controller.brandSelected.value,
-                      validator: (u) =>
-                          u?.idMarca == null ? "MARCA OBLIGATORIO" : null,
-                      itemAsString: (Brand? item) => item?.marca ?? '',
-                      showAsSuffixIcons: true,
-                      dropdownSearchDecoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.person_outline),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        border: OutlineInputBorder(),
-                      ),
-                      searchFieldProps: TextFieldProps(
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                            filled: true, label: Text('Buscar por marca')),
-                      ),
-                      mode: Mode.DIALOG,
-                      items: controller.listBrand,
-                    ),
-                    CustomSpacing(),
-                    DropdownSearch<Model>(
-                      label: 'Modelo',
-                      showSearchBox: true,
-                      compareFn: (item, selectedItem) =>
-                          item?.idModelo == selectedItem?.idModelo,
-                      onChanged: (value) {
-                        controller.modelSelected.value = value!;
-                      },
-                      onSaved: (item) => controller
-                          .createVehicle.value.idModelo = item?.idModelo,
-                      selectedItem: controller.modelSelected.value,
-                      showSelectedItems: true,
-                      validator: (u) =>
-                          u?.idModelo == null ? "MODELO OBLIGATORIO" : null,
-                      itemAsString: (Model? item) => item?.modelo ?? '',
-                      showAsSuffixIcons: true,
-                      dropdownSearchDecoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.person_outline),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        border: OutlineInputBorder(),
-                      ),
-                      searchFieldProps: TextFieldProps(
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                            filled: true, label: Text('Buscar por modelo')),
-                      ),
-                      mode: Mode.DIALOG,
-                      items: controller.listModelAux,
-                    ),
-                    CustomSpacing(),
-                    CustomDropDowSearch(
-                        controller.listStringFuel, 'Tipo combustible',
-                        onSaved: (text) =>
-                            controller.createVehicle.value.combustible = text),
-                    CustomSpacing(),
-                    CustomDropDowSearch(
-                      controller.listStringColor,
-                      'Color',
-                      onSaved: (text) =>
-                          controller.createVehicle.value.color = text,
-                    ),
-                    CustomSpacing(),
-                    CustomDropDowSearch(
-                      controller.listStringMotor,
-                      'Motor',
-                      onSaved: (text) =>
-                          controller.createVehicle.value.motor = text,
-                    ),
-                    CustomSpacing(),
-                    CustomDropDowSearch(
-                      controller.listStringCambio,
-                      'Tipo de cambio',
-                      onSaved: (text) =>
-                          controller.createVehicle.value.cambio = text,
-                    ),
-                    CustomSpacing(),
-                    CustomInput('', 'Año',
-                        iconData: Icons.directions_car_outlined,
-                        onSaved: (text) =>
-                            controller.createVehicle.value.ano = text,
-                        isLoading: controller.isLoading.value,
-                        validator: validatorTreeCaracteressAndNull,
-                        isNumber: true),
-                    CustomInput(
-                      '',
-                      'Numero de chapa',
-                      textEditingController: controller.textNumeroChapa,
-                      onChanged: (text) {
-                        if (text.length == 4) {
-                          bool found = text.contains(RegExp(r'[0-9]'));
-                          if (found) {
-                            controller.textNumeroChapa.updateMask('***-000');
-                          } else {
-                            controller.textNumeroChapa.updateMask('****-000');
-                          }
-                        }
-                      },
-                      iconData: Icons.directions_car_outlined,
-                      onSaved: (text) =>
-                          controller.createVehicle.value.chapa = text,
-                      isLoading: controller.isLoading.value,
-                    ),
-                    CustomInput(
-                      '',
-                      'Numero de chassis',
-                      iconData: Icons.directions_car_outlined,
-                      onSaved: (text) =>
-                          controller.createVehicle.value.chassis = text,
-                      isLoading: controller.isLoading.value,
-                    ),
-                    CustomTitle('Precios'),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          right: 10, left: 10, top: 10, bottom: 10),
-                      child: CustomTitle('Precio venta', fontSize: 15),
-                    ),
-                    CustomInput('', 'Precio para venta en guaraníes',
-                        textEditingController: controller.textGuaraniesVenta,
-                        iconData: Icons.price_change_outlined,
-                        onSaved: (text) => controller
-                            .createVehicle.value.contadoGuaranies = text,
-                        isLoading: controller.isLoading.value,
-                        validator: validatorPriceSelGuaranies,
-                        isNumber: true),
-                    CustomInput('', 'Precio para venta en dólares',
-                        iconData: Icons.price_change_outlined,
-                        textEditingController: controller.textDolaresVenta,
-                        onSaved: (text) => controller
-                            .createVehicle.value.contadoDolares = text,
-                        isLoading: controller.isLoading.value,
-                        isNumber: true),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          right: 10, left: 10, bottom: 10),
-                      child: CustomTitle('Precio costo', fontSize: 15),
-                    ),
-                    CustomInput('', 'Costo vehiculo en guaraníes',
-                        textEditingController: controller.textGuaraniesCosto,
-                        iconData: Icons.price_change_outlined,
-                        onSaved: (text) => controller
-                            .createVehicle.value.costoGuaranies = text,
-                        isLoading: controller.isLoading.value,
-                        validator: validatorTreeCaracteressAndNull,
-                        isNumber: true),
-                    CustomInput('', 'Costo vehiculo en dólares',
-                        iconData: Icons.price_change_outlined,
-                        textEditingController: controller.textDolaresCosto,
-                        onSaved: (text) =>
-                            controller.createVehicle.value.costoDolares = text,
-                        isLoading: controller.isLoading.value,
-                        isNumber: true),
-                    CustomTitle('PLANES DE FINANCIACIÓN'),
-                    ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: controller.listCuota.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return CustomPlan(index, controller.listCuota[index],
-                              onPressed: () =>
-                                  controller.listCuota.removeAt(index));
-                        }),
-                    CustomSpacing(),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomButton(
-                              'AGREGAR PLAN',
-                              () => Get.defaultDialog(
-                                      title: 'Nuevo plan',
-                                      content: dialogPlan(),
-                                      actions: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            CustomButton(
-                                                'REGISTRAR PLAN',
-                                                controller.registerCuota,
-                                                ColorPalette.SECUNDARY,
-                                                edgeInsets:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 4),
-                                                fontSize: 12,
-                                                isLoading:
-                                                    controller.isLoading.value),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            CustomButton(
-                                                'CANCELAR',
-                                                () => Get.back(),
-                                                ColorPalette.PRIMARY,
-                                                edgeInsets:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 4),
-                                                fontSize: 12,
-                                                isLoading:
-                                                    controller.isLoading.value),
-                                          ],
-                                        ),
-                                      ]),
-                              ColorPalette.SECUNDARY,
-                              iconData: Icons.post_add,
-                              isLoading: controller.isLoading.value),
-                        ),
-                      ],
-                    ),
-                    CustomSpacing(),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        CustomButton('REGISTRAR', () async {
-                          await controller.registerVehicle();
-                          await listVehicleController.fetchVehicles();
-                        }, ColorPalette.GREEN,
-                            isLoading: controller.isLoading.value),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        CustomButton(
-                            'CANCELAR', () => Get.back(), ColorPalette.PRIMARY,
-                            isLoading: controller.isLoading.value),
-                      ],
-                    ),
-                    CustomSpacing(),
-                  ],
-                ),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: SingleChildScrollView(
+          child: Form(
+            key: controller.formKey,
+            child: Obx(
+              () => Responsive(
+                mobile: mobile(),
+                tablet: tablet(),
+                desktop: tablet(),
               ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
+  }
+
+  Widget tablet() {
+    return Container(
+      alignment: Alignment.center,
+      child: Container(
+        width: 770,
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CustomSpacing(),
+            CustomTitle('Datos vehiculo'),
+            CustomSpacing(),
+            Wrap(
+              children: [
+                ...cardSection()
+                    .where((element) =>
+                        element.toString() !=
+                        const SizedBox(height: 16.0).toString())
+                    .toList()
+                    .map(
+                      (e) => Container(
+                        margin: EdgeInsets.all(4),
+                        width: 220,
+                        height: 90,
+                        child: e,
+                      ),
+                    ),
+              ],
+            ),
+            CustomTitle('Precios'),
+            ...pricesSection(),
+            CustomTitle('Planes de financiación'),
+            ...financSection(),
+            CustomSpacing(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget mobile() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomSpacing(),
+        CustomTitle('Datos vehiculo'),
+        ...cardSection(),
+        CustomTitle('Precios'),
+        ...pricesSection(),
+        CustomTitle('Planes de financiación'),
+        ...financSection(),
+        CustomSpacing(),
+      ],
+    );
+  }
+
+  List<Widget> financSection() {
+    return [
+      ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: controller.listCuota.length,
+          itemBuilder: (BuildContext context, int index) {
+            return CustomPlan(index, controller.listCuota[index],
+                onPressed: () => controller.listCuota.removeAt(index));
+          }),
+      CustomSpacing(),
+      Row(
+        children: [
+          Expanded(
+            child: CustomButton(
+                'AGREGAR PLAN',
+                () => Get.defaultDialog(
+                        title: 'Nuevo plan',
+                        content: dialogPlan(),
+                        actions: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomButton(
+                                  'REGISTRAR PLAN',
+                                  controller.registerCuota,
+                                  ColorPalette.SECUNDARY,
+                                  edgeInsets: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  fontSize: 12,
+                                  isLoading: controller.isLoading.value),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              CustomButton('CANCELAR', () => Get.back(),
+                                  ColorPalette.PRIMARY,
+                                  edgeInsets: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  fontSize: 12,
+                                  isLoading: controller.isLoading.value),
+                            ],
+                          ),
+                        ]),
+                ColorPalette.SECUNDARY,
+                iconData: Icons.post_add,
+                isLoading: controller.isLoading.value),
+          ),
+        ],
+      ),
+      CustomSpacing(),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          CustomButton('REGISTRAR', () async {
+            await controller.registerVehicle();
+            await listVehicleController.fetchVehicles();
+          }, ColorPalette.GREEN, isLoading: controller.isLoading.value),
+          const SizedBox(
+            width: 10,
+          ),
+          CustomButton('CANCELAR', () => Get.back(), ColorPalette.PRIMARY,
+              isLoading: controller.isLoading.value),
+        ],
+      ),
+    ];
+  }
+
+  List<Widget> pricesSection() {
+    return [
+      Padding(
+        padding:
+            const EdgeInsets.only(right: 10, left: 10, top: 10, bottom: 10),
+        child: CustomTitle('Precio venta', fontSize: 15),
+      ),
+      CustomInput('', 'Precio para venta en guaraníes',
+          textEditingController: controller.textGuaraniesVenta,
+          iconData: Icons.price_change_outlined,
+          onSaved: (text) =>
+              controller.createVehicle.value.contadoGuaranies = text,
+          isLoading: controller.isLoading.value,
+          validator: validatorPriceSelGuaraniesWithDolar,
+          onChanged: (text) {
+            if (text.toString().length < 4) {
+              controller.textGuaraniesVenta.text = '0';
+            }
+          },
+          isNumber: true),
+      CustomInput('', 'Precio para venta en dólares',
+          iconData: Icons.price_change_outlined,
+          textEditingController: controller.textDolaresVenta,
+          validator: validatorPriceSelDolaresWithGuaranies,
+          onSaved: (text) =>
+              controller.createVehicle.value.contadoDolares = text,
+          isLoading: controller.isLoading.value,
+          isNumber: true),
+      Padding(
+        padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
+        child: CustomTitle('Precio costo', fontSize: 15),
+      ),
+      CustomInput('', 'Costo vehiculo en guaraníes',
+          textEditingController: controller.textGuaraniesCosto,
+          iconData: Icons.price_change_outlined,
+          onChanged: (text) {
+            if (text.toString().length < 4) {
+              controller.textGuaraniesCosto.text = '0';
+            }
+          },
+          onSaved: (text) =>
+              controller.createVehicle.value.costoGuaranies = text,
+          isLoading: controller.isLoading.value,
+          validator: validatorTreeCaracteressAndNull,
+          isNumber: true),
+      CustomInput('', 'Costo vehiculo en dólares',
+          iconData: Icons.price_change_outlined,
+          textEditingController: controller.textDolaresCosto,
+          onSaved: (text) => controller.createVehicle.value.costoDolares = text,
+          isLoading: controller.isLoading.value,
+          isNumber: true),
+    ];
+  }
+
+  List<Widget> cardSection() {
+    return [
+      CustomSpacing(),
+      DropdownSearch<Brand>(
+        label: 'Marca',
+        showSearchBox: true,
+        compareFn: (item, selectedItem) =>
+            item?.idMarca == selectedItem?.idMarca,
+        onChanged: (value) {
+          controller.brandSelected.value = value!;
+          controller.listModelAux.clear();
+          controller.listModelAux.value = controller.listModel
+              .where((el) => el.idMarca == value.idMarca)
+              .toList();
+          if (controller.listModelAux.isEmpty) {
+            controller.modelSelected.value = Model();
+          } else {
+            controller.modelSelected.value = controller.listModelAux.first;
+          }
+        },
+        showSelectedItems: true,
+        selectedItem: controller.brandSelected.value,
+        validator: (u) => u?.idMarca == null ? "MARCA OBLIGATORIO" : null,
+        itemAsString: (Brand? item) => item?.marca ?? '',
+        showAsSuffixIcons: true,
+        dropdownSearchDecoration: const InputDecoration(
+          prefixIcon: Icon(Icons.person_outline),
+          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          border: OutlineInputBorder(),
+        ),
+        searchFieldProps: TextFieldProps(
+          keyboardType: TextInputType.text,
+          decoration: const InputDecoration(
+              filled: true, label: Text('Buscar por marca')),
+        ),
+        mode: Mode.DIALOG,
+        items: controller.listBrand,
+      ),
+      CustomSpacing(),
+      DropdownSearch<Model>(
+        label: 'Modelo',
+        showSearchBox: true,
+        compareFn: (item, selectedItem) =>
+            item?.idModelo == selectedItem?.idModelo,
+        onChanged: (value) {
+          controller.modelSelected.value = value!;
+        },
+        onSaved: (item) =>
+            controller.createVehicle.value.idModelo = item?.idModelo,
+        selectedItem: controller.modelSelected.value,
+        showSelectedItems: true,
+        validator: (u) => u?.idModelo == null ? "MODELO OBLIGATORIO" : null,
+        itemAsString: (Model? item) => item?.modelo ?? '',
+        showAsSuffixIcons: true,
+        dropdownSearchDecoration: const InputDecoration(
+          prefixIcon: Icon(Icons.person_outline),
+          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          border: OutlineInputBorder(),
+        ),
+        searchFieldProps: TextFieldProps(
+          keyboardType: TextInputType.text,
+          decoration: const InputDecoration(
+              filled: true, label: Text('Buscar por modelo')),
+        ),
+        mode: Mode.DIALOG,
+        items: controller.listModelAux,
+      ),
+      CustomSpacing(),
+      CustomDropDowSearch(controller.listStringFuel, 'Tipo combustible',
+          onSaved: (text) => controller.createVehicle.value.combustible = text),
+      CustomSpacing(),
+      CustomDropDowSearch(
+        controller.listStringColor,
+        'Color',
+        onSaved: (text) => controller.createVehicle.value.color = text,
+      ),
+      CustomSpacing(),
+      CustomDropDowSearch(
+        controller.listStringMotor,
+        'Motor',
+        onSaved: (text) => controller.createVehicle.value.motor = text,
+      ),
+      CustomSpacing(),
+      CustomDropDowSearch(
+        controller.listStringCambio,
+        'Tipo de cambio',
+        onSaved: (text) => controller.createVehicle.value.cambio = text,
+      ),
+      CustomSpacing(),
+      CustomInput('', 'Año',
+          iconData: Icons.directions_car_outlined,
+          onSaved: (text) => controller.createVehicle.value.ano = text,
+          isLoading: controller.isLoading.value,
+          validator: validatorTreeCaracteressAndNull,
+          isNumber: true),
+      CustomInput(
+        '',
+        'Numero de chapa',
+        textEditingController: controller.textNumeroChapa,
+        onChanged: (text) {
+          if (text.length == 4) {
+            bool found = text.contains(RegExp(r'[0-9]'));
+            if (found) {
+              controller.textNumeroChapa.updateMask('***-000');
+            } else {
+              controller.textNumeroChapa.updateMask('****-000');
+            }
+          }
+        },
+        iconData: Icons.directions_car_outlined,
+        onSaved: (text) => controller.createVehicle.value.chapa = text,
+        isLoading: controller.isLoading.value,
+      ),
+      CustomInput(
+        '',
+        'Numero de chassis',
+        iconData: Icons.directions_car_outlined,
+        onSaved: (text) => controller.createVehicle.value.chassis = text,
+        isLoading: controller.isLoading.value,
+      ),
+    ];
   }
 
   Future<void> openAndCloseLoadingDialog() async {
@@ -391,6 +441,11 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                       isNumber: true,
                       iconData: Icons.price_change_outlined,
                       textEditingController: controller.textEntradaGuaranies,
+                      onChanged: (text) {
+                        if (text.toString().length < 4) {
+                          controller.textEntradaGuaranies.text = '0';
+                        }
+                      },
                       onSaved: (text) =>
                           controller.cuota.value.entradaGuaranies = text,
                     ),
@@ -403,12 +458,22 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                       textEditingController: controller.textCuotaGuaranies,
                       onSaved: (text) =>
                           controller.cuota.value.cuotaGuaranies = text,
+                      onChanged: (text) {
+                        if (text.toString().length < 4) {
+                          controller.textCuotaGuaranies.text = '0';
+                        }
+                      },
                     ),
                     CustomInput(
                       '',
                       'Refuerzo',
                       isNumber: true,
                       iconData: Icons.price_change_outlined,
+                      onChanged: (text) {
+                        if (text.toString().length < 4) {
+                          controller.textRefuezoGuaranies.text = '0';
+                        }
+                      },
                       onSaved: (text) =>
                           controller.cuota.value.refuerzoGuaranies = text,
                       textEditingController: controller.textRefuezoGuaranies,
@@ -446,6 +511,26 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
       return 'Campo obligatorio.';
     } else if (text.length < 3) {
       return 'Campo debe de contener minimo 3 caracteres.';
+    }
+    return null;
+  }
+
+  String? validatorPriceSelGuaraniesWithDolar(String text) {
+    if (controller.textDolaresVenta.text.length > 7) {
+      return null;
+    }
+    if (controller.textRefuezoDolares.text.length == 7 && text.length < 5) {
+      return 'Campo dolares o guaranies obligatorio.';
+    }
+    return null;
+  }
+
+  String? validatorPriceSelDolaresWithGuaranies(String text) {
+    if (controller.textGuaraniesVenta.text.length == 5) {
+      return null;
+    }
+    if (controller.textGuaraniesVenta.text.length == 4 && text.length < 8) {
+      return 'Campo dolares o guaranies obligatorio.';
     }
     return null;
   }

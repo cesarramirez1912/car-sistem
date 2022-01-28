@@ -3,6 +3,7 @@ import 'package:car_system/common/date_format.dart';
 import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
 import 'package:car_system/models/sale_collaborator_model.dart';
+import 'package:car_system/responsive.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/search_dropdown.dart';
@@ -54,59 +55,89 @@ class SellsFromCollaboratorView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Obx(
-            () => Column(
-              children: [
-                CustomDropDowSearch(controller.listString.value, '',
-                    iconData: Icons.filter_alt_outlined, onChanged: (value) {
-                  controller.textString.value = value;
-                  controller.filterList();
-                }, selectedItem: controller.textString.value),
-                CustomSpacing(height: 8),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ...controller.salesAux.map(
-                          (e) => Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  CustomTitle('CLIENTE', fontSize: 15),
-                                  CustomTitle(e.cliente.toString(),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600),
-                                  CustomTitle('VEHICULO', fontSize: 15),
-                                  CustomTitle(
-                                      e.marca.toString() +
-                                          ' - ' +
-                                          e.modelo.toString(),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600),
-                                  CustomTitle('FECHA Y HORA DE VENTA',
-                                      fontSize: 15),
-                                  CustomTitle(
-                                      DateFormatBr().formatBrWithTime(
-                                          e.fechaVenta.toString()),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600),
-                                  const Divider(
-                                    color: Colors.grey,
-                                  ),
-                                  render(e, controller),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                )
-              ],
+            () => Responsive(
+                mobile: mobile(), tablet: tablet(900), desktop: tablet(1100)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget tablet(double width) {
+    return principalRender(
+      Expanded(
+        child: Container(
+          alignment: Alignment.topCenter,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: width,
+              child: Center(
+                child: Wrap(
+                  children: [
+                    ...controller.salesAux.map((e) =>
+                        SizedBox(width: 350, height: 325, child: cardSell(e)))
+                  ],
+                ),
+              ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget mobile() {
+    return principalRender(
+      Expanded(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [...controller.salesAux.map((e) => cardSell(e))],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget principalRender(Widget body) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        CustomDropDowSearch(controller.listString.value, '',
+            iconData: Icons.filter_alt_outlined, onChanged: (value) {
+          controller.textString.value = value;
+          controller.filterList();
+        }, selectedItem: controller.textString.value),
+        CustomSpacing(height: 8),
+        body
+      ],
+    );
+  }
+
+  Widget cardSell(SaleCollaboratorModel e) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CustomTitle('CLIENTE', fontSize: 15),
+            CustomTitle(e.cliente.toString(),
+                fontSize: 13, fontWeight: FontWeight.w600),
+            CustomTitle('VEHICULO', fontSize: 15),
+            CustomTitle(e.marca.toString() + ' - ' + e.modelo.toString(),
+                fontSize: 13, fontWeight: FontWeight.w600),
+            CustomTitle('FECHA Y HORA DE VENTA', fontSize: 15),
+            CustomTitle(
+                DateFormatBr().formatBrWithTime(e.fechaVenta.toString()),
+                fontSize: 13,
+                fontWeight: FontWeight.w600),
+            const Divider(
+              color: Colors.grey,
+            ),
+            render(e, controller),
+          ],
         ),
       ),
     );

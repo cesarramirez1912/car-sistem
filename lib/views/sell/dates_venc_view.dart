@@ -10,8 +10,6 @@ class DatesVencView extends GetView<VehicleDetailController> {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = Get.parameters;
-    print(args['isCuote']);
-    print(args['isResumen']);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Fechas generadas'),
