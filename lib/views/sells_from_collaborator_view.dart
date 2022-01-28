@@ -18,6 +18,35 @@ class SellsFromCollaboratorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            alignment: Alignment.topLeft,
+            margin: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
+            decoration: const BoxDecoration(
+                color: Color.fromRGBO(248, 248, 248, 1),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(8),
+                )),
+            child: TextFormField(
+              autofocus: false,
+              onChanged: (text) {
+                controller.salesAux.value = controller.sales
+                    .where((p0) =>
+                        p0.modelo!.contains(text.toUpperCase()) ||
+                        p0.cliente!.contains(text.toUpperCase()) ||
+                        p0.marca!.contains(text.toUpperCase()))
+                    .toList();
+              },
+              decoration: const InputDecoration(
+                hintText: 'Cliente, marca o modelo',
+                border: InputBorder.none,
+                suffixIcon: Icon(Icons.search),
+              ),
+            ),
+          ),
+        ),
         title: const Text('Mis ventas'),
       ),
       body: RefreshIndicator(
@@ -37,7 +66,7 @@ class SellsFromCollaboratorView extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        ...controller.sales.map(
+                        ...controller.salesAux.map(
                           (e) => Card(
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),

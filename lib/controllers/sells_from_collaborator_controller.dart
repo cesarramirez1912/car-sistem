@@ -15,6 +15,7 @@ class SellsFromCollaboratorController extends GetxController {
   SellVehicleRepository sellVehicleRepository = SellVehicleRepository();
 
   RxList<SaleCollaboratorModel> sales = <SaleCollaboratorModel>[].obs;
+  RxList<SaleCollaboratorModel> salesAux = <SaleCollaboratorModel>[].obs;
   RxList<SaleCollaboratorModel> salesGeral = <SaleCollaboratorModel>[].obs;
   User? user = User();
 
@@ -95,6 +96,8 @@ class SellsFromCollaboratorController extends GetxController {
     switch (textString.value) {
       case 'TODOS':
         sales.clear();
+        salesAux.clear();
+        salesAux.addAll(salesGeral);
         sales.addAll(salesGeral);
         break;
       case 'EN ABIERTO':
@@ -107,6 +110,8 @@ class SellsFromCollaboratorController extends GetxController {
                         int.parse(element.cantidadRefuerzosPagados)) >
                     0)
             .toList();
+        salesAux.clear();
+        salesAux.addAll(sales);
         break;
       default:
         sales.value = salesGeral
@@ -117,6 +122,8 @@ class SellsFromCollaboratorController extends GetxController {
                         int.parse(element.cantidadCuotasPagadas)) ==
                     0))
             .toList();
+        salesAux.clear();
+        salesAux.addAll(sales);
     }
   }
 

@@ -20,7 +20,10 @@ Widget CustomDropDowSearch(List<String> list, String label,
       border: const OutlineInputBorder(),
     ),
     searchFieldProps: TextFieldProps(
-      decoration: const InputDecoration(filled: true, label: Text('Buscar')),
+      decoration: const InputDecoration(
+        filled: true,
+        label: Text('Buscar'),
+      ),
     ),
     validator: (value) =>
         isRequired ? (value == null ? 'Campo obligatorio.' : null) : null,
