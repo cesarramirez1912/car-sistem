@@ -74,6 +74,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                             Expanded(
                               child: DropdownSearch<ClientModel>(
                                 showSearchBox: true,
+                                selectedItem: controller.typeClientSelected.value,
                                 compareFn: (item, selectedItem) =>
                                     item?.idCliente == selectedItem?.idCliente,
                                 onChanged: (value) {
@@ -113,8 +114,20 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                             const SizedBox(
                               width: 6,
                             ),
-                            CustomButton('', () {
-                              Get.toNamed(RouterManager.REGISTER_CLIENT);
+                            CustomButton('', () async {
+                              var resId = await Get.toNamed(
+                                  RouterManager.REGISTER_CLIENT);
+                              if (resId != null) {
+                                var clientRegister = clientController
+                                    .listClients
+                                    .where((cli) => cli.idCliente == resId)
+                                    .toList()
+                                    .first;
+                                controller.sellVehicleModel.value.idCliente =
+                                    clientRegister.idCliente;
+                                controller.typeClientSelected.value =
+                                    clientRegister;
+                              }
                             }, ColorPalette.SECUNDARY,
                                 iconData: Icons.person_add_alt),
                           ],

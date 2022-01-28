@@ -22,6 +22,7 @@ class ClientController extends GetxController {
 
   MaskedTextController textCiController =
       MaskedTextController(text: '', mask: '0.000.000-00');
+
   MaskedTextController textPhoneController =
       MaskedTextController(text: '', mask: '(0000)000-000');
 
@@ -69,6 +70,11 @@ class ClientController extends GetxController {
         var clientId =
             await clientRepository?.createClient(clientModel!.toJson());
         await requestClients();
+        textCiController = MaskedTextController(text: '', mask: '0.000.000-00');
+        textPhoneController =
+            MaskedTextController(text: '', mask: '(0000)000-000');
+
+        Get.back(result: clientId);
         CustomSnackBarSuccess(
             'CLIENTE ${clientModel?.cliente} REGISTRADO CON EXITO!');
         formKey.currentState!.reset();

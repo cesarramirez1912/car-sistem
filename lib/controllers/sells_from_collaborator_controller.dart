@@ -94,6 +94,7 @@ class SellsFromCollaboratorController extends GetxController {
   void filterList() {
     switch (textString.value) {
       case 'TODOS':
+        sales.clear();
         sales.addAll(salesGeral);
         break;
       case 'EN ABIERTO':
