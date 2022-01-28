@@ -36,6 +36,9 @@ class EssencialVehicleController extends GetxController {
   FocusNode myFocusNode = FocusNode();
   FocusNode myFocusNode2 = FocusNode();
 
+  Rx<Brand> brandSelected = Brand().obs;
+  Rx<Model> modelSelected = Model().obs;
+
   RxList<String> listStringBrand = <String>[].obs;
   RxList<String> listStringModel = <String>[].obs;
   RxList<String> listStringFuel = <String>[].obs;
@@ -45,6 +48,7 @@ class EssencialVehicleController extends GetxController {
 
   RxList<Brand> listBrand = <Brand>[].obs;
   RxList<Model> listModel = <Model>[].obs;
+  RxList<Model> listModelAux = <Model>[].obs;
   RxList<Fuel> listFuel = <Fuel>[].obs;
   RxList<Color> listColor = <Color>[].obs;
   RxList<Motor> listMotor = <Motor>[].obs;
@@ -89,7 +93,7 @@ class EssencialVehicleController extends GetxController {
       Center(
         child: Card(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60,vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 5),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -139,32 +143,41 @@ class EssencialVehicleController extends GetxController {
     try {
       textRequestEssencial.value = 'MARCAS';
       List resListBrand = await essencialVehicleRepository
-          ?.fetchVehicleInformation(listBrand, Rest.BRANDS, Brand.fromJson);
+          ?.fetchVehicleInformation(<Brand>[], Rest.BRANDS, Brand.fromJson);
       listBrand.value = resListBrand[0];
       listStringBrand.value = resListBrand[1];
+      brandSelected.value = listBrand.first;
       textRequestEssencial.value = 'MODELOS';
       List resListModel = await essencialVehicleRepository
-          ?.fetchVehicleInformation(listModel, Rest.MODELS, Model.fromJson);
+          ?.fetchVehicleInformation(<Model>[], Rest.MODELS, Model.fromJson);
       listModel.value = resListModel[0];
       listStringModel.value = resListModel[1];
+      listModelAux.value = listModel
+          .where((el) => el.idMarca == brandSelected.value.idMarca)
+          .toList();
+      if (listModelAux.isEmpty) {
+        modelSelected.value = Model();
+      } else {
+        modelSelected.value = listModelAux.first;
+      }
       textRequestEssencial.value = 'TIPOS DE COMBUSTIBLES';
       List resListFuel = await essencialVehicleRepository
-          ?.fetchVehicleInformation(listFuel, Rest.FUELS, Fuel.fromJson);
+          ?.fetchVehicleInformation(<Fuel>[], Rest.FUELS, Fuel.fromJson);
       listFuel.value = resListFuel[0];
       listStringFuel.value = resListFuel[1];
       textRequestEssencial.value = 'COLORES';
       List resListColor = await essencialVehicleRepository
-          ?.fetchVehicleInformation(listColor, Rest.COLORS, Color.fromJson);
+          ?.fetchVehicleInformation(<Color>[], Rest.COLORS, Color.fromJson);
       listColor.value = resListColor[0];
       listStringColor.value = resListColor[1];
       textRequestEssencial.value = 'TIPOS DE MOTORES';
       List resListMotor = await essencialVehicleRepository
-          ?.fetchVehicleInformation(listMotor, Rest.MOTORS, Motor.fromJson);
+          ?.fetchVehicleInformation(<Motor>[], Rest.MOTORS, Motor.fromJson);
       listMotor.value = resListMotor[0];
       listStringMotor.value = resListMotor[1];
       textRequestEssencial.value = 'TIPOS DE CAMBIO';
       List resListCambio = await essencialVehicleRepository
-          ?.fetchVehicleInformation(listGear, Rest.GEARS, Gear.fromJson);
+          ?.fetchVehicleInformation(<Gear>[], Rest.GEARS, Gear.fromJson);
       listGear.value = resListCambio[0];
       listStringCambio.value = resListCambio[1];
       textRequestEssencial.value = '';
@@ -175,7 +188,6 @@ class EssencialVehicleController extends GetxController {
 
   Future<void> registerVehicle() async {
     if (formKey.currentState == null) {
-      print("_formKey.currentState is null!");
     } else if (formKey.currentState!.validate()) {
       isLoading.value = true;
       try {
@@ -217,12 +229,11 @@ class EssencialVehicleController extends GetxController {
           createVehicle.value.costoGuaranies = null;
         }
         createVehicle.value.cuotas = listCuota;
-
         var vehicleResponse = await essencialVehicleRepository
             ?.createVehicle(createVehicle.toJson());
         Get.back();
         CustomSnackBarSuccess(
-            ' ${createVehicle.value.modelo} REGISTRADO CON EXITO!');
+            ' ${createVehicle.value.idModelo} REGISTRADO CON EXITO!');
         formKey.currentState?.reset();
         formKeyDialog.currentState?.reset();
         isLoading.value = false;

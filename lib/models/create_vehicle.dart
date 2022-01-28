@@ -4,8 +4,7 @@ class CreateVehicle {
   CreateVehicle({
     this.idEmpresa,
     this.idSucursal,
-    this.marca,
-    this.modelo,
+    this.idModelo,
     this.combustible,
     this.color,
     this.motor,
@@ -22,8 +21,7 @@ class CreateVehicle {
 
   int? idEmpresa;
   int? idSucursal;
-  String? marca;
-  String? modelo;
+  int? idModelo;
   String? combustible;
   String? color;
   String? motor;
@@ -40,8 +38,7 @@ class CreateVehicle {
   CreateVehicle.fromJson(Map<String, dynamic> json) {
     idEmpresa = json['id_empresa'];
     idSucursal = json['id_sucursal'];
-    marca = json['marca'];
-    modelo = json['modelo'];
+    idModelo = json['id_modelo'];
     combustible = json['combustible'];
     color = json['color'];
     motor = json['motor'];
@@ -60,8 +57,7 @@ class CreateVehicle {
     final _data = <String, dynamic>{};
     _data['id_empresa'] = idEmpresa;
     _data['id_sucursal'] = idSucursal;
-    _data['marca'] = marca;
-    _data['modelo'] = modelo;
+    _data['id_modelo'] = idModelo;
     _data['combustible'] = combustible;
     _data['color'] = color;
     _data['motor'] = motor;

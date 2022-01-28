@@ -1,13 +1,17 @@
 import 'package:car_system/colors.dart';
 import 'package:car_system/controllers/essencial_vehicle_controller.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
+import 'package:car_system/models/essencial_vehicle_models/brand.dart';
+import 'package:car_system/models/essencial_vehicle_models/model.dart';
 import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/input.dart';
 import 'package:car_system/widgets/plan.dart';
 import 'package:car_system/widgets/search_dropdown.dart';
+import 'package:car_system/widgets/search_dropdown_model.dart';
 import 'package:car_system/widgets/spacing.dart';
 import 'package:car_system/widgets/title.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,18 +37,74 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     CustomSpacing(),
                     CustomTitle('Datos vehiculo'),
                     CustomSpacing(),
-                    CustomDropDowSearch(
-                      controller.listStringBrand,
-                      'Marca',
-                      onSaved: (text) =>
-                          controller.createVehicle.value.marca = text,
+                    DropdownSearch<Brand>(
+                      label: 'Marca',
+                      showSearchBox: true,
+                      compareFn: (item, selectedItem) =>
+                          item?.idMarca == selectedItem?.idMarca,
+                      onChanged: (value) {
+                        controller.brandSelected.value = value!;
+                        controller.listModelAux.clear();
+                        controller.listModelAux.value = controller.listModel
+                            .where((el) => el.idMarca == value.idMarca)
+                            .toList();
+                        if (controller.listModelAux.isEmpty) {
+                          controller.modelSelected.value = Model();
+                        } else {
+                          controller.modelSelected.value =
+                              controller.listModelAux.first;
+                        }
+                      },
+                      showSelectedItems: true,
+                      selectedItem: controller.brandSelected.value,
+                      validator: (u) =>
+                          u?.idMarca == null ? "MARCA OBLIGATORIO" : null,
+                      itemAsString: (Brand? item) => item?.marca ?? '',
+                      showAsSuffixIcons: true,
+                      dropdownSearchDecoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.person_outline),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        border: OutlineInputBorder(),
+                      ),
+                      searchFieldProps: TextFieldProps(
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                            filled: true, label: Text('Buscar por marca')),
+                      ),
+                      mode: Mode.DIALOG,
+                      items: controller.listBrand,
                     ),
                     CustomSpacing(),
-                    CustomDropDowSearch(
-                      controller.listStringModel,
-                      'Modelo',
-                      onSaved: (text) =>
-                          controller.createVehicle.value.modelo = text,
+                    DropdownSearch<Model>(
+                      label: 'Modelo',
+                      showSearchBox: true,
+                      compareFn: (item, selectedItem) =>
+                          item?.idModelo == selectedItem?.idModelo,
+                      onChanged: (value) {
+                        controller.modelSelected.value = value!;
+                      },
+                      onSaved: (item) => controller
+                          .createVehicle.value.idModelo = item?.idModelo,
+                      selectedItem: controller.modelSelected.value,
+                      showSelectedItems: true,
+                      validator: (u) =>
+                          u?.idModelo == null ? "MODELO OBLIGATORIO" : null,
+                      itemAsString: (Model? item) => item?.modelo ?? '',
+                      showAsSuffixIcons: true,
+                      dropdownSearchDecoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.person_outline),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        border: OutlineInputBorder(),
+                      ),
+                      searchFieldProps: TextFieldProps(
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                            filled: true, label: Text('Buscar por modelo')),
+                      ),
+                      mode: Mode.DIALOG,
+                      items: controller.listModelAux,
                     ),
                     CustomSpacing(),
                     CustomDropDowSearch(

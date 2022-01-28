@@ -1,12 +1,12 @@
 class Rest {
-  //static const String BASE_URL_TEST = "http://172.20.10.5:5480";
+  static const String BASE_URL_TEST = "http://192.168.0.3:5480";
 
-  static const String BASE_URL_TEST = "http://192.168.88.112:5480";
+  //static const String BASE_URL_TEST = "http://192.168.88.112:5480";
   static const String BASE_URL_PRODUCTION =
       "https://carsystembackend.herokuapp.com";
 
   static String get BASE_URL {
-    return BASE_URL_PRODUCTION;
+    return BASE_URL_TEST;
     /*  if(kReleaseMode){
       return RestRoutes.BASE_URL_PRODUCTION;
     } else {
@@ -22,6 +22,7 @@ class Rest {
   static String MOTORS = BASE_URL + "/motors";
   static String GEARS = BASE_URL + "/gears";
   static String BRANDS = BASE_URL + "/brands";
+  static String CATEGORIES = BASE_URL + "/categories";
   static String FUELS = BASE_URL + "/fuels";
   static String VEHICLES = BASE_URL + '/vehicles';
   static String MODELS = BASE_URL + "/models";

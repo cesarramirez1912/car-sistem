@@ -26,7 +26,8 @@ class EssencialVehicleRepository extends GetConnect {
   }
 
   Future<dynamic> fetchVehicleInformation(
-      List listType, String url, dynamic fromJson) async {
+      List listType, String url, dynamic fromJson,
+      {return2arrays = true}) async {
     final response = await get(url);
     List<String> _listString = [];
     if (response.status.hasError) {
@@ -34,16 +35,21 @@ class EssencialVehicleRepository extends GetConnect {
           'Ocurrio un error al traer los datos de INFORMACIONES DE VEHICULO, pruebe de nuevo');
     } else {
       for (var i in response.body['response']) {
-        String key = response.body['response'][0].keys.elementAt(0);
-        _listString.add(i[key]);
-        listType.add(fromJson(i));
+        if (return2arrays) {
+          String key = response.body['response'][0].keys.elementAt(0);
+          _listString.add(i[key]);
+          listType.add(fromJson(i));
+        } else {
+          listType.add(fromJson(i));
+        }
       }
       return [listType, _listString];
     }
   }
 
-  Future<dynamic> postInformations(String url) async {
-    final response = await post(url, {});
+  Future<dynamic> postInformations(
+      String url, Map<dynamic, dynamic> body) async {
+    final response = await post(url, body);
     if (response.status.hasError) {
       return response.body['message'];
     } else {

@@ -1,17 +1,21 @@
-class Fuel {
-  Fuel({
-    required this.combustible,
+class Category {
+  Category({
+    this.categoria,
+    this.idCategoria,
   });
 
-  late final String combustible;
+  String? categoria;
+  dynamic? idCategoria;
 
-  Fuel.fromJson(Map<String, dynamic> json) {
-    combustible = json['combustible'];
+  Category.fromJson(Map<String, dynamic> json) {
+    categoria = json['categoria'];
+    idCategoria = json['id_categoria'];
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
-    _data['combustible'] = combustible;
+    _data['categoria'] = categoria;
+    _data['id_categoria'] = idCategoria;
     return _data;
   }
 }
