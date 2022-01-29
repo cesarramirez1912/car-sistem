@@ -99,7 +99,9 @@ class VehicleDetailController extends GetxController {
     vehicles
         .addAll(listVehicleController.getVehiclesFromId(idVehiculoSucursal));
     vehicleDetail?.value = vehicles.first;
-    textContadoGuaranies.text = vehicles.first.contadoGuaranies.toString();
+    textContadoGuaranies.text = vehicles.first.contadoGuaranies == null
+        ? '0'
+        : vehicles.first.contadoGuaranies.toString();
     textContadoDolares.text = vehicles.first.contadoDolares.toString() + '00';
     sellVehicleModel.value.idVehiculoSucursal =
         vehicles.first.idVehiculoSucursal;
@@ -141,6 +143,7 @@ class VehicleDetailController extends GetxController {
   Future<void> firstDateCuote(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
+        locale: const Locale('es'),
         initialDate: firstDateCuoteSelected.value,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
@@ -152,6 +155,7 @@ class VehicleDetailController extends GetxController {
   Future<void> firstDateRefuerzo(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
+        locale: const Locale('es'),
         initialDate: firstDateRefuerzoSelected.value,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
@@ -201,8 +205,10 @@ class VehicleDetailController extends GetxController {
     for (int i = 0; i < listDateGeneratedCuotas.length; i++) {
       listResumen.add(
         Resumen(
-          fechaCuota: DateFormatBr().formatBr(listDateGeneratedRefuerzos[i]),
-          fechaRefuerzo: DateFormatBr().formatBr(listDateGeneratedRefuerzos[i]),
+          fechaCuota: DateFormatBr()
+              .formatBrFromString(listDateGeneratedRefuerzos[i].toString()),
+          fechaRefuerzo: DateFormatBr()
+              .formatBrFromString(listDateGeneratedRefuerzos[i].toString()),
           valorCuota: cuota.value.cuotaGuaranies,
           valorRefuerzo: cuota.value.cuotaGuaranies,
         ),
@@ -215,17 +221,17 @@ class VehicleDetailController extends GetxController {
     } else if (formKeyDialog.currentState!.validate()) {
       formKeyDialog.currentState!.save();
       cuota.value.entradaGuaranies =
-          RemoveMoneyFormat().format(cuota.value.entradaGuaranies);
+          RemoveMoneyFormat().removeToString(cuota.value.entradaGuaranies);
       cuota.value.cuotaGuaranies =
-          RemoveMoneyFormat().format(cuota.value.cuotaGuaranies);
+          RemoveMoneyFormat().removeToString(cuota.value.cuotaGuaranies);
       cuota.value.refuerzoGuaranies =
-          RemoveMoneyFormat().format(cuota.value.refuerzoGuaranies);
+          RemoveMoneyFormat().removeToString(cuota.value.refuerzoGuaranies);
       cuota.value.entradaDolares =
-          RemoveMoneyFormat().format(cuota.value.entradaDolares);
+          RemoveMoneyFormat().removeToString(cuota.value.entradaDolares);
       cuota.value.cuotaDolares =
-          RemoveMoneyFormat().format(cuota.value.cuotaDolares);
+          RemoveMoneyFormat().removeToString(cuota.value.cuotaDolares);
       cuota.value.refuerzoDolares =
-          RemoveMoneyFormat().format(cuota.value.refuerzoDolares);
+          RemoveMoneyFormat().removeToString(cuota.value.refuerzoDolares);
 
       if (cuota.value.entradaDolares != null) {
         if (double.parse(cuota.value.entradaDolares) == 0.0) {
@@ -280,15 +286,16 @@ class VehicleDetailController extends GetxController {
         if (textCantidadRefuerzos.text.isNotEmpty) {
           generatedDatesRefuerzos();
         }
-        if (textCantidadCuotas.text.isNotEmpty) {
+        if (textCantidadCuotas.text.isNotEmpty ||
+            cuota.value.cantidadCuotas != null) {
           generatedDatesCuotes();
         }
 
         if (typeSellSelected != 'CONTADO') {
           sellVehicleModel.value.entradaDolares =
-              RemoveMoneyFormat().format(cuota.value.entradaDolares);
+              RemoveMoneyFormat().removeToString(cuota.value.entradaDolares);
           sellVehicleModel.value.entradaGuaranies =
-              RemoveMoneyFormat().format(cuota.value.entradaGuaranies);
+              RemoveMoneyFormat().removeToString(cuota.value.entradaGuaranies);
 
           if (listDateGeneratedCuotas.isNotEmpty) {
             sellVehicleModel.value.cuotas?.clear();
@@ -310,9 +317,9 @@ class VehicleDetailController extends GetxController {
           }
         } else {
           sellVehicleModel.value.contadoGuaranies = RemoveMoneyFormat()
-              .format(sellVehicleModel.value.contadoGuaranies);
-          sellVehicleModel.value.contadoDolares =
-              RemoveMoneyFormat().format(sellVehicleModel.value.contadoDolares);
+              .removeToString(sellVehicleModel.value.contadoGuaranies);
+          sellVehicleModel.value.contadoDolares = RemoveMoneyFormat()
+              .removeToString(sellVehicleModel.value.contadoDolares);
         }
         var responseSellVehicle =
             await sellVehicleRepository.sellVehicle(sellVehicleModel.toJson());

@@ -1,5 +1,5 @@
 class RemoveMoneyFormat {
-  dynamic format(dynamic text) {
+  dynamic removeToString(dynamic text) {
     if (text == null) {
       return null;
     } else {
@@ -11,5 +11,9 @@ class RemoveMoneyFormat {
           .replaceAll(',', '.')
           .replaceAll(' ', '');
     }
+  }
+
+  double removeToDouble(dynamic text) {
+    return double.parse(removeToString(text));
   }
 }

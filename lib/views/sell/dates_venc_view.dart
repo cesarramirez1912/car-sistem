@@ -105,9 +105,9 @@ class DatesVencView extends GetView<VehicleDetailController> {
                       cells: [
                         DataCell(Text((i + 1).toString())),
                         DataCell(Text(
-                          DateFormatBr().formatBr(isCuote
-                              ? controller.listDateGeneratedCuotas[i]
-                              : controller.listDateGeneratedRefuerzos[i]),
+                          DateFormatBr().formatBrFromString(isCuote
+                              ? controller.listDateGeneratedCuotas[i].toString()
+                              : controller.listDateGeneratedRefuerzos[i].toString()),
                         )),
                       ]),
                 ),

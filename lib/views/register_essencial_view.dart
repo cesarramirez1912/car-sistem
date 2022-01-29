@@ -4,6 +4,7 @@ import 'package:car_system/models/essencial_vehicle_models/category.dart';
 import 'package:car_system/repositories/essencial_vehicle_repository.dart';
 import 'package:car_system/rest.dart';
 import 'package:car_system/widgets/button.dart';
+import 'package:car_system/widgets/dialog_fetch.dart';
 import 'package:car_system/widgets/input.dart';
 import 'package:car_system/widgets/input_login.dart';
 import 'package:car_system/widgets/search_dropdown.dart';
@@ -91,8 +92,15 @@ class RegisterEssencialView extends StatelessWidget {
                 ),
                 CustomButton(
                     'REGISTRAR NUEVOS DATOS',
-                    () async => await registerEssencialController
-                        .openAndCloseLoadingDialog(),
+                    () async => await CustomDialogFetch(() async {
+                          bool res = await registerEssencialController
+                              .verifyInformation();
+                          if (res) {
+                            var resss = await registerEssencialController
+                                .sendInformations();
+                            CustomSnackBarSuccess('Registrado todos los datos');
+                          }
+                        }, text: 'Registrando nuevos datos'),
                     ColorPalette.GREEN)
               ],
             ),
@@ -259,87 +267,21 @@ class RegisterEssencialController extends GetxController {
   @override
   void onReady() async {
     // TODO: implement onReady
-    await getEssencial();
+    await CustomDialogFetch(() async {
+      Future responseee = essencialVehicleRepository
+          .fetchVehicleInformation(<Brand>[], Rest.BRANDS, Brand.fromJson);
+      Future responseCategoria = essencialVehicleRepository
+          .fetchVehicleInformation(
+              <Category>[], Rest.CATEGORIES, Category.fromJson,
+              return2arrays: false);
+
+      List<dynamic> listAwait =
+          await Future.wait([responseee, responseCategoria]);
+      listBrands.value = listAwait[0][0];
+      brandSelected.value = listBrands.first;
+      listCategories.value = listAwait[1][0];
+      categorySelected.value = listCategories.first;
+    });
     super.onReady();
-  }
-
-  Future<void> getEssencial() async {
-    Get.dialog(
-      Center(
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 5),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 15, bottom: 30, left: 8, right: 8),
-                  child: CircularProgressIndicator(),
-                ),
-                Flexible(
-                  child: Text(
-                    'Marcas y categorias...',
-                    style: TextStyle(fontSize: 16),
-                    overflow: TextOverflow.clip,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      barrierDismissible: false,
-    );
-    List responseee = await essencialVehicleRepository
-        .fetchVehicleInformation(<Brand>[], Rest.BRANDS, Brand.fromJson);
-    List responseCategoria = await essencialVehicleRepository
-        .fetchVehicleInformation(
-            <Category>[], Rest.CATEGORIES, Category.fromJson,
-            return2arrays: false);
-    listBrands.value = responseee[0];
-    brandSelected.value = listBrands.first;
-    listCategories.value = responseCategoria[0];
-    categorySelected.value = listCategories.first;
-    Get.back();
-  }
-
-  Future<void> openAndCloseLoadingDialog() async {
-    Get.dialog(
-      Center(
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 5),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 15, bottom: 30, left: 8, right: 8),
-                  child: CircularProgressIndicator(),
-                ),
-                Flexible(
-                  child: Text(
-                    'Registrando aguarde...',
-                    style: TextStyle(fontSize: 16),
-                    overflow: TextOverflow.clip,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      barrierDismissible: false,
-    );
-    bool res = await verifyInformation();
-    if (res) {
-      var resss = await sendInformations();
-      CustomSnackBarSuccess('Registrado todos los datos');
-    }
-
-    Get.back();
   }
 }

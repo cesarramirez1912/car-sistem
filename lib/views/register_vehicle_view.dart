@@ -1,4 +1,6 @@
 import 'package:car_system/colors.dart';
+import 'package:car_system/common/money_format.dart';
+import 'package:car_system/common/remove_money_format.dart';
 import 'package:car_system/controllers/essencial_vehicle_controller.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
@@ -181,7 +183,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
           onSaved: (text) =>
               controller.createVehicle.value.contadoGuaranies = text,
           isLoading: controller.isLoading.value,
-          validator: validatorPriceSelGuaraniesWithDolar,
+          validator: validatorPriceSelDinero,
           onChanged: (text) {
             if (text.toString().length < 4) {
               controller.textGuaraniesVenta.text = '0';
@@ -191,7 +193,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
       CustomInput('', 'Precio para venta en dólares',
           iconData: Icons.price_change_outlined,
           textEditingController: controller.textDolaresVenta,
-          validator: validatorPriceSelDolaresWithGuaranies,
+          validator: validatorPriceSelDinero,
           onSaved: (text) =>
               controller.createVehicle.value.contadoDolares = text,
           isLoading: controller.isLoading.value,
@@ -345,38 +347,6 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
     ];
   }
 
-  Future<void> openAndCloseLoadingDialog() async {
-    Get.dialog(
-      Center(
-        child: Card(
-          margin: EdgeInsets.symmetric(horizontal: Get.width * 0.15),
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Padding(
-                  padding:
-                      EdgeInsets.only(top: 15, bottom: 30, left: 8, right: 8),
-                  child: CircularProgressIndicator(),
-                ),
-                Flexible(
-                  child: Text(
-                    controller.textRequestEssencial.value,
-                    style: const TextStyle(fontSize: 16),
-                    overflow: TextOverflow.clip,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      barrierDismissible: false,
-    );
-  }
-
   Widget dialogPlan() {
     return SingleChildScrollView(
       child: Container(
@@ -391,119 +361,133 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
           height: 300,
           child: SingleChildScrollView(
             child: Form(
-                key: controller.formKeyDialog,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CustomSpacing(),
-                    CustomTitle('Cant. Cuotas | Refuerzos'),
-                    CustomSpacing(),
-                    CustomInput(
-                      '',
-                      'Cantidad cuotas',
-                      isNumber: true,
-                      onSaved: (text) =>
-                          controller.cuota.value.cantidadCuotas = text,
-                      validator: (String text) {
-                        if (text.isEmpty) {
-                          return 'Campo obligatorio.';
-                        } else {
-                          if (double.parse(text.toString()) == 0.0) {
-                            return 'Cantidad debe de ser minimo 1';
-                          }
+              key: controller.formKeyDialog,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CustomSpacing(),
+                  CustomTitle('Cant. Cuotas | Refuerzos'),
+                  CustomSpacing(),
+                  CustomInput(
+                    '',
+                    'Cantidad cuotas',
+                    isNumber: true,
+                    onSaved: (text) =>
+                        controller.cuota.value.cantidadCuotas = text,
+                    validator: (String text) {
+                      if (text.isEmpty) {
+                        return 'Campo obligatorio.';
+                      } else {
+                        if (double.parse(text.toString()) == 0.0) {
+                          return 'Cantidad debe de ser minimo 1';
                         }
-                      },
-                      textEditingController: controller.textCantidadCuotas,
-                    ),
-                    CustomInput('', 'Cantidad refuerzos',
-                        validator: (String text) {
-                          if (text.isEmpty) return null;
-                          if (double.parse(text.toString()) == 0.0) {
-                            return 'Cantidad debe de ser minimo 1';
-                          }
-                        },
-                        isNumber: true,
-                        onSaved: (text) {
-                          if (text == '') {
-                            controller.cuota.value.cantidadRefuerzo = null;
-                          } else {
-                            controller.cuota.value.cantidadRefuerzo = text;
-                          }
-                        },
-                        textEditingController:
-                            controller.textCantidadRefuerzos),
-                    CustomTitle('Plan guaraníes'),
-                    CustomSpacing(),
-                    CustomInput(
-                      '',
-                      'Entrada',
+                      }
+                    },
+                    onChanged: controller.sumTotal,
+                    textEditingController: controller.textCantidadCuotas,
+                  ),
+                  CustomInput('', 'Cantidad refuerzos',
+                      onChanged: controller.sumTotal,
+                      validator: validatorRefuerzo,
+                      isNumber: true, onSaved: (text) {
+                    if (text == '') {
+                      controller.cuota.value.cantidadRefuerzo = null;
+                    } else {
+                      controller.cuota.value.cantidadRefuerzo = text;
+                    }
+                  }, textEditingController: controller.textCantidadRefuerzos),
+                  CustomTitle('Plan guaraníes'),
+                  CustomSpacing(),
+                  CustomInput(
+                    '',
+                    'Entrada',
+                    isNumber: true,
+                    iconData: Icons.price_change_outlined,
+                    textEditingController: controller.textEntradaGuaranies,
+                    onChanged: (text) {
+                      if (text.toString().length < 4) {
+                        controller.textEntradaGuaranies.updateValue(0);
+                      }
+                    },
+                    onSaved: (text) =>
+                        controller.cuota.value.entradaGuaranies = text,
+                  ),
+                  CustomInput(
+                    '',
+                    'Cuota',
+                    isNumber: true,
+                    validator: validatorCuoteDinero,
+                    iconData: Icons.price_change_outlined,
+                    textEditingController: controller.textCuotaGuaranies,
+                    onSaved: (text) =>
+                        controller.cuota.value.cuotaGuaranies = text,
+                    onChanged: (text) {
+                      if (text.toString().length < 4) {
+                        controller.textCuotaGuaranies.updateValue(0);
+                      }
+                    },
+                  ),
+                  CustomInput(
+                    '',
+                    'Refuerzo',
+                    isNumber: true,
+                    iconData: Icons.price_change_outlined,
+                    validator: validatorRefuerzoDinero,
+                    onChanged: (text) {
+                      if (text.toString().length < 4) {
+                        controller.textRefuezoGuaranies.updateValue(0);
+                      }
+                    },
+                    onSaved: (text) =>
+                        controller.cuota.value.refuerzoGuaranies = text,
+                    textEditingController: controller.textRefuezoGuaranies,
+                  ),
+                  CustomTitle('Plan dólares'),
+                  CustomSpacing(),
+                  CustomInput('', 'Entrada',
                       isNumber: true,
                       iconData: Icons.price_change_outlined,
-                      textEditingController: controller.textEntradaGuaranies,
-                      onChanged: (text) {
-                        if (text.toString().length < 4) {
-                          controller.textEntradaGuaranies.text = '0';
-                        }
-                      },
                       onSaved: (text) =>
-                          controller.cuota.value.entradaGuaranies = text,
-                    ),
-                    CustomInput(
-                      '',
-                      'Cuota',
-                      isNumber: true,
-                      validator: validatorPriceSelGuaranies,
-                      iconData: Icons.price_change_outlined,
-                      textEditingController: controller.textCuotaGuaranies,
-                      onSaved: (text) =>
-                          controller.cuota.value.cuotaGuaranies = text,
-                      onChanged: (text) {
-                        if (text.toString().length < 4) {
-                          controller.textCuotaGuaranies.text = '0';
-                        }
-                      },
-                    ),
-                    CustomInput(
-                      '',
-                      'Refuerzo',
+                          controller.cuota.value.entradaDolares = text,
+                      textEditingController: controller.textEntradaDolares),
+                  CustomInput('', 'Cuota',
                       isNumber: true,
                       iconData: Icons.price_change_outlined,
-                      onChanged: (text) {
-                        if (text.toString().length < 4) {
-                          controller.textRefuezoGuaranies.text = '0';
-                        }
-                      },
+                      validator: validatorCuoteDinero,
                       onSaved: (text) =>
-                          controller.cuota.value.refuerzoGuaranies = text,
-                      textEditingController: controller.textRefuezoGuaranies,
-                    ),
-                    CustomTitle('Plan dólares'),
-                    CustomSpacing(),
-                    CustomInput('', 'Entrada',
-                        isNumber: true,
-                        iconData: Icons.price_change_outlined,
-                        onSaved: (text) =>
-                            controller.cuota.value.entradaDolares = text,
-                        textEditingController: controller.textEntradaDolares),
-                    CustomInput('', 'Cuota',
-                        isNumber: true,
-                        iconData: Icons.price_change_outlined,
-                        onSaved: (text) =>
-                            controller.cuota.value.cuotaDolares = text,
-                        textEditingController: controller.textCuotaDolares),
-                    CustomInput('', 'Refuerzo',
-                        isNumber: true,
-                        iconData: Icons.price_change_outlined,
-                        onSaved: (text) =>
-                            controller.cuota.value.refuerzoDolares = text,
-                        textEditingController: controller.textRefuezoDolares),
-                  ],
-                )),
+                          controller.cuota.value.cuotaDolares = text,
+                      textEditingController: controller.textCuotaDolares),
+                  CustomInput('', 'Refuerzo',
+                      isNumber: true,
+                      validator: validatorRefuerzoDinero,
+                      iconData: Icons.price_change_outlined,
+                      onSaved: (text) =>
+                          controller.cuota.value.refuerzoDolares = text,
+                      textEditingController: controller.textRefuezoDolares),
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
+  }
+
+  String? validatorRefuerzoDinero(String text) {
+    double refuerzoGuaraniesDouble = RemoveMoneyFormat()
+        .removeToDouble(controller.textRefuezoGuaranies.text);
+    double refuerzoDolaresDouble =
+        RemoveMoneyFormat().removeToDouble(controller.textRefuezoDolares.text);
+    if (controller.textCantidadRefuerzos.text.isEmpty) {
+      return null;
+    } else {
+      if (refuerzoGuaraniesDouble == 0.0 && refuerzoDolaresDouble < 1) {
+        return 'Campo obligatorio.';
+      } else {
+        return null;
+      }
+    }
   }
 
   String? validatorTreeCaracteressAndNull(String text) {
@@ -515,28 +499,56 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
     return null;
   }
 
-  String? validatorPriceSelGuaraniesWithDolar(String text) {
-    if (controller.textDolaresVenta.text.length > 7) {
-      return null;
+  String? validatorRefuerzo(String text) {
+    double refuerzoGuaraniesDouble = RemoveMoneyFormat()
+        .removeToDouble(controller.textRefuezoGuaranies.text);
+    double refuerzoDolarDouble =
+        RemoveMoneyFormat().removeToDouble(controller.textRefuezoDolares.text);
+    if (text.isEmpty) {
+      if (refuerzoGuaraniesDouble > 0) {
+        return 'Obligatorio (Refuerzo G\$).';
+      } else if (refuerzoDolarDouble > 0.0) {
+        return 'Obligatorio (Refuerzo U\$).';
+      } else {
+        return null;
+      }
+    } else {
+      if (double.parse(text.toString()) == 0.0) {
+        return 'Cantidad debe de ser minimo 1';
+      } else {
+        return null;
+      }
     }
-    if (controller.textRefuezoDolares.text.length == 7 && text.length < 5) {
-      return 'Campo dolares o guaranies obligatorio.';
-    }
-    return null;
   }
 
-  String? validatorPriceSelDolaresWithGuaranies(String text) {
-    if (controller.textGuaraniesVenta.text.length == 5) {
+  String? validatorCuoteDinero(String text) {
+    double cuotaGuaraniesDouble =
+        RemoveMoneyFormat().removeToDouble(controller.textCuotaGuaranies.text);
+    double cuotaDolaresDouble =
+        RemoveMoneyFormat().removeToDouble(controller.textCuotaDolares.text);
+
+    if (controller.textCantidadCuotas.value.text.isNotEmpty) {
+      if (cuotaGuaraniesDouble > 0.0) {
+        return null;
+      }
+      if (cuotaGuaraniesDouble == 0.0 && cuotaDolaresDouble < 1) {
+        return 'Campo obligatorio.';
+      }
       return null;
+    } else {
+      return 'Campo obligatorio.';
     }
-    if (controller.textGuaraniesVenta.text.length == 4 && text.length < 8) {
-      return 'Campo dolares o guaranies obligatorio.';
-    }
-    return null;
   }
 
-  String? validatorPriceSelGuaranies(String text) {
-    if (text.length < 5) {
+  String? validatorPriceSelDinero(String text) {
+    double guaraniesVentaDouble =
+        RemoveMoneyFormat().removeToDouble(controller.textGuaraniesVenta.text);
+    double dolaresVentaDouble =
+        RemoveMoneyFormat().removeToDouble(controller.textDolaresVenta.text);
+    if (dolaresVentaDouble > 1) {
+      return null;
+    }
+    if (dolaresVentaDouble == 0.0 && guaraniesVentaDouble == 0.0) {
       return 'Campo obligatorio.';
     }
     return null;

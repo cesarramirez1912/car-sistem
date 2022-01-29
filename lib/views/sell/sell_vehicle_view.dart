@@ -228,7 +228,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                     },
               textEditingController:
                   controller.typesMoneySelected == 'GUARANIES'
-                      ? controller.textContadoGuaranies
+                      ? (controller.textContadoGuaranies)
                       : controller.textContadoDolares),
         ];
       case 'CREDITO':
@@ -330,8 +330,8 @@ class SellVehicleView extends GetView<VehicleDetailController> {
             Expanded(
               child: textInputContainer(
                 'Primera cuota en:',
-                DateFormatBr()
-                    .formatBr(controller.firstDateCuoteSelected.value),
+                DateFormatBr().formatBrFromString(
+                    controller.firstDateCuoteSelected.value.toString()),
                 onTap: () => controller.firstDateCuote(context),
               ),
             ),
@@ -381,8 +381,9 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                       Expanded(
                         child: textInputContainer(
                           'Primer refuerzo en:',
-                          DateFormatBr().formatBr(
-                              controller.firstDateRefuerzoSelected.value),
+                          DateFormatBr().formatBrFromString(controller
+                              .firstDateRefuerzoSelected.value
+                              .toString()),
                           onTap: () => controller.firstDateRefuerzo(context),
                         ),
                       ),
@@ -599,7 +600,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
             'Cuota',
             isNumber: true,
             validator: (String text) {
-              String newString = RemoveMoneyFormat().format(text);
+              String newString = RemoveMoneyFormat().removeToString(text);
               if (text.isEmpty) return 'Informar cuota mensual.';
               if (newString.isNum) {
                 if (double.parse(newString.toString()) == 0.0) {
@@ -618,7 +619,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
             'Refuerzo',
             isNumber: true,
             validator: (String text) {
-              String newString = RemoveMoneyFormat().format(text);
+              String newString = RemoveMoneyFormat().removeToString(text);
               if (controller.textCantidadRefuerzos.text.isNotEmpty) {
                 if (newString.isNum) {
                   if (double.parse(newString.toString()) == 0.0) {
@@ -646,7 +647,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomInput('', 'Cuota',
               isNumber: true,
               validator: (String text) {
-                String newString = RemoveMoneyFormat().format(text);
+                String newString = RemoveMoneyFormat().removeToString(text);
                 if (text.isEmpty) return 'Informar cuota mensual.';
                 if (newString.isNum) {
                   if (double.parse(newString.toString()) == 0.0) {
@@ -662,7 +663,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomInput('', 'Refuerzo',
               isNumber: true,
               validator: (String text) {
-                String newString = RemoveMoneyFormat().format(text);
+                String newString = RemoveMoneyFormat().removeToString(text);
                 if (controller.textCantidadRefuerzos.text.isNotEmpty) {
                   if (newString.isNum) {
                     if (double.parse(newString.toString()) == 0.0) {
