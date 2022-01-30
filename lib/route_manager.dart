@@ -30,7 +30,6 @@ class RouterManager {
     GetPage(name: HOME, page: () => ListVehiclesView(), binding: AllBinding()),
     GetPage(name: VEHICLE_DETAIL, page: () => VehicleDetailView(), binding: AllBinding()),
     GetPage(name: REGISTER, page: () => RegisterVehicleView(), binding: AllBinding()),
-    GetPage(name: REGISTER, page: () => RegisterVehicleView(), binding: AllBinding()),
     GetPage(name: SEL_VEHICLE, page: () => SellVehicleView(), binding: AllBinding()),
     GetPage(name: DATES_VEN, page: () => DatesVencView()),
     GetPage(name: SELLS_FROM_COLLABORATOR, page: () => SellsFromCollaboratorView(),binding: AllBinding()),

@@ -85,7 +85,7 @@ class ListVehiclesView extends GetView<ListVehicleController> {
         alignment: Alignment.center,
         padding: const EdgeInsets.all(10),
         child: Container(
-          alignment: Alignment.center,
+            alignment: Alignment.center,
             width: 800,
             child: Wrap(
               children: [
@@ -122,13 +122,13 @@ class ListVehiclesView extends GetView<ListVehicleController> {
             child: Wrap(
               children: [
                 ...controller.vehicles.map(
-                      (element) => Container(
+                  (element) => Container(
                     width: 350,
                     child: GestureDetector(
                       onTap: () => Get.toNamed(RouterManager.VEHICLE_DETAIL,
                           parameters: {
                             'idVehiculoSucursal':
-                            element.idVehiculoSucursal.toString()
+                                element.idVehiculoSucursal.toString()
                           }),
                       child: Card(
                         child: VehicleDetails(element),

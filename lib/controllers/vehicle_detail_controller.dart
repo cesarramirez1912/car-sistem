@@ -275,8 +275,9 @@ class VehicleDetailController extends GetxController {
     }
   }
 
-  Future<void> registerSale() async {
+  Future<bool> registerSale() async {
     if (formKey.currentState == null) {
+      return false;
     } else if (formKey.currentState!.validate()) {
       isLoading.value = true;
       try {
@@ -292,6 +293,15 @@ class VehicleDetailController extends GetxController {
         }
 
         if (typeSellSelected != 'CONTADO') {
+          if (typesMoneySelected == 'GUARANIES' &&
+                  cuota.value.cuotaGuaranies == null ||
+              typesMoneySelected == 'DOLARES' &&
+                  cuota.value.cuotaDolares == null) {
+            isLoading.value = false;
+            CustomSnackBarError('SIN VALOR EN CUOTA! HACER UN NUEVO PLAN');
+            return false;
+          }
+
           sellVehicleModel.value.entradaDolares =
               RemoveMoneyFormat().removeToString(cuota.value.entradaDolares);
           sellVehicleModel.value.entradaGuaranies =
@@ -323,14 +333,19 @@ class VehicleDetailController extends GetxController {
         }
         var responseSellVehicle =
             await sellVehicleRepository.sellVehicle(sellVehicleModel.toJson());
-        CustomSnackBarSuccess('VENTA REGISTRADA CON EXITO!');
-        Get.back();
+
         formKey.currentState!.reset();
         isLoading.value = false;
+        return true;
       } catch (e) {
         CustomSnackBarError(e.toString());
         isLoading.value = false;
+        return false;
       }
+    } else {
+      isLoading.value = false;
+      CustomSnackBarError('Falta completar algun campo');
+      return false;
     }
   }
 

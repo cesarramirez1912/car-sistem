@@ -14,6 +14,10 @@ class RemoveMoneyFormat {
   }
 
   double removeToDouble(dynamic text) {
-    return double.parse(removeToString(text));
+    if (removeToString(text) == null || removeToString(text) == '') {
+      return 0.0;
+    } else {
+      return double.parse(removeToString(text));
+    }
   }
 }

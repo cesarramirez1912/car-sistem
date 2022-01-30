@@ -254,14 +254,11 @@ class EssencialVehicleController extends GetxController {
         createVehicle.value.cuotas = listCuota;
         var vehicleResponse = await essencialVehicleRepository
             ?.createVehicle(createVehicle.toJson());
-        Get.back();
-        CustomSnackBarSuccess(
-            ' ${createVehicle.value.idModelo} REGISTRADO CON EXITO!');
+
         formKey.currentState?.reset();
         formKeyDialog.currentState?.reset();
         isLoading.value = false;
       } catch (e) {
-        print(e);
         CustomSnackBarError(e.toString());
         isLoading.value = false;
       }

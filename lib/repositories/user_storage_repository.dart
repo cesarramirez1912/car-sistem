@@ -9,6 +9,7 @@ class UserStorageRepository extends GetConnect {
             .timeout(const Duration(seconds: 10));
     if (response.status.hasError) {
       if (response.body['message'] != '') {
+        return Future.error(response.body['message']);
       } else {
         return Future.error(
             'Sin registro, verifique de nuevo los datos ingressados');

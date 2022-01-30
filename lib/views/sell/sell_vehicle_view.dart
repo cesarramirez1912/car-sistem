@@ -10,6 +10,7 @@ import 'package:car_system/models/register_client_model.dart';
 import 'package:car_system/responsive.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/button.dart';
+import 'package:car_system/widgets/dialog_fetch.dart';
 import 'package:car_system/widgets/input.dart';
 import 'package:car_system/widgets/plan.dart';
 import 'package:car_system/widgets/search_dropdown.dart';
@@ -97,9 +98,13 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                                   value.idCliente;
                             },
                             showSelectedItems: true,
-                            validator: (u) => u?.idCliente == null
-                                ? "CLIENTE OBLIGATORIO PARA LA VENTA"
-                                : null,
+                            validator: (u) {
+                              if (u?.idCliente == null) {
+                                return "CLIENTE OBLIGATORIO PARA LA VENTA";
+                              } else {
+                                return null;
+                              }
+                            },
                             itemAsString: (ClientModel? item) =>
                                 item?.cliente ?? '',
                             dropdownBuilder:
@@ -195,11 +200,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: listRender(context),
                     ),
-                    CustomButton('FINALIZAR VENTA', () async {
-                      await controller.registerSale();
-                      await listVehicleController.fetchVehicles();
-                      await sellsFromCollaboratorController.requestSales();
-                    }, ColorPalette.GREEN)
+                    conditionalRenderButton()
                   ],
                 ),
               ),
@@ -210,6 +211,36 @@ class SellVehicleView extends GetView<VehicleDetailController> {
     );
   }
 
+  Widget conditionalRenderButton() {
+    double _contadoGuaranies = RemoveMoneyFormat()
+        .removeToDouble(controller.textContadoGuaranies.text);
+    double _contadoDolares =
+        RemoveMoneyFormat().removeToDouble(controller.textContadoDolares.text);
+    if (controller.typeSellSelected.value == 'CONTADO' ||
+        (controller.cuota.value.cantidadCuotas != null &&
+            controller.cuota.value.cuotaGuaranies != null) ||
+        (controller.cuota.value.cantidadCuotas != null &&
+            controller.cuota.value.cuotaDolares != null) ||
+        _contadoGuaranies > 0.0 ||
+        _contadoDolares > 0.0) {
+      return CustomButton('FINALIZAR VENTA', () async {
+        bool res = false;
+        CustomDialogFetch(() async {
+          res = await controller.registerSale();
+        }, text: 'REGISTRANDO NUEVA VENTA')
+            .then((value) async {
+          if (res) {
+            CustomSnackBarSuccess('VENTA REGISTRADA CON EXITO!');
+            await Future.delayed(Duration(seconds: 1));
+            Get.offAllNamed(RouterManager.HOME);
+          }
+        });
+      }, ColorPalette.GREEN);
+    } else {
+      return Container();
+    }
+  }
+
   List<Widget> listRender(BuildContext context) {
     switch (controller.typeSellSelected.value) {
       case 'CONTADO':
@@ -217,6 +248,21 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomInput('', 'PRECIO VENTA ${controller.typesMoneySelected.value}',
               isNumber: true,
               iconData: Icons.price_change_outlined,
+              onChanged: (text) {
+                if (controller.typesMoneySelected == 'GUARANIES') {
+                  if (text.toString().length < 4) {
+                    controller.textContadoGuaranies.updateValue(0);
+                  }
+                }
+              },
+              validator: (text) {
+                double valueDouble = RemoveMoneyFormat().removeToDouble(text);
+                if (valueDouble == 0.0) {
+                  return 'Campo obligatorio';
+                } else {
+                  return null;
+                }
+              },
               onSaved: (text) => controller.typesMoneySelected == 'GUARANIES'
                   ? {
                       controller.sellVehicleModel.value.contadoGuaranies = text,
@@ -236,8 +282,8 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           CustomPlan(0, controller.cuota.value,
               textRender: controller.typesMoneySelected.value,
               withTitle: false),
-          controller.vehicleSelected.first.cantidadCuotas == null ||
-                  controller.vehicleSelected.first.cantidadCuotas == 0
+          (controller.vehicleSelected.first.cantidadCuotas == null ||
+                  controller.vehicleSelected.first.cantidadCuotas == 0)
               ? Container()
               : expanded(CustomButton(
                   'ELEGIR PLAN',
@@ -293,31 +339,26 @@ class SellVehicleView extends GetView<VehicleDetailController> {
               iconData: Icons.post_add,
               isLoading: controller.isLoading.value)),
           CustomSpacing(),
-          const Divider(
-            color: Colors.grey,
-          ),
-          CustomSpacing(),
           controller.cuota.value.cantidadCuotas == null ||
                   controller.cuota.value.cantidadCuotas == 0
               ? Container()
               : vencimientosSection(context),
-          CustomSpacing(),
-          const Divider(
-            color: Colors.grey,
-          ),
-          CustomSpacing()
         ];
       default:
         return [];
     }
   }
 
-  Widget vencimientosSection(BuildContext context) {
+  vencimientosSection(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        const Divider(
+          color: Colors.grey,
+        ),
+        CustomSpacing(),
         CustomTitle('Fechas vencimiento'),
         Padding(
           padding: const EdgeInsets.only(right: 10, left: 10),
@@ -402,7 +443,12 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                         ],
                       )
                     ],
-                  )
+                  ),
+                  CustomSpacing(),
+                  const Divider(
+                    color: Colors.grey,
+                  ),
+                  CustomSpacing()
                 ],
               ),
       ],
@@ -552,7 +598,20 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                     ),
                     CustomInput('', 'Cantidad refuerzos',
                         validator: (String text) {
-                          if (text.isEmpty) return null;
+                          double guaraniesRefuerzo = RemoveMoneyFormat()
+                              .removeToDouble(
+                                  controller.textRefuezoGuaranies.text);
+                          double dolaresRefuerzo = RemoveMoneyFormat()
+                              .removeToDouble(
+                                  controller.textRefuezoDolares.text);
+                          if (text.isEmpty) {
+                            if (dolaresRefuerzo > 0.0 ||
+                                guaraniesRefuerzo > 0.0) {
+                              return 'Campo obligatorio';
+                            } else {
+                              return null;
+                            }
+                          }
                           if (double.parse(text.toString()) == 0.0) {
                             return 'Cantidad debe de ser minimo 1';
                           }
@@ -591,14 +650,20 @@ class SellVehicleView extends GetView<VehicleDetailController> {
             '',
             'Entrada',
             isNumber: true,
+            onChanged: (text) => controller.textEntradaGuaranies
+                .updateValue(RemoveMoneyFormat().removeToDouble(text)),
             iconData: Icons.price_change_outlined,
             textEditingController: controller.textEntradaGuaranies,
-            onSaved: (text) => controller.cuota.value.entradaGuaranies = text,
+            onSaved: (text) {
+              controller.cuota.value.entradaGuaranies = text;
+            },
           ),
           CustomInput(
             '',
             'Cuota',
             isNumber: true,
+            onChanged: (text) => controller.textCuotaGuaranies
+                .updateValue(RemoveMoneyFormat().removeToDouble(text)),
             validator: (String text) {
               String newString = RemoveMoneyFormat().removeToString(text);
               if (text.isEmpty) return 'Informar cuota mensual.';
@@ -618,6 +683,8 @@ class SellVehicleView extends GetView<VehicleDetailController> {
             '',
             'Refuerzo',
             isNumber: true,
+            onChanged: (text) => controller.textRefuezoGuaranies
+                .updateValue(RemoveMoneyFormat().removeToDouble(text)),
             validator: (String text) {
               String newString = RemoveMoneyFormat().removeToString(text);
               if (controller.textCantidadRefuerzos.text.isNotEmpty) {

@@ -1,15 +1,16 @@
 import 'package:car_system/colors.dart';
-import 'package:car_system/common/money_format.dart';
 import 'package:car_system/common/remove_money_format.dart';
 import 'package:car_system/controllers/essencial_vehicle_controller.dart';
-import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
 import 'package:car_system/models/essencial_vehicle_models/model.dart';
 import 'package:car_system/responsive.dart';
+import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/button.dart';
+import 'package:car_system/widgets/dialog_fetch.dart';
 import 'package:car_system/widgets/input.dart';
 import 'package:car_system/widgets/plan.dart';
 import 'package:car_system/widgets/search_dropdown.dart';
+import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
 import 'package:car_system/widgets/spacing.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -17,8 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RegisterVehicleView extends GetView<EssencialVehicleController> {
-  ListVehicleController listVehicleController = Get.find();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,9 +155,15 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          CustomButton('REGISTRAR', () async {
-            await controller.registerVehicle();
-            await listVehicleController.fetchVehicles();
+          CustomButton('REGISTRAR VEHICULO', () async {
+            CustomDialogFetch(() async {
+              await controller.registerVehicle();
+            }, text: 'REGISTRANDO VEHICULO')
+                .then((value) async {
+              CustomSnackBarSuccess('VEHICULO REGISTRADO CON EXITO!');
+              await Future.delayed(const Duration(seconds: 1));
+              Get.offAllNamed(RouterManager.HOME);
+            });
           }, ColorPalette.GREEN, isLoading: controller.isLoading.value),
           const SizedBox(
             width: 10,
