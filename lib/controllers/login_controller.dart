@@ -30,7 +30,7 @@ class LoginController extends GetxController {
       List<User> res = await _loginRepository
           .fetchLogin({"celular": phone.text, "sena": password.text});
       user?.value = res.first;
-      userStorageController.storePriceModel(user!.value);
+      await userStorageController.storePriceModel(user!.value);
       isFetching.value = false;
       if (res.first.dias < Static.DAYS_PERMIT_APP_USE ||
           res.first.activo == 0) {

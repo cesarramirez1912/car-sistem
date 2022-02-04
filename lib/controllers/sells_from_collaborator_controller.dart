@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/models/cuote_detail_model.dart';
 import 'package:car_system/models/refuerzo_detail_model.dart';
@@ -24,6 +25,20 @@ class SellsFromCollaboratorController extends GetxController {
 
   RxList<RefuerzoDetailModel> listaRefuerzosGeral = <RefuerzoDetailModel>[].obs;
   RxList<RefuerzoDetailModel> listaRefuerzos = <RefuerzoDetailModel>[].obs;
+
+  RxString financiadoTotalStr = ''.obs;
+
+  RxString totalPagadoCuotaStr = ''.obs;
+  RxString totalVentaCuotaStr = ''.obs;
+  RxString totalCantidadFaltanteCuotaStr = ''.obs;
+  RxString totalCantidadPagadoCuotaStr = ''.obs;
+  RxString totalCuotaFaltanteStr = ''.obs;
+
+  RxString totalPagadoRefuerzoStr = ''.obs;
+  RxString totalVentaRefuerzoStr = ''.obs;
+  RxString totalCantidadFaltanteRefuerzoStr = ''.obs;
+  RxString totalCantidadPagadoRefuerzoStr = ''.obs;
+  RxString totalRefuerzoFaltanteStr = ''.obs;
 
   RxBool isLoading = false.obs;
   RxBool isCuote = false.obs;
@@ -150,6 +165,108 @@ class SellsFromCollaboratorController extends GetxController {
     } else {
       listaCuotes.addAll(lista);
     }
+
+    financiadoTotalStr.value = '';
+
+    totalPagadoCuotaStr.value = '';
+    totalVentaCuotaStr.value = '';
+    totalCantidadPagadoCuotaStr.value = '';
+    totalCantidadFaltanteCuotaStr.value = '';
+
+    totalPagadoRefuerzoStr.value = '';
+    totalVentaRefuerzoStr.value = '';
+    totalCantidadPagadoRefuerzoStr.value = '';
+    totalCantidadFaltanteRefuerzoStr.value = '';
+
+    double totalPagadoCuota = 0.0;
+    double totalVentaCuota = 0.0;
+    double totalCantidadPagadoCuota = 0;
+    double totalCantidadFaltanteCuota = 0;
+
+    double totalPagadoRefuerzo = 0.0;
+    double totalVentaRefuerzo = 0.0;
+    double totalCantidadPagadoRefuerzo = 0;
+    double totalCantidadFaltanteRefuerzo = 0;
+
+    bool isGuaranies = true;
+
+    for (var cuote in listaCuotes) {
+      if (cuote.cuotaDolares == null) {
+        totalVentaCuota =
+            (totalVentaCuota + double.parse(cuote.cuotaGuaranies.toString()));
+        if (cuote.pagoGuaranies == null) {
+          totalCantidadFaltanteCuota = totalCantidadFaltanteCuota + 1;
+        } else {
+          totalPagadoCuota =
+              (totalPagadoCuota + double.parse(cuote.pagoGuaranies.toString()));
+          totalCantidadPagadoCuota = totalCantidadPagadoCuota + 1;
+        }
+      } else {
+        isGuaranies = false;
+        totalVentaCuota =
+            (totalVentaCuota + double.parse(cuote.cuotaDolares.toString()));
+        if (cuote.pagoDolares == null) {
+          totalCantidadFaltanteCuota = totalCantidadFaltanteCuota + 1;
+        } else {
+          totalPagadoCuota =
+              (totalPagadoCuota + double.parse(cuote.pagoDolares.toString()));
+          totalCantidadPagadoCuota = totalCantidadPagadoCuota + 1;
+        }
+      }
+    }
+
+    for (var refuerzo in listaRefuerzos) {
+      if (refuerzo.refuerzoDolares == null) {
+        totalVentaRefuerzo = (totalVentaRefuerzo +
+            double.parse(refuerzo.refuerzoGuaranies.toString()));
+        if (refuerzo.pagoGuaranies == null) {
+          totalCantidadFaltanteRefuerzo = totalCantidadFaltanteRefuerzo + 1;
+        } else {
+          totalPagadoRefuerzo = (totalPagadoRefuerzo +
+              double.parse(refuerzo.pagoGuaranies.toString()));
+          totalCantidadPagadoRefuerzo = totalCantidadPagadoRefuerzo + 1;
+        }
+      } else {
+        totalVentaRefuerzo = (totalVentaRefuerzo +
+            double.parse(refuerzo.refuerzoDolares.toString()));
+        if (refuerzo.pagoDolares == null) {
+          totalCantidadFaltanteRefuerzo = totalCantidadFaltanteRefuerzo + 1;
+        } else {
+          totalPagadoRefuerzo = (totalPagadoRefuerzo +
+              double.parse(refuerzo.pagoDolares.toString()));
+          totalCantidadPagadoRefuerzo = totalCantidadPagadoRefuerzo + 1;
+        }
+      }
+    }
+
+    totalPagadoCuotaStr.value = MoneyFormat()
+        .formatCommaToDot(totalPagadoCuota, isGuaranies: isGuaranies);
+    totalVentaCuotaStr.value = MoneyFormat()
+        .formatCommaToDot(totalVentaCuota, isGuaranies: isGuaranies);
+    totalCantidadPagadoCuotaStr.value = MoneyFormat()
+        .formatCommaToDot(totalCantidadPagadoCuota, isGuaranies: isGuaranies);
+    totalCantidadFaltanteCuotaStr.value = MoneyFormat()
+        .formatCommaToDot(totalCantidadFaltanteCuota, isGuaranies: isGuaranies);
+    totalCuotaFaltanteStr.value = MoneyFormat().formatCommaToDot(
+        (totalVentaCuota - totalPagadoCuota),
+        isGuaranies: isGuaranies);
+
+    totalPagadoRefuerzoStr.value = MoneyFormat()
+        .formatCommaToDot(totalPagadoRefuerzo, isGuaranies: isGuaranies);
+    totalVentaRefuerzoStr.value = MoneyFormat()
+        .formatCommaToDot(totalVentaRefuerzo, isGuaranies: isGuaranies);
+    totalCantidadPagadoRefuerzoStr.value = MoneyFormat().formatCommaToDot(
+        totalCantidadPagadoRefuerzo,
+        isGuaranies: isGuaranies);
+    totalCantidadFaltanteRefuerzoStr.value = MoneyFormat().formatCommaToDot(
+        totalCantidadFaltanteRefuerzo,
+        isGuaranies: isGuaranies);
+    totalRefuerzoFaltanteStr.value = MoneyFormat().formatCommaToDot(
+        (totalVentaRefuerzo - totalPagadoRefuerzo),
+        isGuaranies: isGuaranies);
+
+    financiadoTotalStr.value = MoneyFormat()
+        .formatCommaToDot(totalVentaRefuerzo+totalVentaCuota, isGuaranies: isGuaranies);
   }
 
   void queryListRefuerzos(int? idVenta) async {

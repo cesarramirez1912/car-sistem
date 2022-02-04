@@ -2,21 +2,31 @@ import 'package:car_system/common/money_format.dart';
 import 'package:car_system/models/cuotes.dart';
 import 'package:car_system/widgets/renders_cards_plan/render_dolares_plan.dart';
 import 'package:car_system/widgets/renders_cards_plan/render_guaranies_plan.dart';
+import 'package:car_system/widgets/renders_cards_plan/totales_plan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../plan.dart';
 import '../title.dart';
 
-Widget renderCuotas(Cuota cuota, {String? textRender}) {
+Widget renderCuotas(Cuota cuota,
+    {String? textRender, required bool showTotales,required bool showDolares,required bool showGuaranies}) {
   List<Widget> listRender() {
     switch (textRender) {
       case 'GUARANIES':
-        return guaraniesRender(cuota);
+        return showTotales
+            ? guaraniesRender(cuota) + totalesRender(cuota,showDolares,showGuaranies )
+            : guaraniesRender(cuota);
       case 'DOLARES':
-        return dolaresRender(cuota);
+        return showTotales
+            ? dolaresRender(cuota) + totalesRender(cuota,showDolares,showGuaranies )
+            : dolaresRender(cuota);
       default:
-        return guaraniesRender(cuota) + dolaresRender(cuota);
+        return showTotales
+            ? guaraniesRender(cuota) +
+                dolaresRender(cuota) +
+                totalesRender(cuota,showDolares,showGuaranies )
+            : guaraniesRender(cuota) + dolaresRender(cuota);
     }
   }
 

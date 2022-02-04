@@ -38,6 +38,7 @@ class UserStorageController extends GetxController {
     List<User> _listUser = await userStorageRepository
         .fetchUserInformation(user!.value.idColaborador);
     storePriceModel(_listUser.first);
+    print(_listUser.first.toJson());
     if (_listUser.first.dias < Static.DAYS_PERMIT_APP_USE ||
         _listUser.first.activo == 0) {
       Get.offAndToNamed(RouterManager.LOGIN);
@@ -49,13 +50,13 @@ class UserStorageController extends GetxController {
     user?.value = _user!;
   }
 
-  void storePriceModel(User _user) {
+  Future<void> storePriceModel(User _user) async {
     user?.value = _user;
-    box.write('userModel', _user.toJson());
+    await box.write('userModel', _user.toJson());
   }
 
-  void deleteStore() {
-    box.remove('userModel');
+  Future<void> deleteStore() async {
+    await box.remove('userModel');
   }
 
   User restoreModel() {

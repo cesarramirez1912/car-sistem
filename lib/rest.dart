@@ -1,7 +1,7 @@
 class Rest {
-  static const String BASE_URL_TEST = "http://192.168.0.3:5480";
+  //static const String BASE_URL_TEST = "http://192.168.0.3:5480";
 
-  //static const String BASE_URL_TEST = "http://192.168.88.112:5480";
+  static const String BASE_URL_TEST = "http://192.168.88.112:5480";
   static const String BASE_URL_PRODUCTION =
       "https://carsystembackend.herokuapp.com";
 

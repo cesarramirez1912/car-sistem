@@ -39,7 +39,7 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
             Flexible(
               child: Column(
                 children: [
-                  VehicleDetails(controller.vehicles.first,heithImage: 320),
+                  VehicleDetails(controller.vehicles.first, heithImage: 320),
                   venderButton()
                 ],
               ),
@@ -84,7 +84,7 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
             Flexible(
               child: Column(
                 children: [
-                  VehicleDetails(controller.vehicles.first,heithImage: 320),
+                  VehicleDetails(controller.vehicles.first, heithImage: 320),
                   venderButton()
                 ],
               ),
@@ -100,7 +100,11 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                   Cuota cuota =
                       Cuota.fromJson(controller.vehicles[index].toJson());
                   if (cuota.cantidadCuotas != null) {
-                    return CustomPlan(index, cuota);
+                    return CustomPlan(
+                      index,
+                      cuota,
+                      showTotal: true,
+                    );
                   } else {
                     return Container(
                         alignment: Alignment.center,
@@ -151,7 +155,7 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                           Cuota cuota = Cuota.fromJson(
                               controller.vehicles[index].toJson());
                           if (cuota.cantidadCuotas != null) {
-                            return CustomPlan(index, cuota);
+                            return CustomPlan(index, cuota,showTotal: true);
                           } else {
                             return Container(
                                 alignment: Alignment.center,

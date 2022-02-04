@@ -1,4 +1,5 @@
 import 'package:car_system/colors.dart';
+import 'package:car_system/common/money_format.dart';
 import 'package:car_system/common/remove_money_format.dart';
 import 'package:car_system/controllers/essencial_vehicle_controller.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
@@ -108,6 +109,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
           itemCount: controller.listCuota.length,
           itemBuilder: (BuildContext context, int index) {
             return CustomPlan(index, controller.listCuota[index],
+                showTotal: true,
                 onPressed: () => controller.listCuota.removeAt(index));
           }),
       CustomSpacing(),
@@ -120,6 +122,25 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                         title: 'Nuevo plan',
                         content: dialogPlan(),
                         actions: [
+                          Obx(
+                            () => Container(
+                              padding: const EdgeInsets.only(left: 10),
+                              width: double.maxFinite,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTitle('Plan total'),
+                                  CustomTitle(MoneyFormat().formatCommaToDot(
+                                      controller
+                                          .textTotalGuaraniesString.value),fontSize: 16),
+                                  CustomTitle(MoneyFormat().formatCommaToDot(
+                                      controller.textTotalDolaresString.value,
+                                      isGuaranies: false),fontSize: 16),
+                                ],
+                              ),
+                            ),
+                          ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -411,6 +432,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     iconData: Icons.price_change_outlined,
                     textEditingController: controller.textEntradaGuaranies,
                     onChanged: (text) {
+                      controller.sumTotal(text);
                       if (text.toString().length < 4) {
                         controller.textEntradaGuaranies.updateValue(0);
                       }
@@ -428,6 +450,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     onSaved: (text) =>
                         controller.cuota.value.cuotaGuaranies = text,
                     onChanged: (text) {
+                      controller.sumTotal(text);
                       if (text.toString().length < 4) {
                         controller.textCuotaGuaranies.updateValue(0);
                       }
@@ -440,6 +463,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                     iconData: Icons.price_change_outlined,
                     validator: validatorRefuerzoDinero,
                     onChanged: (text) {
+                      controller.sumTotal(text);
                       if (text.toString().length < 4) {
                         controller.textRefuezoGuaranies.updateValue(0);
                       }
@@ -451,6 +475,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                   CustomTitle('Plan dólares'),
                   CustomSpacing(),
                   CustomInput('', 'Entrada',
+                      onChanged: controller.sumTotal,
                       isNumber: true,
                       iconData: Icons.price_change_outlined,
                       onSaved: (text) =>
@@ -458,6 +483,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                       textEditingController: controller.textEntradaDolares),
                   CustomInput('', 'Cuota',
                       isNumber: true,
+                      onChanged: controller.sumTotal,
                       iconData: Icons.price_change_outlined,
                       validator: validatorCuoteDinero,
                       onSaved: (text) =>
@@ -465,6 +491,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                       textEditingController: controller.textCuotaDolares),
                   CustomInput('', 'Refuerzo',
                       isNumber: true,
+                      onChanged: controller.sumTotal,
                       validator: validatorRefuerzoDinero,
                       iconData: Icons.price_change_outlined,
                       onSaved: (text) =>
@@ -590,5 +617,14 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
         )
       ],
     );
+  }
+}
+
+class Totales extends StatelessWidget {
+  EssencialVehicleController controller = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() => Text(controller.textTotalDolares.text.toString()));
   }
 }

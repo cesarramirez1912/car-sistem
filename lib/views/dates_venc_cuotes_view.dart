@@ -4,6 +4,7 @@ import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/search_dropdown.dart';
+import 'package:car_system/widgets/spacing.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,6 +26,8 @@ class DatesVencCuotesView extends StatelessWidget {
           : Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomDropDowSearch(
                       controller.listStringCuotaOrefuerzo.value, '',
@@ -32,6 +35,25 @@ class DatesVencCuotesView extends StatelessWidget {
                     controller.textStringCuotaOrefuerzo.value = value;
                     controller.filterCuoteOrRefuerzo();
                   }, selectedItem: controller.textStringCuotaOrefuerzo.value),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [...sectionTotal()],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 6,
+                  ),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -55,6 +77,44 @@ class DatesVencCuotesView extends StatelessWidget {
     }
   }
 
+  List<Widget> sectionTotal() {
+    if (controller.isCuote.value) {
+      return [
+        Text(
+          'Total Financiado: ' + controller.financiadoTotalStr.value,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        CustomSpacing(height: 6),
+        Text(
+          'Total Cuota: ' + controller.totalVentaCuotaStr.value,
+        ),
+        Text(
+          'Cuota Pagado: ' + controller.totalPagadoCuotaStr.value,
+          style: const TextStyle(color: ColorPalette.GREEN),
+        ),
+        Text(
+          'Cuota Faltante: ' + controller.totalCuotaFaltanteStr.value,
+          style: const TextStyle(color:  ColorPalette.PRIMARY),
+        )
+      ];
+    } else {
+      return [
+        Text(
+          'Total Financiado: ' + controller.financiadoTotalStr.value,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        CustomSpacing(height: 6),
+        Text('Total Refuerzo: ' + controller.totalVentaRefuerzoStr.value),
+        Text(
+          'Refuerzo Pagado: ' + controller.totalPagadoRefuerzoStr.value,
+          style: const TextStyle(color:  ColorPalette.GREEN),
+        ),
+        Text('Refuerzo faltante: ' + controller.totalRefuerzoFaltanteStr.value,
+            style: const TextStyle(color: ColorPalette.PRIMARY))
+      ];
+    }
+  }
+
   Widget isCuote() {
     return DataTable(
       columnSpacing: 0,
@@ -70,7 +130,8 @@ class DatesVencCuotesView extends StatelessWidget {
                         controller.listaCuotes[i].fechaCuota.toString()),
                     controller.listaCuotes[i].cuotaGuaranies,
                     controller.listaCuotes[i].cuotaDolares,
-                    controller.listaCuotes[i].idCuotaVenta,controller.listaCuotes[i].idVenta);
+                    controller.listaCuotes[i].idCuotaVenta,
+                    controller.listaCuotes[i].idVenta);
               }
             },
             cells: [
@@ -87,10 +148,13 @@ class DatesVencCuotesView extends StatelessWidget {
                 ),
               ),
               DataCell(
-                Text(controller.listaCuotes[i].fechaPago != null
-                    ? DateFormatBr().formatBrFromString(
-                        controller.listaCuotes[i].fechaPago.toString())
-                    : '-'),
+                Text(
+                  controller.listaCuotes[i].fechaPago != null
+                      ? DateFormatBr().formatBrFromString(
+                          controller.listaCuotes[i].fechaPago.toString())
+                      : '-',
+                  style: const TextStyle(color: ColorPalette.GREEN),
+                ),
               ),
             ]),
       ),
@@ -142,10 +206,13 @@ class DatesVencCuotesView extends StatelessWidget {
                 ),
               ),
               DataCell(
-                Text(controller.listaRefuerzos[i].fechaPago != null
-                    ? DateFormatBr().formatBrFromString(
-                        controller.listaRefuerzos[i].fechaPago.toString())
-                    : '-'),
+                Text(
+                  controller.listaRefuerzos[i].fechaPago != null
+                      ? DateFormatBr().formatBrFromString(
+                          controller.listaRefuerzos[i].fechaPago.toString())
+                      : '-',
+                  style: const TextStyle(color: ColorPalette.GREEN),
+                ),
               ),
             ]),
       ),
@@ -165,7 +232,7 @@ class DatesVencCuotesView extends StatelessWidget {
 }
 
 Future openDialog(SellsFromCollaboratorController controller, String fecha,
-    dynamic valorGuaranies, dynamic valorDolares, int? id,int? idVenta) {
+    dynamic valorGuaranies, dynamic valorDolares, int? id, int? idVenta) {
   return Get.defaultDialog(
       title: 'PAGAR ${controller.textStringCuotaOrefuerzo}',
       content: dialogPlan(controller, fecha, valorGuaranies, valorDolares),
@@ -177,7 +244,8 @@ Future openDialog(SellsFromCollaboratorController controller, String fecha,
           children: [
             CustomButton(
                 '     PAGAR     ',
-                () => controller.postPago(valorDolares, valorGuaranies, id,idVenta),
+                () => controller.postPago(
+                    valorDolares, valorGuaranies, id, idVenta),
                 ColorPalette.GREEN,
                 edgeInsets:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

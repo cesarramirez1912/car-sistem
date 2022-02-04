@@ -75,7 +75,7 @@ class SellsFromCollaboratorView extends StatelessWidget {
                 child: Wrap(
                   children: [
                     ...controller.salesAux.map((e) =>
-                        SizedBox(width: 350, height: 325, child: cardSell(e)))
+                        SizedBox(width: 350, height: 400, child: cardSell(e)))
                   ],
                 ),
               ),
@@ -128,6 +128,19 @@ class SellsFromCollaboratorView extends StatelessWidget {
             CustomTitle('VEHICULO', fontSize: 15),
             CustomTitle(e.marca.toString() + ' - ' + e.modelo.toString(),
                 fontSize: 13, fontWeight: FontWeight.w600),
+            e.contadoGuaranies == null && e.contadoDolares == null
+                ? CustomTitle('ENTREGA', fontSize: 15)
+                : Container(),
+            e.contadoGuaranies == null && e.contadoDolares == null
+                ? CustomTitle(
+                    e.entradaDolares == null && e.entradaGuaranies == null
+                        ? '0'
+                        : e.entradaGuaranies == null
+                            ? MoneyFormat().formatCommaToDot(e.entradaDolares,isGuaranies: false)
+                            : MoneyFormat().formatCommaToDot(e.entradaGuaranies),
+                fontSize: 13,
+                    fontWeight: FontWeight.w600)
+                : Container(),
             CustomTitle('FECHA Y HORA DE VENTA', fontSize: 15),
             CustomTitle(
                 DateFormatBr().formatBrWithTime(e.fechaVenta.toString()),

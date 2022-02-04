@@ -91,6 +91,9 @@ class EssencialVehicleController extends GetxController {
   MoneyMaskedTextController textTotalGuaranies = MoneyMaskedTextController(
       leftSymbol: 'G\$ ', precision: 0, decimalSeparator: '');
 
+  RxString textTotalGuaraniesString = '0'.obs;
+  RxString textTotalDolaresString = '0'.obs;
+
   @override
   void onInit() async {
     UserStorageController userStorageController =
@@ -188,7 +191,7 @@ class EssencialVehicleController extends GetxController {
     double refuerzoMasEntrada =
         RemoveMoneyFormat().removeToDouble(textEntradaGuaranies.text) +
             refuerzoXcantidad;
-    textTotalGuaranies.updateValue(refuerzoMasEntrada + cuotaXcantidad);
+    textTotalGuaraniesString.value=(refuerzoMasEntrada + cuotaXcantidad).toString();
   }
 
   void sumTotalDolares() {
@@ -206,7 +209,7 @@ class EssencialVehicleController extends GetxController {
     double refuerzoMasEntrada =
         RemoveMoneyFormat().removeToDouble(textEntradaDolares.text) +
             refuerzoXcantidad;
-    textTotalDolares.updateValue((refuerzoMasEntrada + cuotaXcantidad));
+    textTotalDolaresString.value = (refuerzoMasEntrada + cuotaXcantidad).toString();
   }
 
   Future<void> registerVehicle() async {

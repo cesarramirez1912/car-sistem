@@ -281,6 +281,9 @@ class SellVehicleView extends GetView<VehicleDetailController> {
         return [
           CustomPlan(0, controller.cuota.value,
               textRender: controller.typesMoneySelected.value,
+              showTotal: true,
+              showDolares:   controller.typesMoneySelected == 'DOLARES',
+              showGuaranies:   controller.typesMoneySelected == 'GUARANIES',
               withTitle: false),
           (controller.vehicleSelected.first.cantidadCuotas == null ||
                   controller.vehicleSelected.first.cantidadCuotas == 0)

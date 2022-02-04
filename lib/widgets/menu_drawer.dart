@@ -42,8 +42,8 @@ Widget CustomMenuDrawer(ListVehicleController controller) {
             'Cerrar sesión',
             style: TextStyle(color: Color.fromRGBO(121, 121, 121, 1.0)),
           ),
-          onTap: () {
-            controller.userStorageController.deleteStore();
+          onTap: () async {
+            await controller.userStorageController.deleteStore();
             Get.offAndToNamed(RouterManager.LOGIN);
           },
         ),

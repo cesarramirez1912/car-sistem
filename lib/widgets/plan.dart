@@ -6,7 +6,13 @@ import 'package:flutter/material.dart';
 
 // ignore: non_constant_identifier_names
 Widget CustomPlan(int index, Cuota cuota,
-    {String? textRender, bool withTitle = true, Function? onPressed}) {
+    {String? textRender,
+    bool withTitle = true,
+    Function? onPressed,
+    bool showTotal = false,
+    bool showDolares = true,
+    bool showGuaranies = true}) {
+  print(showTotal);
   if (cuota.cantidadCuotas == 0 || cuota.cantidadCuotas == null) {
     return Container(
         alignment: Alignment.center,
@@ -38,7 +44,11 @@ Widget CustomPlan(int index, Cuota cuota,
                   ? CustomTitle('Plan n° ${(index + 1).toString()}',
                       fontSize: 17)
                   : Container(),
-              renderCuotas(cuota, textRender: textRender),
+              renderCuotas(cuota,
+                  textRender: textRender,
+                  showTotales: showTotal,
+                  showDolares: showDolares,
+                  showGuaranies: showGuaranies),
               const SizedBox(
                 height: 10,
               )

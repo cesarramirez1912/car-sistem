@@ -7,6 +7,7 @@ class UserStorageRepository extends GetConnect {
     final response =
         await get(Rest.USER_INFORMATION + idCollaborator.toString())
             .timeout(const Duration(seconds: 10));
+
     if (response.status.hasError) {
       if (response.body['message'] != '') {
         return Future.error(response.body['message']);
