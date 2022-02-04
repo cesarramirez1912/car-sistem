@@ -5,26 +5,40 @@ import 'package:flutter/material.dart';
 import '../plan.dart';
 import '../title.dart';
 
-List<Widget> guaraniesRender(Cuota cuota) {
+List<Widget> totalesRender(Cuota cuota, showDolares, showGuaranies) {
   return [
-    CustomTitle('Plan guaranies'),
-    planText(
-      'Entrada',
-          MoneyFormat().formatCommaToDot(
-            cuota.entradaGuaranies,
-          ),
-    ),
-    planText(
-      'Cuota',
-          MoneyFormat().formatCommaToDot(
-            cuota.cuotaGuaranies,
-          ),
-    ),
-    planText(
-      'Refuerzo',
-          MoneyFormat().formatCommaToDot(
-            cuota.refuerzoGuaranies,
-          ),
-    ),
+    CustomTitle('Plan total'),
+    showGuaranies
+        ? planText(
+            'Guaranies',
+            MoneyFormat().formatCommaToDot(
+              (verifyIsStringToDouble(cuota.cuotaGuaranies) *
+                      verifyIsStringToDouble(cuota.cantidadCuotas)) +
+                  ((verifyIsStringToDouble(cuota.cantidadRefuerzo)) *
+                      (verifyIsStringToDouble(cuota.refuerzoGuaranies))) +
+                  (verifyIsStringToDouble(cuota.entradaGuaranies)),
+            ),
+          )
+        : SizedBox(),
+    showDolares
+        ? planText(
+            'Dolares',
+            MoneyFormat().formatCommaToDot(
+                (verifyIsStringToDouble(cuota.cuotaDolares) *
+                        verifyIsStringToDouble(cuota.cantidadCuotas)) +
+                    ((verifyIsStringToDouble(cuota.cantidadRefuerzo)) *
+                        (verifyIsStringToDouble(cuota.refuerzoDolares))) +
+                    (verifyIsStringToDouble(cuota.entradaDolares)),
+                isGuaranies: false),
+          )
+        : Container(),
   ];
+}
+
+double verifyIsStringToDouble(dynamic value) {
+  try {
+    return double.parse(value);
+  } catch (e) {
+    return double.parse(value.toString());
+  }
 }
