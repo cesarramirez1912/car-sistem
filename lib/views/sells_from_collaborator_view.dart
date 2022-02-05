@@ -116,41 +116,48 @@ class SellsFromCollaboratorView extends StatelessWidget {
   }
 
   Widget cardSell(SaleCollaboratorModel e) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            CustomTitle('CLIENTE', fontSize: 15),
-            CustomTitle(e.cliente.toString(),
-                fontSize: 13, fontWeight: FontWeight.w600),
-            CustomTitle('VEHICULO', fontSize: 15),
-            CustomTitle(e.marca.toString() + ' - ' + e.modelo.toString(),
-                fontSize: 13, fontWeight: FontWeight.w600),
-            e.contadoGuaranies == null && e.contadoDolares == null
-                ? CustomTitle('ENTREGA', fontSize: 15)
-                : Container(),
-            e.contadoGuaranies == null && e.contadoDolares == null
-                ? CustomTitle(
-                    e.entradaDolares == null && e.entradaGuaranies == null
-                        ? '0'
-                        : e.entradaGuaranies == null
-                            ? MoneyFormat().formatCommaToDot(e.entradaDolares,isGuaranies: false)
-                            : MoneyFormat().formatCommaToDot(e.entradaGuaranies),
-                fontSize: 13,
-                    fontWeight: FontWeight.w600)
-                : Container(),
-            CustomTitle('FECHA Y HORA DE VENTA', fontSize: 15),
-            CustomTitle(
-                DateFormatBr().formatBrWithTime(e.fechaVenta.toString()),
-                fontSize: 13,
-                fontWeight: FontWeight.w600),
-            const Divider(
-              color: Colors.grey,
-            ),
-            render(e, controller),
-          ],
+    return  GestureDetector(
+      onTap: () => Get.toNamed(RouterManager.CLIENT_DETAIL_VIEW,
+          parameters: {'idVenta': e.idVenta.toString(),'idCliente': e.idCliente.toString()}),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CustomTitle('CLIENTE', fontSize: 15),
+              CustomTitle(e.cliente.toString(),
+                  fontSize: 13, fontWeight: FontWeight.w600),
+              CustomTitle('VEHICULO', fontSize: 15),
+              CustomTitle(e.marca.toString() + ' - ' + e.modelo.toString(),
+                  fontSize: 13, fontWeight: FontWeight.w600),
+              e.contadoGuaranies == null && e.contadoDolares == null
+                  ? CustomTitle('ENTREGA', fontSize: 15)
+                  : Container(),
+              e.contadoGuaranies == null && e.contadoDolares == null
+                  ? CustomTitle(
+                      e.entradaDolares == null && e.entradaGuaranies == null
+                          ? '0'
+                          : e.entradaGuaranies == null
+                              ? MoneyFormat().formatCommaToDot(e.entradaDolares,
+                                  isGuaranies: false)
+                              : MoneyFormat()
+                                  .formatCommaToDot(e.entradaGuaranies),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600)
+                  : Container(),
+              CustomTitle('FECHA Y HORA DE VENTA', fontSize: 15),
+              CustomTitle(
+                  DateFormatBr().formatBrWithTime(e.fechaVenta.toString()),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600),
+              const Divider(
+                color: Colors.grey,
+              ),
+              render(e, controller),
+            ],
+          ),
         ),
       ),
     );

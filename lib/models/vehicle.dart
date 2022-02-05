@@ -1,48 +1,48 @@
 class Vehicle {
   Vehicle({
-    required this.idVehiculoSucursal,
-    required this.idEmpresa,
-    required this.idSucursal,
+    this.idVehiculoSucursal,
+    this.idEmpresa,
+    this.idSucursal,
     this.chapa,
     this.chassis,
     this.costoGuaranies,
     this.costoDolares,
-    required this.contadoGuaranies,
+    this.contadoGuaranies,
     this.contadoDolares,
-    required this.combustible,
-    required this.color,
-    required this.motor,
-    required this.ano,
-    required this.cambio,
-    required this.marca,
-    required this.modelo,
-    required this.cantidadCuotas,
-    required this.cuotaGuaranies,
-    required this.cuotaDolares,
-    required this.cantidadRefuerzo,
-    required this.refuerzoGuaranies,
-    required this.refuerzoDolares,
-    required this.entradaGuaranies,
-    required this.entradaDolares,
+    this.combustible,
+    this.color,
+    this.motor,
+    this.ano,
+    this.cambio,
+    this.marca,
+    this.modelo,
+    this.cantidadCuotas,
+    this.cuotaGuaranies,
+    this.cuotaDolares,
+    this.cantidadRefuerzo,
+    this.refuerzoGuaranies,
+    this.refuerzoDolares,
+    this.entradaGuaranies,
+    this.entradaDolares,
   });
 
-  late final int idVehiculoSucursal;
-  late final int idEmpresa;
-  late final int idSucursal;
+  late final int? idVehiculoSucursal;
+  late final int? idEmpresa;
+  late final int? idSucursal;
   dynamic? chapa;
   dynamic? chassis;
   dynamic costoGuaranies;
   dynamic costoDolares;
   late final dynamic contadoGuaranies;
   dynamic contadoDolares;
-  late final String combustible;
-  late final String color;
-  late final String motor;
-  late final String ano;
-  late final String cambio;
-  late final String marca;
-  late final String modelo;
-  late final int? cantidadCuotas;
+  late final String? combustible;
+  late final String? color;
+  late final String? motor;
+  late final String? ano;
+  late final String? cambio;
+  late final String? marca;
+  late final String? modelo;
+  late final dynamic? cantidadCuotas;
   dynamic? cuotaGuaranies;
   dynamic? cuotaDolares;
   late final int? cantidadRefuerzo;

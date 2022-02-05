@@ -1,3 +1,4 @@
+import 'package:car_system/views/client_detail_view.dart';
 import 'package:car_system/views/dates_venc_cuotes_view.dart';
 import 'package:car_system/views/new_plan_view.dart';
 import 'package:car_system/views/register_client_view.dart';
@@ -25,6 +26,7 @@ class RouterManager {
   static const String SELLS_FROM_COLLABORATOR= '/sells_from_collaborator';
   static const String SELLS_DETAILS_CUOTES= '/sells_details_cuotes';
   static const String NEW_PLAN_VIEW= '/new_plan_view';
+  static const String CLIENT_DETAIL_VIEW= '/client_detail_view';
 
   static List<GetPage> getRoutes() => [
     GetPage(name: LOGIN, page: () => LoginView(), binding: AllBinding()),
@@ -38,5 +40,6 @@ class RouterManager {
     GetPage(name: SELLS_DETAILS_CUOTES, page: () => DatesVencCuotesView(),),
     GetPage(name: REGISTER_ESSENCIAL, page: () => RegisterEssencialView(),),
     GetPage(name: NEW_PLAN_VIEW, page: () => NewPlanView(),),
+    GetPage(name: CLIENT_DETAIL_VIEW, page: () => ClientDetailView(),),
   ];
 }

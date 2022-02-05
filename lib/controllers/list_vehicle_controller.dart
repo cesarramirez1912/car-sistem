@@ -65,8 +65,8 @@ class ListVehicleController extends GetxController {
     } else {
       List<Vehicle> _list = vehiclesAux
           .where((element) =>
-              element.marca.contains(text.toUpperCase()) ||
-              element.modelo.contains(text.toUpperCase()))
+              element.marca!.contains(text.toUpperCase()) ||
+              element.modelo!.contains(text.toUpperCase()))
           .toList();
       vehicles.value = _list;
     }

@@ -4,25 +4,28 @@ import 'package:car_system/widgets/title.dart';
 import 'package:car_system/widgets/vehicle_detail_card.dart';
 import 'package:flutter/material.dart';
 
-Widget VehicleDetails(Vehicle vehicle, {double heithImage = 180}) {
+Widget VehicleDetails(Vehicle vehicle,
+    {double heithImage = 180, bool withImage = true}) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Container(
-        height: heithImage,
-        color: const Color.fromRGBO(235, 235, 235, 1),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(
-              Icons.image,
-              size: 150,
-              color: Color.fromRGBO(225, 225, 225, 1),
-            ),
-          ],
-        ),
-      ),
+      withImage
+          ? Container(
+              height: heithImage,
+              color: const Color.fromRGBO(235, 235, 235, 1),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(
+                    Icons.image,
+                    size: 150,
+                    color: Color.fromRGBO(225, 225, 225, 1),
+                  ),
+                ],
+              ),
+            )
+          : Container(),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
         child: Column(
