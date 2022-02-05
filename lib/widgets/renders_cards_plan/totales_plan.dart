@@ -36,9 +36,13 @@ List<Widget> totalesRender(Cuota cuota, showDolares, showGuaranies) {
 }
 
 double verifyIsStringToDouble(dynamic value) {
-  try {
-    return double.parse(value);
-  } catch (e) {
-    return double.parse(value.toString());
+  if (value == null) {
+    return 0;
+  } else {
+    try {
+      return double.parse(value);
+    } catch (e) {
+      return double.parse(value.toString());
+    }
   }
 }
