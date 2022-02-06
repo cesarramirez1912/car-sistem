@@ -23,7 +23,6 @@ class ClientRepository extends GetConnect {
   }
 
   Future<dynamic> createClient(Map<String, dynamic> _body) async {
-    print(_body);
     final response = await post(Rest.CLIENTS, _body);
     if (response.status.hasError) {
       return Future.error(

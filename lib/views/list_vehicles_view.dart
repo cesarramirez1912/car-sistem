@@ -1,4 +1,3 @@
-import 'package:car_system/colors.dart';
 import 'package:car_system/controllers/client_controller.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/controllers/sells_from_collaborator_controller.dart';

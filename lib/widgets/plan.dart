@@ -12,7 +12,6 @@ Widget CustomPlan(int index, Cuota cuota,
     bool showTotal = false,
     bool showDolares = true,
     bool showGuaranies = true}) {
-  print(showTotal);
   if (cuota.cantidadCuotas == 0 || cuota.cantidadCuotas == null) {
     return Container(
         alignment: Alignment.center,

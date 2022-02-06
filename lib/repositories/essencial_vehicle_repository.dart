@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 class EssencialVehicleRepository extends GetConnect {
   Future<dynamic> getchLogin(Map<String, String> _body) async {
     final response = await get(Rest.CLIENTS);
-    print(response.statusText);
     if (response.status.hasError) {
       return Future.error(
           'Ocurrio un error al traer los datos, pruebe de nuevo');

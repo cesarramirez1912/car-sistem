@@ -16,7 +16,6 @@ class ClientDetailView extends StatelessWidget {
     ClientDetailController controller = Get.put(ClientDetailController(
         listClients: clientController.listClients,
         sales: sellsFromCollaboratorController.sales));
-    print('ssiii');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalles de la venta'),

@@ -44,7 +44,7 @@ Widget CustomMenuDrawer(ListVehicleController controller) {
           ),
           onTap: () async {
             await controller.userStorageController.deleteStore();
-            Get.offAndToNamed(RouterManager.LOGIN);
+            Get.offAllNamed(RouterManager.LOGIN);
           },
         ),
       ],
@@ -59,34 +59,38 @@ Widget CustomMenuDrawer(ListVehicleController controller) {
           decoration: const BoxDecoration(
             color: ColorPalette.PRIMARY,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                controller.user?.empresa ?? '-',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
-              ),
-              Text(
-                controller.user?.colaborador ?? '-',
-                style: const TextStyle(color: Colors.white),
-              ),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    controller.userStorageController.packageInfo.value.version +
-                        "." +
-                        controller.userStorageController.user!.value.dias
-                            .toString(),
-                    style: const TextStyle(
-                        color: Color.fromRGBO(141, 11, 11, 1.0), fontSize: 10),
-                  ),
+          child: Obx(
+            () => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  controller.user?.empresa ?? '-',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700),
                 ),
-              )
-            ],
+                Text(
+                  controller.user?.colaborador ?? '-',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      controller
+                              .userStorageController.packageInfo.value.version +
+                          "." +
+                          controller.userStorageController.user!.value.dias
+                              .toString(),
+                      style: const TextStyle(
+                          color: Color.fromRGBO(141, 11, 11, 1.0),
+                          fontSize: 10),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
         ..._defaultItems

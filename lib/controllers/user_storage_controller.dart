@@ -37,8 +37,7 @@ class UserStorageController extends GetxController {
   Future<void> fetchUserInformation() async {
     List<User> _listUser = await userStorageRepository
         .fetchUserInformation(user!.value.idColaborador);
-    storePriceModel(_listUser.first);
-    print(_listUser.first.toJson());
+    await storePriceModel(_listUser.first);
     if (_listUser.first.dias < Static.DAYS_PERMIT_APP_USE ||
         _listUser.first.activo == 0) {
       Get.offAndToNamed(RouterManager.LOGIN);

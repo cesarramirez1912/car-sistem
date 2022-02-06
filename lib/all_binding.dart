@@ -11,7 +11,7 @@ import 'controllers/client_controller.dart';
 class AllBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<LoginController>(() => LoginController(), fenix: true);
+    Get.lazyPut<LoginController>(() => LoginController());
     Get.lazyPut<ClientController>(() => ClientController());
     Get.lazyPut<ListVehicleController>(() => ListVehicleController());
     Get.lazyPut<VehicleDetailController>(() => VehicleDetailController());
@@ -19,7 +19,6 @@ class AllBinding extends Bindings {
         fenix: true);
     Get.lazyPut<SellsFromCollaboratorController>(
         () => SellsFromCollaboratorController());
-    Get.lazyPut<UserStorageController>(() => UserStorageController(),
-        fenix: true);
+    Get.lazyPut<UserStorageController>(() => UserStorageController());
   }
 }

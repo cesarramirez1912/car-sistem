@@ -10,7 +10,7 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
 
 class ClientController extends GetxController {
-  User? user = User();
+  Rx<User>? user = User().obs;
   final formKey = GlobalKey<FormState>();
   Rx<bool> isLoading = false.obs;
   ClientRepository? clientRepository;
@@ -31,7 +31,7 @@ class ClientController extends GetxController {
     UserStorageController userStorageController =
         Get.find<UserStorageController>();
     clientRepository = ClientRepository();
-    user = userStorageController.restoreModel();
+    user?.value = await userStorageController.restoreModel();
     await requestClients();
     super.onInit();
   }
@@ -39,7 +39,7 @@ class ClientController extends GetxController {
   Future<void> requestClients() async {
     try {
       List<ClientModel> listClientsRequest =
-          await clientRepository?.requestClients(user!.idEmpresa);
+          await clientRepository?.requestClients(user?.value.idEmpresa);
       listClientsString.clear();
       for (var client in listClientsRequest) {
         if (client.cliente != null) {
@@ -59,8 +59,8 @@ class ClientController extends GetxController {
       isLoading.value = true;
       try {
         formKey.currentState!.save();
-        clientModel?.idSucursal = user?.idSucursal;
-        clientModel?.idEmpresa = user?.idEmpresa;
+        clientModel?.idSucursal = user?.value.idSucursal;
+        clientModel?.idEmpresa = user?.value.idEmpresa;
         clientModel?.celular = clientModel?.celular
             ?.replaceAll('(', '')
             .replaceAll(')', '')
