@@ -68,8 +68,17 @@ class SellsFromCollaboratorController extends GetxController {
     filterList();
   }
 
-  Future<void> postPago(dynamic valorDolares, dynamic valorGuaranies, int? id,
-      int? idVenta) async {
+  Future<void> postPago(
+      dynamic valorDolares, dynamic valorGuaranies, int? id, int? idVenta,
+      {required bool isCuote}) async {
+    if (valorDolares == null && double.parse(valorGuaranies) == 0) {
+      CustomSnackBarError('TOTAL NO VALIDO');
+      return;
+    }
+    if (valorGuaranies == null && double.parse(valorDolares) == 0) {
+      CustomSnackBarError('TOTAL NO VALIDO');
+      return;
+    }
     var bodyCuote = {
       "id_cuota_venta": id,
       "pago_dolares": valorDolares,
@@ -82,7 +91,7 @@ class SellsFromCollaboratorController extends GetxController {
     };
     isLoadingRequest.value = true;
     try {
-      if (textStringCuotaOrefuerzo.value == 'CUOTA') {
+      if (isCuote) {
         var resCuote = await sellVehicleRepository.postCuote(bodyCuote);
         List<CuoteDetailModel> _list = await requestCuotes(idVenta);
         listaCuotes.clear();
@@ -99,6 +108,7 @@ class SellsFromCollaboratorController extends GetxController {
         listaRefuerzos.addAll(_list);
       }
       Get.back();
+
       isLoadingRequest.value = false;
       CustomSnackBarSuccess('PAGO EFECTUADO CON EXITO!');
     } catch (e) {
@@ -265,8 +275,9 @@ class SellsFromCollaboratorController extends GetxController {
         (totalVentaRefuerzo - totalPagadoRefuerzo),
         isGuaranies: isGuaranies);
 
-    financiadoTotalStr.value = MoneyFormat()
-        .formatCommaToDot(totalVentaRefuerzo+totalVentaCuota, isGuaranies: isGuaranies);
+    financiadoTotalStr.value = MoneyFormat().formatCommaToDot(
+        totalVentaRefuerzo + totalVentaCuota,
+        isGuaranies: isGuaranies);
   }
 
   void queryListRefuerzos(int? idVenta) async {

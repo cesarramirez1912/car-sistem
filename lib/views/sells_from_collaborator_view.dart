@@ -7,6 +7,7 @@ import 'package:car_system/responsive.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/search_dropdown.dart';
+import 'package:car_system/widgets/search_input.dart';
 import 'package:car_system/widgets/spacing.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:get/get.dart';
@@ -21,31 +22,18 @@ class SellsFromCollaboratorView extends StatelessWidget {
       appBar: AppBar(
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            alignment: Alignment.topLeft,
-            margin: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
-            decoration: const BoxDecoration(
-                color: Color.fromRGBO(248, 248, 248, 1),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(8),
-                )),
-            child: TextFormField(
-              autofocus: false,
-              onChanged: (text) {
-                controller.salesAux.value = controller.sales
-                    .where((p0) =>
-                        p0.modelo!.contains(text.toUpperCase()) ||
-                        p0.cliente!.contains(text.toUpperCase()) ||
-                        p0.marca!.contains(text.toUpperCase()))
-                    .toList();
-              },
-              decoration: const InputDecoration(
-                hintText: 'Cliente, marca o modelo',
-                border: InputBorder.none,
-                suffixIcon: Icon(Icons.search),
-              ),
-            ),
+          child: CustomSearchInput(
+            hintText: 'Cliente, marca o modelo',
+            onClean: () => controller.salesAux.value = controller.sales,
+            controller: TextEditingController(),
+            onChanged: (text) {
+              controller.salesAux.value = controller.sales
+                  .where((p0) =>
+                      p0.modelo!.contains(text.toUpperCase()) ||
+                      p0.cliente!.contains(text.toUpperCase()) ||
+                      p0.marca!.contains(text.toUpperCase()))
+                  .toList();
+            },
           ),
         ),
         title: const Text('Mis ventas'),
@@ -116,9 +104,11 @@ class SellsFromCollaboratorView extends StatelessWidget {
   }
 
   Widget cardSell(SaleCollaboratorModel e) {
-    return  GestureDetector(
-      onTap: () => Get.toNamed(RouterManager.CLIENT_DETAIL_VIEW,
-          parameters: {'idVenta': e.idVenta.toString(),'idCliente': e.idCliente.toString()}),
+    return GestureDetector(
+      onTap: () => Get.toNamed(RouterManager.CLIENT_DETAIL_VIEW, parameters: {
+        'idVenta': e.idVenta.toString(),
+        'idCliente': e.idCliente.toString()
+      }),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(12.0),

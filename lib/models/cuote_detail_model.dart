@@ -7,16 +7,18 @@ class CuoteDetailModel {
   dynamic? fechaPago;
   String? fechaCuota;
   int? idVenta;
+  String? anosMesesDias;
 
   CuoteDetailModel(
       {this.idCuotaVenta,
-        this.cuotaGuaranies,
-        this.cuotaDolares,
-        this.pagoGuaranies,
-        this.pagoDolares,
-        this.fechaPago,
-        this.fechaCuota,
-        this.idVenta});
+      this.cuotaGuaranies,
+      this.cuotaDolares,
+      this.pagoGuaranies,
+      this.pagoDolares,
+      this.fechaPago,
+      this.fechaCuota,
+      this.idVenta,
+      this.anosMesesDias});
 
   CuoteDetailModel.fromJson(Map<String, dynamic> json) {
     idCuotaVenta = json['id_cuota_venta'];
@@ -27,6 +29,7 @@ class CuoteDetailModel {
     fechaPago = json['fecha_pago'];
     fechaCuota = json['fecha_cuota'];
     idVenta = json['id_venta'];
+    anosMesesDias = json['anos_meses_dias'];
   }
 
   Map<String, dynamic> toJson() {
@@ -39,6 +42,7 @@ class CuoteDetailModel {
     data['fecha_pago'] = this.fechaPago;
     data['fecha_cuota'] = this.fechaCuota;
     data['id_venta'] = this.idVenta;
+    data['anos_meses_dias'] = this.anosMesesDias;
     return data;
   }
 }

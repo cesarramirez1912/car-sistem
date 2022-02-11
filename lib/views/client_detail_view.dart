@@ -1,6 +1,7 @@
 import 'package:car_system/controllers/client_controller.dart';
 import 'package:car_system/controllers/client_detail_controller.dart';
 import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
+import 'package:car_system/widgets/client_body.dart';
 import 'package:car_system/widgets/spacing.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:car_system/widgets/vehicle_details.dart';
@@ -44,16 +45,7 @@ class ClientDetailView extends StatelessWidget {
                               color: Colors.grey,
                             ),
                             CustomSpacing(),
-                            custTitle('Nombre'),
-                            suBtitle(controller.clientModel.value.cliente),
-                            custTitle('CI'),
-                            suBtitle(controller.clientModel.value.ci),
-                            custTitle('Celular'),
-                            suBtitle(controller.clientModel.value.celular),
-                            custTitle('Ciudad'),
-                            suBtitle(controller.clientModel.value.ciudad),
-                            custTitle('Direccion'),
-                            suBtitle(controller.clientModel.value.direccion),
+                            ClientBody(controller.clientModel.value)
                           ],
                         ),
                       ),
@@ -94,13 +86,5 @@ class ClientDetailView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget custTitle(text) {
-    return CustomTitle(text, fontWeight: FontWeight.bold, fontSize: 15);
-  }
-
-  Widget suBtitle(text) {
-    return CustomTitle(text, fontWeight: FontWeight.normal, fontSize: 15);
   }
 }

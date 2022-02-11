@@ -19,6 +19,7 @@ class ClientController extends GetxController {
 
   RxList<String> listClientsString = <String>[].obs;
   RxList<ClientModel> listClients = <ClientModel>[].obs;
+  RxList<ClientModel> listClientsAux = <ClientModel>[].obs;
 
   MaskedTextController textCiController =
       MaskedTextController(text: '', mask: '0.000.000-00');
@@ -47,6 +48,8 @@ class ClientController extends GetxController {
         }
       }
       listClients.clear();
+      listClientsAux.clear();
+      listClientsAux.addAll(listClientsRequest);
       listClients.addAll(listClientsRequest);
     } catch (e) {
       print(e);

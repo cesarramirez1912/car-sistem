@@ -1,5 +1,8 @@
 import 'package:car_system/views/client_detail_view.dart';
+import 'package:car_system/views/clients_view.dart';
 import 'package:car_system/views/dates_venc_cuotes_view.dart';
+import 'package:car_system/views/deudor/deudor_detail_view.dart';
+import 'package:car_system/views/deudor/deudor_view.dart';
 import 'package:car_system/views/new_plan_view.dart';
 import 'package:car_system/views/register_client_view.dart';
 import 'package:car_system/views/list_vehicles_view.dart';
@@ -27,6 +30,9 @@ class RouterManager {
   static const String SELLS_DETAILS_CUOTES= '/sells_details_cuotes';
   static const String NEW_PLAN_VIEW= '/new_plan_view';
   static const String CLIENT_DETAIL_VIEW= '/client_detail_view';
+  static const String CLIENTS_VIEW= '/clients_view';
+  static const String DEUDOR_VIEW= '/deudor_view';
+  static const String DEUDOR_DETAIL_VIEW= '/deudor_detail_view';
 
   static List<GetPage> getRoutes() => [
     GetPage(name: LOGIN, page: () => LoginView(), binding: AllBinding()),
@@ -41,5 +47,8 @@ class RouterManager {
     GetPage(name: REGISTER_ESSENCIAL, page: () => RegisterEssencialView(),),
     GetPage(name: NEW_PLAN_VIEW, page: () => NewPlanView(),),
     GetPage(name: CLIENT_DETAIL_VIEW, page: () => ClientDetailView(),),
+    GetPage(name: CLIENTS_VIEW, page: () => ClientsView(),),
+    GetPage(name: DEUDOR_VIEW, page: () => DeudorView(),),
+    GetPage(name: DEUDOR_DETAIL_VIEW, page: () => DeudorDetailView(),),
   ];
 }

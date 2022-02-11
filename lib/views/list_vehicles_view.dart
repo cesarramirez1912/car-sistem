@@ -1,17 +1,21 @@
 import 'package:car_system/controllers/client_controller.dart';
+import 'package:car_system/controllers/deudor_controller.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
 import 'package:car_system/responsive.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/menu_drawer.dart';
+import 'package:car_system/widgets/search_input.dart';
 import 'package:car_system/widgets/vehicle_details.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ListVehiclesView extends GetView<ListVehicleController> {
+class ListVehiclesView extends StatelessWidget {
+  ListVehicleController controller = Get.put(ListVehicleController());
   ClientController clientController = Get.put(ClientController());
   SellsFromCollaboratorController sellsFromCollaboratorController =
       Get.put(SellsFromCollaboratorController());
+  DeudorController deudorController = Get.put(DeudorController());
 
   @override
   Widget build(context) {
@@ -19,26 +23,11 @@ class ListVehiclesView extends GetView<ListVehicleController> {
       appBar: AppBar(
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            alignment: Alignment.topLeft,
-            margin: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
-            decoration: const BoxDecoration(
-                color: Color.fromRGBO(248, 248, 248, 1),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(8),
-                )),
-            child: TextFormField(
-              autofocus: false,
+          child: CustomSearchInput(
+              hintText: 'Buscar por marca o modelo',
               onChanged: (text) => controller.searchText(text),
               controller: controller.searchTextController,
-              decoration: const InputDecoration(
-                hintText: 'Buscar por marca o modelo',
-                border: InputBorder.none,
-                suffixIcon: Icon(Icons.search),
-              ),
-            ),
-          ),
+              onClean: () => controller.searchText('')),
         ),
         title: const Text('Vehiculos'),
       ),
@@ -53,7 +42,7 @@ class ListVehiclesView extends GetView<ListVehicleController> {
                     mobile: mobile(),
                   )),
       ),
-      drawer: CustomMenuDrawer(controller),
+      drawer: Obx(() => CustomMenuDrawer(controller, deudorController)),
     );
   }
 
@@ -89,7 +78,7 @@ class ListVehiclesView extends GetView<ListVehicleController> {
             child: Wrap(
               children: [
                 ...controller.vehicles.map(
-                  (element) => Container(
+                  (element) => SizedBox(
                     width: 350,
                     child: GestureDetector(
                       onTap: () => Get.toNamed(RouterManager.VEHICLE_DETAIL,

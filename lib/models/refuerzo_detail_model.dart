@@ -7,16 +7,18 @@ class RefuerzoDetailModel {
   String? fechaPago;
   String? fechaRefuerzo;
   int? idVenta;
+  String? anosMesesDias;
 
   RefuerzoDetailModel(
       {this.idRefuerzoVenta,
-        this.refuerzoGuaranies,
-        this.refuerzoDolares,
-        this.pagoGuaranies,
-        this.pagoDolares,
-        this.fechaPago,
-        this.fechaRefuerzo,
-        this.idVenta});
+      this.refuerzoGuaranies,
+      this.refuerzoDolares,
+      this.pagoGuaranies,
+      this.pagoDolares,
+      this.fechaPago,
+      this.fechaRefuerzo,
+      this.idVenta,
+      this.anosMesesDias});
 
   RefuerzoDetailModel.fromJson(Map<String, dynamic> json) {
     idRefuerzoVenta = json['id_refuerzo_venta'];
@@ -27,6 +29,7 @@ class RefuerzoDetailModel {
     fechaPago = json['fecha_pago'];
     fechaRefuerzo = json['fecha_refuerzo'];
     idVenta = json['id_venta'];
+    anosMesesDias = json['anos_meses_dias'];
   }
 
   Map<String, dynamic> toJson() {
@@ -39,6 +42,7 @@ class RefuerzoDetailModel {
     data['fecha_pago'] = this.fechaPago;
     data['fecha_refuerzo'] = this.fechaRefuerzo;
     data['id_venta'] = this.idVenta;
+    data['anos_meses_dias'] = this.anosMesesDias;
     return data;
   }
 }

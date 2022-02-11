@@ -1,3 +1,4 @@
+import 'package:car_system/controllers/deudor_controller.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,11 +8,34 @@ import '../colors.dart';
 
 enum Roles { SUPER, ADMIN, VENDEDOR }
 
-Widget CustomMenuDrawer(ListVehicleController controller) {
+Widget CustomMenuDrawer(
+    ListVehicleController controller, DeudorController deudorController) {
+  Widget rounderNotification(int quantity) {
+    return Container(
+      width: 30,
+      height: 30,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        color: ColorPalette.PRIMARY,
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+      ),
+      child: Text(
+        quantity.toString(),
+        style: const TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
   List<Widget> _defaultItems = [
     ListTile(
       title: const Text('Inicio'),
       onTap: () => Get.back(),
+    ),
+    ListTile(
+      title: const Text('Clientes'),
+      onTap: () => Get.toNamed(RouterManager.CLIENTS_VIEW),
     ),
     ListTile(
       title: const Text('Mis ventas'),
@@ -20,6 +44,13 @@ Widget CustomMenuDrawer(ListVehicleController controller) {
     ListTile(
       title: const Text('Registrar vehiculo'),
       onTap: () => Get.toNamed(RouterManager.REGISTER),
+    ),
+    ListTile(
+      title: const Text('Pendientes de pago'),
+      onTap: () => Get.toNamed(RouterManager.DEUDOR_VIEW),
+      trailing: rounderNotification(
+          deudorController.listDeudoresAgrupadoCuota.length +
+              deudorController.listDeudoresAgrupadoRefuerzo.length),
     ),
   ];
 

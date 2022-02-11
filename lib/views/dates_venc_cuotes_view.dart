@@ -1,11 +1,11 @@
 import 'package:car_system/colors.dart';
 import 'package:car_system/common/date_format.dart';
-import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
-import 'package:car_system/widgets/button.dart';
+import 'package:car_system/widgets/cuote_refuerzo/iscuote_render.dart';
+import 'package:car_system/widgets/cuote_refuerzo/isrefuerzo_render.dart';
+import 'package:car_system/widgets/pay_dialog.dart';
 import 'package:car_system/widgets/search_dropdown.dart';
 import 'package:car_system/widgets/spacing.dart';
-import 'package:car_system/widgets/title.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -71,9 +71,55 @@ class DatesVencCuotesView extends StatelessWidget {
 
   Widget render() {
     if (controller.isCuote.value) {
-      return isCuote();
+      return isCuote(
+        controller.listaCuotes.value,
+        (selected) async {
+          if (((selected.cuotaDolares ?? 0) - (selected.pagoDolares ?? 0)) !=
+                  0 ||
+              ((selected.cuotaGuaranies ?? 0) -
+                      (selected.pagoGuaranies ?? 0)) !=
+                  0) {
+            await payDialog(controller, selected.idCuotaVenta, selected.idVenta,
+                fecha: DateFormatBr()
+                    .formatBrFromString(selected.fechaCuota.toString()),
+                faltanteDolares: selected.cuotaDolares != null
+                    ? ((selected.cuotaDolares ?? 0) -
+                        (selected.pagoDolares ?? 0))
+                    : null,
+                faltanteGuaranies: selected.cuotaGuaranies != null
+                    ? ((selected.cuotaGuaranies ?? 0) -
+                        (selected.pagoGuaranies ?? 0))
+                    : null,
+                pagoGuaranies: (selected.pagoGuaranies ?? 0),
+                pagoDolares: (selected.pagoDolares ?? 0),
+                isCuote: true);
+          }
+        },
+      );
     } else {
-      return isRefuerzo();
+      return isRefuerzo(controller.listaRefuerzos.value, (selected) async {
+        if (((selected.refuerzoDolares ?? 0) - (selected.pagoDolares ?? 0)) !=
+                0 ||
+            ((selected.refuerzoGuaranies ?? 0) -
+                    (selected.pagoGuaranies ?? 0)) !=
+                0) {
+          await payDialog(
+              controller, selected.idRefuerzoVenta, selected.idVenta,
+              fecha: DateFormatBr()
+                  .formatBrFromString(selected.fechaRefuerzo.toString()),
+              faltanteDolares: selected.refuerzoDolares != null
+                  ? ((selected.refuerzoDolares ?? 0) -
+                      (selected.pagoDolares ?? 0))
+                  : null,
+              faltanteGuaranies: selected.refuerzoGuaranies != null
+                  ? ((selected.refuerzoGuaranies ?? 0) -
+                      (selected.pagoGuaranies ?? 0))
+                  : null,
+              pagoGuaranies: (selected.pagoGuaranies ?? 0),
+              pagoDolares: (selected.pagoDolares ?? 0),
+              isCuote: false);
+        }
+      });
     }
   }
 
@@ -82,7 +128,7 @@ class DatesVencCuotesView extends StatelessWidget {
       return [
         Text(
           'Total Financiado: ' + controller.financiadoTotalStr.value,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         CustomSpacing(height: 6),
         Text(
@@ -94,7 +140,7 @@ class DatesVencCuotesView extends StatelessWidget {
         ),
         Text(
           'Cuota Faltante: ' + controller.totalCuotaFaltanteStr.value,
-          style: const TextStyle(color:  ColorPalette.PRIMARY),
+          style: const TextStyle(color: ColorPalette.PRIMARY),
         )
       ];
     } else {
@@ -107,7 +153,7 @@ class DatesVencCuotesView extends StatelessWidget {
         Text('Total Refuerzo: ' + controller.totalVentaRefuerzoStr.value),
         Text(
           'Refuerzo Pagado: ' + controller.totalPagadoRefuerzoStr.value,
-          style: const TextStyle(color:  ColorPalette.GREEN),
+          style: const TextStyle(color: ColorPalette.GREEN),
         ),
         Text('Refuerzo faltante: ' + controller.totalRefuerzoFaltanteStr.value,
             style: const TextStyle(color: ColorPalette.PRIMARY))
@@ -115,178 +161,22 @@ class DatesVencCuotesView extends StatelessWidget {
     }
   }
 
-  Widget isCuote() {
-    return DataTable(
-      columnSpacing: 0,
-      showCheckboxColumn: false,
-      rows: List.generate(
-        controller.listaCuotes.length,
-        (i) => DataRow(
-            onSelectChanged: (selected) {
-              if (controller.listaCuotes[i].fechaPago == null) {
-                openDialog(
-                    controller,
-                    DateFormatBr().formatBrFromString(
-                        controller.listaCuotes[i].fechaCuota.toString()),
-                    controller.listaCuotes[i].cuotaGuaranies,
-                    controller.listaCuotes[i].cuotaDolares,
-                    controller.listaCuotes[i].idCuotaVenta,
-                    controller.listaCuotes[i].idVenta);
-              }
-            },
-            cells: [
-              DataCell(Text(controller.listaCuotes[i].cuotaGuaranies != null
-                  ? MoneyFormat().formatCommaToDot(
-                      controller.listaCuotes[i].cuotaGuaranies.toString())
-                  : MoneyFormat().formatCommaToDot(
-                      controller.listaCuotes[i].cuotaDolares.toString(),
-                      isGuaranies: false))),
-              DataCell(
-                Text(
-                  DateFormatBr().formatBrFromString(
-                      controller.listaCuotes[i].fechaCuota.toString()),
-                ),
-              ),
-              DataCell(
-                Text(
-                  controller.listaCuotes[i].fechaPago != null
-                      ? DateFormatBr().formatBrFromString(
-                          controller.listaCuotes[i].fechaPago.toString())
-                      : '-',
-                  style: const TextStyle(color: ColorPalette.GREEN),
-                ),
-              ),
-            ]),
+  List<DataColumn> dataColumn() {
+    return const <DataColumn>[
+      DataColumn(
+        label: Text(
+          'Cuota / Venc.',
+          softWrap: true,
+          maxLines: 3,
+          overflow: TextOverflow.visible,
+        ),
       ),
-      columns: const <DataColumn>[
-        DataColumn(
-          label: Text('Cuota'),
-        ),
-        DataColumn(
-          label: Text('Venc.'),
-        ),
-        DataColumn(
-          label: Text('Fecha Pag.'),
-        ),
-      ],
-    );
+      DataColumn(
+        label: Text('Pago / Fecha'),
+      ),
+      DataColumn(
+        label: Text('Pendiente'),
+      ),
+    ];
   }
-
-  Widget isRefuerzo() {
-    return DataTable(
-      columnSpacing: 0,
-      showCheckboxColumn: false,
-      rows: List.generate(
-        controller.listaRefuerzos.length,
-        (i) => DataRow(
-            onSelectChanged: (selected) {
-              if (controller.listaRefuerzos[i].fechaPago == null) {
-                openDialog(
-                    controller,
-                    DateFormatBr().formatBrFromString(
-                        controller.listaRefuerzos[i].fechaRefuerzo.toString()),
-                    controller.listaRefuerzos[i].refuerzoGuaranies,
-                    controller.listaRefuerzos[i].refuerzoDolares,
-                    controller.listaRefuerzos[i].idRefuerzoVenta,
-                    controller.listaRefuerzos[i].idVenta);
-              }
-            },
-            cells: [
-              DataCell(Text(controller.listaRefuerzos[i].refuerzoGuaranies !=
-                      null
-                  ? MoneyFormat().formatCommaToDot(
-                      controller.listaRefuerzos[i].refuerzoGuaranies.toString())
-                  : MoneyFormat().formatCommaToDot(
-                      controller.listaRefuerzos[i].refuerzoDolares.toString(),
-                      isGuaranies: false))),
-              DataCell(
-                Text(
-                  DateFormatBr().formatBrFromString(
-                      controller.listaRefuerzos[i].fechaRefuerzo.toString()),
-                ),
-              ),
-              DataCell(
-                Text(
-                  controller.listaRefuerzos[i].fechaPago != null
-                      ? DateFormatBr().formatBrFromString(
-                          controller.listaRefuerzos[i].fechaPago.toString())
-                      : '-',
-                  style: const TextStyle(color: ColorPalette.GREEN),
-                ),
-              ),
-            ]),
-      ),
-      columns: const <DataColumn>[
-        DataColumn(
-          label: Text('Cuota'),
-        ),
-        DataColumn(
-          label: Text('Venc.'),
-        ),
-        DataColumn(
-          label: Text('Fecha Pag.'),
-        ),
-      ],
-    );
-  }
-}
-
-Future openDialog(SellsFromCollaboratorController controller, String fecha,
-    dynamic valorGuaranies, dynamic valorDolares, int? id, int? idVenta) {
-  return Get.defaultDialog(
-      title: 'PAGAR ${controller.textStringCuotaOrefuerzo}',
-      content: dialogPlan(controller, fecha, valorGuaranies, valorDolares),
-      actions: [
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomButton(
-                '     PAGAR     ',
-                () => controller.postPago(
-                    valorDolares, valorGuaranies, id, idVenta),
-                ColorPalette.GREEN,
-                edgeInsets:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                fontSize: 12,
-                isLoading: controller.isLoadingRequest.value),
-            const SizedBox(
-              width: 10,
-            ),
-            CustomButton('CANCELAR', () => Get.back(), ColorPalette.PRIMARY,
-                edgeInsets:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                fontSize: 12,
-                isLoading: controller.isLoadingRequest.value),
-          ],
-        ),
-      ]);
-}
-
-Widget dialogPlan(controller, fecha, valorGuaranies, valorDolares) {
-  return SingleChildScrollView(
-    child: Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CustomTitle('FECHA'),
-          CustomTitle(fecha, fontWeight: FontWeight.w500, fontSize: 15),
-          CustomTitle('TOTAL'),
-          CustomTitle(
-              valorGuaranies != null
-                  ? MoneyFormat().formatCommaToDot(valorGuaranies)
-                  : MoneyFormat()
-                      .formatCommaToDot(valorDolares, isGuaranies: false),
-              fontWeight: FontWeight.w500,
-              fontSize: 15),
-          CustomTitle('PAGAR ?'),
-        ],
-      ),
-    ),
-  );
 }

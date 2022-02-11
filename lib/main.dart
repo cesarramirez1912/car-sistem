@@ -1,3 +1,4 @@
+import 'package:car_system/all_binding.dart';
 import 'package:car_system/colors.dart';
 import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/models/static_model.dart';
@@ -13,9 +14,14 @@ void main() async {
   await userStorageController.initStorage();
   runApp(
     GetMaterialApp(
-      localizationsDelegates: const [GlobalMaterialLocalizations.delegate],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       supportedLocales: const [
-        Locale('es'),
+        Locale('en', ''),
+        Locale('es', ''),
       ],
       debugShowCheckedModeBanner: false,
       initialRoute:

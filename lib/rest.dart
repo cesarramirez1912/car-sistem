@@ -1,7 +1,8 @@
 class Rest {
-  //static const String BASE_URL_TEST = "http://192.168.0.3:5480";
+  //static const String BASE_URL_TEST = "http://192.168.0.8:5480";
+  //static const String BASE_URL_TEST = "http://172.20.10.5:5480";
 
-  static const String BASE_URL_TEST = "http://192.168.88.112:5480";
+  //static const String BASE_URL_TEST = "http://192.168.88.112:5480";
   static const String BASE_URL_PRODUCTION =
       "https://carsystembackend.herokuapp.com";
 
@@ -34,4 +35,6 @@ class Rest {
   static String SELLS_COLLABORATOR = SELLS + "/collaborator=";
   static String SELLS_CUOTES_DETAILS = SELLS + "/detail/cuote/idVenta=";
   static String SELLS_REFUERZOS_DETAILS = SELLS + "/detail/refuerzo/idVenta=";
+  static String DEUDORES_CUOTA = BASE_URL + "/debtor/cuota/company=";
+  static String DEUDORES_REFUERZO = BASE_URL + "/debtor/refuerzo/company=";
 }
