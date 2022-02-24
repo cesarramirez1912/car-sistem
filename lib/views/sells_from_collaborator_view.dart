@@ -13,9 +13,7 @@ import 'package:car_system/widgets/title.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-class SellsFromCollaboratorView extends StatelessWidget {
-  SellsFromCollaboratorController controller = Get.find();
-
+class SellsFromCollaboratorView extends GetView<SellsFromCollaboratorController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,10 +103,8 @@ class SellsFromCollaboratorView extends StatelessWidget {
 
   Widget cardSell(SaleCollaboratorModel e) {
     return GestureDetector(
-      onTap: () => Get.toNamed(RouterManager.CLIENT_DETAIL_VIEW, parameters: {
-        'idVenta': e.idVenta.toString(),
-        'idCliente': e.idCliente.toString()
-      }),
+      onTap: () => Get.toNamed(RouterManager.CLIENT_DETAIL_VIEW,
+          parameters:  e.toJson().map((key, value) => MapEntry(key, value.toString()))),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(12.0),

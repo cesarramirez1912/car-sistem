@@ -1,6 +1,7 @@
 import 'package:car_system/colors.dart';
 import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/client_controller.dart';
+import 'package:car_system/responsive.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/input.dart';
 import 'package:car_system/widgets/spacing.dart';
@@ -10,6 +11,24 @@ import 'package:get/get.dart';
 class RegisterClientView extends GetView<ClientController> {
   @override
   Widget build(BuildContext context) {
+    return Responsive(
+      mobile: principal(),
+      tablet: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal()),
+      ),
+      desktop: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal()),
+      ),
+    );
+  }
+
+  Widget principal() {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Registrar Cliente'),

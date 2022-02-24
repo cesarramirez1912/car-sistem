@@ -1,25 +1,36 @@
-import 'package:car_system/controllers/client_controller.dart';
 import 'package:car_system/controllers/client_detail_controller.dart';
-import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
+import 'package:car_system/responsive.dart';
 import 'package:car_system/widgets/client_body.dart';
 import 'package:car_system/widgets/spacing.dart';
 import 'package:car_system/widgets/title.dart';
-import 'package:car_system/widgets/vehicle_details.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ClientDetailView extends StatelessWidget {
-  ClientController clientController = Get.find<ClientController>();
-  SellsFromCollaboratorController sellsFromCollaboratorController = Get.find();
+  ClientDetailController controller = Get.put(ClientDetailController());
 
   @override
   Widget build(BuildContext context) {
-    ClientDetailController controller = Get.put(ClientDetailController(
-        listClients: clientController.listClients,
-        sales: sellsFromCollaboratorController.sales));
+    return Responsive(
+        mobile: principal(context),
+        tablet: Center(
+          child: Container(
+              alignment: Alignment.center,
+              width: 900,
+              child: principal(context)),
+        ),
+        desktop: Center(
+          child: Container(
+              alignment: Alignment.center,
+              width: 900,
+              child: principal(context)),
+        ));
+  }
+
+  Widget principal(context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalles de la venta'),
+        title: const Text('Detalles del cliente'),
       ),
       body: SingleChildScrollView(
         child: Obx(
@@ -45,39 +56,11 @@ class ClientDetailView extends StatelessWidget {
                               color: Colors.grey,
                             ),
                             CustomSpacing(),
-                            ClientBody(controller.clientModel.value)
+                            ClientBody(controller.client.value)
                           ],
                         ),
                       ),
                     ),
-                    Card(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                CustomSpacing(),
-                                CustomTitle('Vehiculo'),
-                                CustomSpacing(),
-                                const Divider(
-                                  height: 2,
-                                  color: Colors.grey,
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (controller.vehicle != null)
-                            VehicleDetails(controller.vehicle!.value,
-                                withImage: false)
-                          else
-                            Container(),
-                        ],
-                      ),
-                    )
                   ],
                 ),
               ),

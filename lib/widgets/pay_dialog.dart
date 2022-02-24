@@ -16,8 +16,6 @@ Future payDialog(controller, int? id, int? idVenta,
     required dynamic faltanteDolares,
     required dynamic pagoDolares,
     required bool isCuote}) {
-  print(pagoDolares);
-  print(faltanteDolares);
   MoneyMaskedTextController textGuaraniesCosto = MoneyMaskedTextController(
       leftSymbol: 'G\$ ', precision: 0, decimalSeparator: '');
   MoneyMaskedTextController textDolaresCosto =

@@ -1,7 +1,5 @@
-import 'package:car_system/controllers/client_controller.dart';
-import 'package:car_system/controllers/deudor_controller.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
-import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
+import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/responsive.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/menu_drawer.dart';
@@ -11,16 +9,42 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ListVehiclesView extends StatelessWidget {
-  ListVehicleController controller = Get.put(ListVehicleController());
-  ClientController clientController = Get.put(ClientController());
-  SellsFromCollaboratorController sellsFromCollaboratorController =
-      Get.put(SellsFromCollaboratorController());
-  DeudorController deudorController = Get.put(DeudorController());
+  ListVehicleController controller = Get.find();
+  UserStorageController userStorageController = Get.find();
 
   @override
   Widget build(context) {
+    return Responsive(
+      mobile: principal(context),
+      tablet: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal(context)),
+      ),
+      desktop: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal(context)),
+      ),
+    );
+  }
+
+  Widget principal(context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Responsive.isTablet(context) || Responsive.isDesktop(context)
+              ? IconButton(
+              onPressed: () async {
+                controller.isLoading.value = true;
+                await controller.fetchVehicles();
+                controller.isLoading.value = false;
+              },
+              icon: const Icon(Icons.refresh))
+              : Container(),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: CustomSearchInput(
@@ -33,16 +57,21 @@ class ListVehiclesView extends StatelessWidget {
       ),
       body: Obx(
         () => RefreshIndicator(
-            onRefresh: () async => await controller.fetchVehicles(),
-            child: controller.isLoading.value
-                ? const Center(child: CircularProgressIndicator())
-                : Responsive(
-                    tablet: tablet(),
-                    desktop: desktop(),
-                    mobile: mobile(),
-                  )),
+          onRefresh: () async {
+            var fetchaVehicles = await controller.fetchVehicles();
+          },
+          child: controller.isLoading.value
+              ? const Center(child: CircularProgressIndicator())
+              : Responsive(
+                  tablet: tablet(),
+                  desktop: desktop(),
+                  mobile: mobile(),
+                ),
+        ),
       ),
-      drawer: Obx(() => CustomMenuDrawer(controller, deudorController)),
+      drawer: userStorageController.user?.value.cargo == Roles.VENDEDOR.name
+          ? Obx(() => CustomMenuDrawer())
+          : null,
     );
   }
 

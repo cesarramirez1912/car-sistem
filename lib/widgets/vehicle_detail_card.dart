@@ -48,6 +48,7 @@ Column CustomVehicleDetailCard(Vehicle? _vehicle) {
           ],
         ),
       ),
+     _vehicle?.chassis != null ?  gridElement(_vehicle?.chassis??'-', 'chassis') : Container()
     ],
   );
 }

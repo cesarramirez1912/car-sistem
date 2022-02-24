@@ -108,7 +108,7 @@ class SellsFromCollaboratorController extends GetxController {
         listaRefuerzos.addAll(_list);
       }
       Get.back();
-
+      Get.back();
       isLoadingRequest.value = false;
       CustomSnackBarSuccess('PAGO EFECTUADO CON EXITO!');
     } catch (e) {

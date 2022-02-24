@@ -5,7 +5,7 @@ import 'package:car_system/widgets/vehicle_detail_card.dart';
 import 'package:flutter/material.dart';
 
 Widget VehicleDetails(Vehicle vehicle,
-    {double heithImage = 180, bool withImage = true}) {
+    {double heithImage = 180, bool withImage = true, bool withPrice = true}) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,30 +32,30 @@ Widget VehicleDetails(Vehicle vehicle,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+           vehicle.contadoGuaranies!=null && withPrice ? Text(
               MoneyFormat().formatCommaToDot(vehicle.contadoGuaranies),
               style: const TextStyle(
                   color: Color.fromRGBO(72, 72, 72, 1),
                   fontSize: 18,
                   fontWeight: FontWeight.w700),
-            ),
-            Text(
+            ) : Container(),
+            vehicle.contadoDolares!=null && withPrice ? Text(
               MoneyFormat()
                   .formatCommaToDot(vehicle.contadoDolares, isGuaranies: false),
               style: const TextStyle(
                   color: Color.fromRGBO(72, 72, 72, 1),
                   fontSize: 18,
                   fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(
+            ) : Container(),
+            (vehicle.contadoDolares!=null ||  vehicle.contadoGuaranies!=null)&& withPrice ? const SizedBox(
               height: 10,
-            ),
-            const Divider(
+            ) : Container(),
+            (vehicle.contadoDolares!=null ||  vehicle.contadoGuaranies!=null)&& withPrice ? const Divider(
               color: Colors.grey,
-            ),
-            const SizedBox(
+            ) : Container(),
+            (vehicle.contadoDolares!=null ||  vehicle.contadoGuaranies!=null)&& withPrice ? const SizedBox(
               height: 10,
-            ),
+            ) : Container(),
             CustomVehicleDetailCard(vehicle)
           ],
         ),

@@ -1,19 +1,13 @@
-import 'dart:math';
-
 import 'package:car_system/common/date_format.dart';
 import 'package:car_system/common/remove_money_format.dart';
 import 'package:car_system/controllers/list_vehicle_controller.dart';
-import 'package:car_system/controllers/login_controller.dart';
 import 'package:car_system/models/cuotes.dart';
 import 'package:car_system/models/register_client_model.dart';
 import 'package:car_system/models/resument_model.dart';
 import 'package:car_system/models/sell_vehicle_model.dart';
-import 'package:car_system/models/user_model.dart';
 import 'package:car_system/models/vehicle.dart';
-import 'package:car_system/repositories/home_repository.dart';
 import 'package:car_system/repositories/sell_vehicle_repository.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
-import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
@@ -33,7 +27,7 @@ class VehicleDetailController extends GetxController {
   RxList<String> typesCobroMensuales = ['3 MESES', '6 MESES', '12 MESES'].obs;
   RxString typeCobroMensualSelected = '3 MESES'.obs;
 
-  RxList<String> typesSell = ['CONTADO', 'CREDITO'].obs;
+  RxList<String> typesSell = ['CONTADO', 'FINANCIADO'].obs;
   RxString typeSellSelected = ''.obs;
 
   RxString typeClientSelectedString = ''.obs;

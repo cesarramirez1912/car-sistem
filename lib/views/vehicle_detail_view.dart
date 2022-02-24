@@ -1,5 +1,4 @@
 import 'package:car_system/colors.dart';
-import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/vehicle_detail_controller.dart';
 import 'package:car_system/models/cuotes.dart';
 import 'package:car_system/responsive.dart';
@@ -14,6 +13,24 @@ import 'package:get/get.dart';
 class VehicleDetailView extends GetView<VehicleDetailController> {
   @override
   Widget build(BuildContext context) {
+    return Responsive(
+      mobile: principal(),
+      tablet: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal()),
+      ),
+      desktop: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal()),
+      ),
+    );
+  }
+
+  Widget principal() {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalles'),
@@ -155,7 +172,7 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                           Cuota cuota = Cuota.fromJson(
                               controller.vehicles[index].toJson());
                           if (cuota.cantidadCuotas != null) {
-                            return CustomPlan(index, cuota,showTotal: true);
+                            return CustomPlan(index, cuota, showTotal: true);
                           } else {
                             return Container(
                                 alignment: Alignment.center,

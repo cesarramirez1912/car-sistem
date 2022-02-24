@@ -1,6 +1,7 @@
 import 'package:car_system/colors.dart';
 import 'package:car_system/common/date_format.dart';
 import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
+import 'package:car_system/responsive.dart';
 import 'package:car_system/widgets/cuote_refuerzo/iscuote_render.dart';
 import 'package:car_system/widgets/cuote_refuerzo/isrefuerzo_render.dart';
 import 'package:car_system/widgets/pay_dialog.dart';
@@ -15,6 +16,23 @@ class DatesVencCuotesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     controller.filterCuoteOrRefuerzo();
+    return Responsive(
+        mobile: principal(),
+        tablet: Center(
+          child: Container(
+              alignment: Alignment.center,
+              width: 900,
+              child: principal()),
+        ),
+        desktop: Center(
+          child: Container(
+              alignment: Alignment.center,
+              width: 900,
+              child: principal()),
+        ));
+  }
+
+  Widget principal() {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Fechas'),

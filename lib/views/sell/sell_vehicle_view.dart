@@ -24,6 +24,7 @@ import 'package:get/get.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 import '../../colors.dart';
+import '../../widgets/textInputContainer.dart';
 
 class SellVehicleView extends GetView<VehicleDetailController> {
   ClientController clientController = Get.find();
@@ -39,6 +40,23 @@ class SellVehicleView extends GetView<VehicleDetailController> {
         userStorageController.user!.value.idSucursal;
     controller.sellVehicleModel.value.idColaborador =
         userStorageController.user!.value.idColaborador;
+    return Responsive(
+        mobile: principal(context),
+        tablet: Center(
+          child: Container(
+              alignment: Alignment.center,
+              width: 900,
+              child: principal(context)),
+        ),
+        desktop: Center(
+          child: Container(
+              alignment: Alignment.center,
+              width: 900,
+              child: principal(context)),
+        ));
+  }
+
+  Widget principal(context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vender vehiculo'),
@@ -164,7 +182,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                         selectedItem: controller.typeSellSelected.value,
                         onChanged: (value) {
                       controller.cleanInputsCuotes();
-                      if (value == 'CREDITO') {
+                      if (value == 'FINANCIADO') {
                         controller.sellVehicleModel.value.contadoGuaranies =
                             null;
                         controller.sellVehicleModel.value.contadoDolares = null;
@@ -232,7 +250,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           if (res) {
             CustomSnackBarSuccess('VENTA REGISTRADA CON EXITO!');
             await Future.delayed(Duration(seconds: 1));
-            Get.offAllNamed(RouterManager.HOME);
+            Get.offAllNamed(RouterManager.VEHICLES);
           }
         });
       }, ColorPalette.GREEN);
@@ -277,13 +295,13 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                       ? (controller.textContadoGuaranies)
                       : controller.textContadoDolares),
         ];
-      case 'CREDITO':
+      case 'FINANCIADO':
         return [
           CustomPlan(0, controller.cuota.value,
               textRender: controller.typesMoneySelected.value,
               showTotal: true,
-              showDolares:   controller.typesMoneySelected == 'DOLARES',
-              showGuaranies:   controller.typesMoneySelected == 'GUARANIES',
+              showDolares: controller.typesMoneySelected == 'DOLARES',
+              showGuaranies: controller.typesMoneySelected == 'GUARANIES',
               withTitle: false),
           (controller.vehicleSelected.first.cantidadCuotas == null ||
                   controller.vehicleSelected.first.cantidadCuotas == 0)
@@ -455,37 +473,6 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                 ],
               ),
       ],
-    );
-  }
-
-  Widget textInputContainer(String text, String value, {Function? onTap}) {
-    return GestureDetector(
-      onTap: () => onTap!(),
-      child: Stack(
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            margin: const EdgeInsets.only(top: 10),
-            decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(4)),
-                border: Border.all(color: Colors.grey)),
-            child: Text(value, style: TextStyle(fontSize: 16)),
-          ),
-          Positioned(
-            top: 0,
-            left: 10,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              color: Colors.white,
-              child: Text(
-                text,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 

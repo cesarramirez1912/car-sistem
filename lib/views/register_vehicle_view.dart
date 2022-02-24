@@ -18,23 +18,58 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class RegisterVehicleView extends GetView<EssencialVehicleController> {
+class RegisterVehicleView extends StatelessWidget {
+  EssencialVehicleController controller = Get.find();
+
   @override
   Widget build(BuildContext context) {
+    return Responsive(
+      mobile: principal(context),
+      tablet: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal(context)),
+      ),
+      desktop: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal(context)),
+      ),
+    );
+  }
+
+  Widget principal(context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Registrar Vehiculo'),
+        actions: [
+          Responsive.isTablet(context) || Responsive.isDesktop(context)
+              ? IconButton(
+              onPressed: () async {
+                controller.isLoading.value = true;
+                await controller.fetchEssencialsDatas();
+                controller.isLoading.value = false;
+              },
+              icon: const Icon(Icons.refresh))
+              : Container(),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: SingleChildScrollView(
-          child: Form(
-            key: controller.formKey,
-            child: Obx(
-              () => Responsive(
-                mobile: mobile(),
-                tablet: tablet(),
-                desktop: tablet(),
+
+      body: RefreshIndicator(
+        onRefresh: () => controller.fetchEssencialsDatas(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: SingleChildScrollView(
+            child: Form(
+              key: controller.formKey,
+              child: Obx(
+                () => Responsive(
+                  mobile: mobile(),
+                  tablet: tablet(),
+                  desktop: tablet(),
+                ),
               ),
             ),
           ),
@@ -131,12 +166,16 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   CustomTitle('Plan total'),
-                                  CustomTitle(MoneyFormat().formatCommaToDot(
-                                      controller
-                                          .textTotalGuaraniesString.value),fontSize: 16),
-                                  CustomTitle(MoneyFormat().formatCommaToDot(
-                                      controller.textTotalDolaresString.value,
-                                      isGuaranies: false),fontSize: 16),
+                                  CustomTitle(
+                                      MoneyFormat().formatCommaToDot(controller
+                                          .textTotalGuaraniesString.value),
+                                      fontSize: 16),
+                                  CustomTitle(
+                                      MoneyFormat().formatCommaToDot(
+                                          controller
+                                              .textTotalDolaresString.value,
+                                          isGuaranies: false),
+                                      fontSize: 16),
                                 ],
                               ),
                             ),
@@ -183,7 +222,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
                 .then((value) async {
               CustomSnackBarSuccess('VEHICULO REGISTRADO CON EXITO!');
               await Future.delayed(const Duration(seconds: 1));
-              Get.offAllNamed(RouterManager.HOME);
+              Get.offAllNamed(RouterManager.VEHICLES);
             });
           }, ColorPalette.GREEN, isLoading: controller.isLoading.value),
           const SizedBox(
@@ -347,7 +386,7 @@ class RegisterVehicleView extends GetView<EssencialVehicleController> {
           isNumber: true),
       CustomInput(
         '',
-        'Numero de chapa',
+        'Chapa',
         textEditingController: controller.textNumeroChapa,
         onChanged: (text) {
           if (text.length == 4) {

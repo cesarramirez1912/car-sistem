@@ -11,6 +11,8 @@ class DeudorController extends GetxController {
 
   RxInt selectedIndex = 0.obs;
 
+  RxBool isLoading = false.obs;
+
   TextEditingController searchTextController = TextEditingController(text: '');
 
   DeudorRepository deudorRepository = DeudorRepository();
@@ -31,8 +33,10 @@ class DeudorController extends GetxController {
 
   @override
   Future<void> onInit() async {
+    isLoading.value = true;
     user = userStorageController.user?.value;
     await requestDeudores();
+    isLoading.value = false;
     super.onInit();
   }
 

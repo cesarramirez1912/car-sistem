@@ -11,11 +11,31 @@ import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../responsive.dart';
+
 class DeudorDetailView extends StatelessWidget {
   DeudorDetailController controller = Get.put(DeudorDetailController());
 
   @override
   Widget build(BuildContext context) {
+    return Responsive(
+      tablet: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal()),
+      ),
+      desktop: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal()),
+      ),
+      mobile: principal(),
+    );
+  }
+
+  Widget principal() {
     return Scaffold(
       appBar: AppBar(
         title: Text(controller.isCuota.value ? 'Cuotas' : 'Refuerzos'),
@@ -141,6 +161,7 @@ class DeudorDetailController extends GetxController {
       }
       await deudorController.requestDeudores();
       initial();
+      Get.back();
       Get.back();
       isLoadingRequest.value = false;
       CustomSnackBarSuccess('PAGO EFECTUADO CON EXITO!');

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/models/register_client_model.dart';
-import 'package:car_system/models/user_model.dart';
 import 'package:car_system/repositories/register_client_repository.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
@@ -10,7 +9,8 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
 
 class ClientController extends GetxController {
-  Rx<User>? user = User().obs;
+  UserStorageController userStorageController =
+  Get.find<UserStorageController>();
   final formKey = GlobalKey<FormState>();
   Rx<bool> isLoading = false.obs;
   ClientRepository? clientRepository;
@@ -29,10 +29,7 @@ class ClientController extends GetxController {
 
   @override
   void onInit() async {
-    UserStorageController userStorageController =
-        Get.find<UserStorageController>();
     clientRepository = ClientRepository();
-    user?.value = await userStorageController.restoreModel();
     await requestClients();
     super.onInit();
   }
@@ -40,7 +37,7 @@ class ClientController extends GetxController {
   Future<void> requestClients() async {
     try {
       List<ClientModel> listClientsRequest =
-          await clientRepository?.requestClients(user?.value.idEmpresa);
+          await clientRepository?.requestClients(userStorageController.user?.value.idEmpresa);
       listClientsString.clear();
       for (var client in listClientsRequest) {
         if (client.cliente != null) {
@@ -62,8 +59,8 @@ class ClientController extends GetxController {
       isLoading.value = true;
       try {
         formKey.currentState!.save();
-        clientModel?.idSucursal = user?.value.idSucursal;
-        clientModel?.idEmpresa = user?.value.idEmpresa;
+        clientModel?.idSucursal = userStorageController.user?.value.idSucursal;
+        clientModel?.idEmpresa = userStorageController.user?.value.idEmpresa;
         clientModel?.celular = clientModel?.celular
             ?.replaceAll('(', '')
             .replaceAll(')', '')

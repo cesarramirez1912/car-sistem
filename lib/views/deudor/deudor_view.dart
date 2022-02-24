@@ -7,6 +7,8 @@ import 'package:car_system/widgets/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../responsive.dart';
+
 class DeudorView extends StatelessWidget {
   DeudorController controller = Get.find();
 
@@ -14,8 +16,37 @@ class DeudorView extends StatelessWidget {
   Widget build(BuildContext context) {
     PageController pageController =
         PageController(initialPage: controller.selectedIndex.value);
+    return Responsive(
+      mobile: principal(context, pageController),
+      desktop: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal(context, pageController)),
+      ),
+      tablet: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal(context, pageController)),
+      ),
+    );
+  }
+
+  Widget principal(context, pageController) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Responsive.isTablet(context) || Responsive.isDesktop(context)
+              ? IconButton(
+                  onPressed: () async {
+                    controller.isLoading.value = true;
+                    await controller.requestDeudores();
+                    controller.isLoading.value = false;
+                  },
+                  icon: const Icon(Icons.refresh))
+              : Container(),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: CustomSearchInput(
@@ -69,24 +100,33 @@ class DeudorView extends StatelessWidget {
 
   Widget Cuotes() {
     return Obx(
-      () => ListView.builder(
-        itemCount: controller.listDeudoresAgrupadoCuota.length,
-        itemBuilder: (context, index) {
-          return bodyDeudor(controller.listDeudoresAgrupadoCuota[index], true);
-        },
-      ),
+      () => controller.isLoading.value
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView.builder(
+              itemCount: controller.listDeudoresAgrupadoCuota.length,
+              itemBuilder: (context, index) {
+                return bodyDeudor(
+                    controller.listDeudoresAgrupadoCuota[index], true);
+              },
+            ),
     );
   }
 
   Widget Refuerzos() {
     return Obx(
-      () => ListView.builder(
-        itemCount: controller.listDeudoresAgrupadoRefuerzo.length,
-        itemBuilder: (context, index) {
-          return bodyDeudor(
-              controller.listDeudoresAgrupadoRefuerzo[index], false);
-        },
-      ),
+      () => controller.isLoading.value
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView.builder(
+              itemCount: controller.listDeudoresAgrupadoRefuerzo.length,
+              itemBuilder: (context, index) {
+                return bodyDeudor(
+                    controller.listDeudoresAgrupadoRefuerzo[index], false);
+              },
+            ),
     );
   }
 

@@ -29,6 +29,24 @@ class ClientModel {
     direccion = json['direccion'];
     ciudad = json['ciudad'];
   }
+  ClientModel.fromMapStringString(Map<dynamic, dynamic> json) {
+    idEmpresa = int.parse(json['id_empresa']);
+    idSucursal = int.parse(json['id_sucursal']);
+    idCliente = int.parse(json['id_cliente']);
+    ci = verifycationNull(json['ci']);
+    celular = verifycationNull(json['celular']);
+    ciudad = verifycationNull(json['ciudad']);
+    direccion = verifycationNull(json['direccion']);
+    cliente = verifycationNull(json['cliente']);
+  }
+
+  dynamic? verifycationNull(value) {
+    if (value != 'null') {
+      return value;
+    } else {
+      return null;
+    }
+  }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
