@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 
 class DashRepository extends GetConnect {
   Future<dynamic> requestCobrosMes(int? idEmpresa, int month, int year) async {
-    final response = await get(Rest.COBROS_MES +
-        '${idEmpresa}/mes=${month}/ano=${year}');
+    final response =
+        await get(Rest.COBROS_MES + '${idEmpresa}/mes=${month}/ano=${year}');
     return await requestModel(response).then((value) {
       List<Total> _list = [];
       for (var i in response.body['response']) {
@@ -16,9 +16,22 @@ class DashRepository extends GetConnect {
     });
   }
 
+  Future<dynamic> requestTotalVentasMes(
+      int? idEmpresa, int month, int year) async {
+    final response =
+        await get(Rest.VENTAS_MES + '${idEmpresa}/mes=${month}/ano=${year}');
+    return await requestModel(response).then((value) {
+      List<TotalVenta> _list = [];
+      for (var i in response.body['response']) {
+        _list.add(TotalVenta.fromJson(i));
+      }
+      return _list;
+    });
+  }
+
   Future<dynamic> requestCount(int? idEmpresa, int month, int year) async {
-    final response = await get(Rest.COUNT_VENTA_MES +
-        '${idEmpresa}/mes=${month}/ano=${year}');
+    final response = await get(
+        Rest.COUNT_VENTA_MES + '${idEmpresa}/mes=${month}/ano=${year}');
     return await requestModel(response).then((value) {
       List<Count> _list = [];
       for (var i in value) {
@@ -30,8 +43,8 @@ class DashRepository extends GetConnect {
 
   Future<dynamic> requestCountCuotesPagos(
       int? idEmpresa, int? month, int year) async {
-    final response = await get(Rest.COUNT_CUOTES_PAGOS_MES +
-        '${idEmpresa}/mes=${month}/ano=${year}');
+    final response = await get(
+        Rest.COUNT_CUOTES_PAGOS_MES + '${idEmpresa}/mes=${month}/ano=${year}');
     return await requestModel(response).then((value) {
       List<CountTotalCuotaPago> _list = [];
       for (var i in value) {
@@ -42,8 +55,8 @@ class DashRepository extends GetConnect {
   }
 
   Future<dynamic> requestNegocios(int? idEmpresa, int? month, int year) async {
-    final response = await get(Rest.NEGOCIOS_MES +
-        '${idEmpresa}/mes=${month}/ano=${year}');
+    final response =
+        await get(Rest.NEGOCIOS_MES + '${idEmpresa}/mes=${month}/ano=${year}');
     return await requestModel(response).then((value) {
       List<SaleCollaboratorModel> _list = [];
       for (var i in value) {
@@ -76,6 +89,18 @@ class Total {
   Total.fromJson(Map<String, dynamic> json) {
     pagoGuaranies = json['pago_guaranies'];
     pagoDolares = json['pago_dolares'];
+  }
+}
+
+class TotalVenta {
+  dynamic? ventaGuaranies;
+  dynamic? ventaDolares;
+
+  TotalVenta({this.ventaGuaranies, this.ventaDolares});
+
+  TotalVenta.fromJson(Map<String, dynamic> json) {
+    ventaGuaranies = json['venta_guaranies'];
+    ventaDolares = json['venta_dolares'];
   }
 }
 

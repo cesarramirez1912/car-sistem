@@ -250,7 +250,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
           if (res) {
             CustomSnackBarSuccess('VENTA REGISTRADA CON EXITO!');
             await Future.delayed(Duration(seconds: 1));
-            Get.offAllNamed(RouterManager.VEHICLES);
+            Get.offAllNamed(RouterManager.DASH);
           }
         });
       }, ColorPalette.GREEN);

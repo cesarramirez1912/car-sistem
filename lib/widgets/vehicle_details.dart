@@ -1,6 +1,5 @@
 import 'package:car_system/common/money_format.dart';
 import 'package:car_system/models/vehicle.dart';
-import 'package:car_system/widgets/title.dart';
 import 'package:car_system/widgets/vehicle_detail_card.dart';
 import 'package:flutter/material.dart';
 

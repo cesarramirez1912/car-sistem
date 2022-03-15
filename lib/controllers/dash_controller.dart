@@ -23,6 +23,7 @@ class DashController extends GetxController {
   ListVehicleController listVehicleController = Get.find();
   SellsFromCollaboratorController sellsFromCollaboratorController = Get.find();
   Rx<Total> totalMes = Total().obs;
+  Rx<TotalVenta> totalVentaMes = TotalVenta().obs;
   Rx<Count> totalVendidoMes = Count().obs;
   Rx<CountTotalCuotaPago>? totalCuotaPago = CountTotalCuotaPago().obs;
   RxList<CountTotalCuotaPago> listTotalPagoMes = <CountTotalCuotaPago>[].obs;
@@ -43,12 +44,14 @@ class DashController extends GetxController {
     try {
       Future _totalMes = dashRepository.requestCobrosMes(
           userStorageController.user?.value.idEmpresa, monthInt, year);
+      Future _totalNegociosMes = dashRepository.requestTotalVentasMes(
+          userStorageController.user?.value.idEmpresa, monthInt, year);
       Future _countMes = dashRepository.requestCount(
           userStorageController.user?.value.idEmpresa, monthInt, year);
       Future _countCuotesPagos = dashRepository.requestCountCuotesPagos(
           userStorageController.user?.value.idEmpresa, null, year);
-      var responses =
-          await Future.wait([_totalMes, _countMes, _countCuotesPagos]);
+      var responses = await Future.wait(
+          [_totalMes, _countMes, _countCuotesPagos, _totalNegociosMes]);
       totalMes.value = Total();
       totalVendidoMes.value = Count();
       totalMes.value = responses[0][0];
@@ -58,6 +61,7 @@ class DashController extends GetxController {
       totalCuotaPago?.value =
           _list.firstWhereOrNull((element) => element.mes == monthInt) ??
               CountTotalCuotaPago();
+      totalVentaMes.value = responses[3][0];
     } catch (e) {
       print(e);
     }

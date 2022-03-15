@@ -1,4 +1,5 @@
 import 'package:car_system/bindings/clients_binding.dart';
+import 'package:car_system/bindings/cuotes_month_binding.dart';
 import 'package:car_system/bindings/list_vehicle_bindings.dart';
 import 'package:car_system/bindings/login_binding.dart';
 import 'package:car_system/bindings/register_vehicle_binding.dart';
@@ -6,6 +7,8 @@ import 'package:car_system/bindings/sell_from_collaborator_binding.dart';
 import 'package:car_system/bindings/vehicle_detail_binding.dart';
 import 'package:car_system/views/client_detail_view.dart';
 import 'package:car_system/views/clients_view.dart';
+import 'package:car_system/views/cuote_month/cuote_month_detail_view.dart';
+import 'package:car_system/views/cuote_month/principal_cuotes_month.dart';
 import 'package:car_system/views/dash/dash_view.dart';
 import 'package:car_system/views/dash/negocios/negocios_view.dart';
 import 'package:car_system/views/dates_venc_cuotes_view.dart';
@@ -44,7 +47,9 @@ class RouterManager {
   static const String CLIENTS_VIEW= '/clients_view';
   static const String DEUDOR_VIEW= '/deudor_view';
   static const String DEUDOR_DETAIL_VIEW= '/deudor_detail_view';
+  static const String CUOTE_MONTH_DETAIL_VIEW= '/cuote_month_detail_view';
   static const String NEGOCIOS_VIEW= '/negocios_view';
+  static const String CUOTES_MONTH= '/cuotes_month';
 
   static List<GetPage> getRoutes() => [
     GetPage(name: LOGIN, page: () => LoginView(),binding: LoginBindings()),
@@ -63,7 +68,9 @@ class RouterManager {
     GetPage(name: SALE_DETAIL_VIEW, page: () => SaleDetailView(),),
     GetPage(name: CLIENTS_VIEW, page: () => ClientsView(),binding: ClientBinding()),
     GetPage(name: DEUDOR_VIEW, page: () => DeudorView(),),
+    GetPage(name: CUOTES_MONTH, page: () => PrincipalCuotesMonth(),binding: CuotesMonthBinding()),
     GetPage(name: DEUDOR_DETAIL_VIEW, page: () => DeudorDetailView(),),
+    GetPage(name: CUOTE_MONTH_DETAIL_VIEW, page: () => CuoteMonthDetailView(),),
     GetPage(name: NEGOCIOS_VIEW, page: () => NegociosView() ),
   ];
 }

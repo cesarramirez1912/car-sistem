@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class DateFormatBr {
-  String formatBrFromString(String dateString) {
+  String formatBrFromString(String? dateString) {
+    if (dateString == null) {
+      return '';
+    }
     return DateFormat('dd/MM/yyyy').format(DateTime.parse(dateString));
   }
 
@@ -13,7 +14,7 @@ class DateFormatBr {
   }
 
   String formatBrMonthNamed(String dateString) {
-    return months[DateTime.parse(dateString).month-1];
+    return months[DateTime.parse(dateString).month - 1];
   }
 
   String _verifyDateAndMonth(int dayOrMonth) {
@@ -25,17 +26,17 @@ class DateFormatBr {
   }
 }
 
-  const months = [
-    'ENERO',
-    'FEBRERO',
-    'MARZO',
-    'ABRIL',
-    'MAYO',
-    'JUNIO',
-    'JULIO',
-    'AGOSTO',
-    'SEPTIEMBRE',
-    'OCTUBRE',
-    'NOVIEMBRE',
-    'DICIEMBRE'
-  ];
+const months = [
+  'ENERO',
+  'FEBRERO',
+  'MARZO',
+  'ABRIL',
+  'MAYO',
+  'JUNIO',
+  'JULIO',
+  'AGOSTO',
+  'SEPTIEMBRE',
+  'OCTUBRE',
+  'NOVIEMBRE',
+  'DICIEMBRE'
+];

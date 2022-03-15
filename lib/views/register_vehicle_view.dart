@@ -27,15 +27,11 @@ class RegisterVehicleView extends StatelessWidget {
       mobile: principal(context),
       tablet: Center(
         child: Container(
-            alignment: Alignment.center,
-            width: 900,
-            child: principal(context)),
+            alignment: Alignment.center, width: 900, child: principal(context)),
       ),
       desktop: Center(
         child: Container(
-            alignment: Alignment.center,
-            width: 900,
-            child: principal(context)),
+            alignment: Alignment.center, width: 900, child: principal(context)),
       ),
     );
   }
@@ -47,16 +43,15 @@ class RegisterVehicleView extends StatelessWidget {
         actions: [
           Responsive.isTablet(context) || Responsive.isDesktop(context)
               ? IconButton(
-              onPressed: () async {
-                controller.isLoading.value = true;
-                await controller.fetchEssencialsDatas();
-                controller.isLoading.value = false;
-              },
-              icon: const Icon(Icons.refresh))
+                  onPressed: () async {
+                    controller.isLoading.value = true;
+                    await controller.fetchEssencialsDatas();
+                    controller.isLoading.value = false;
+                  },
+                  icon: const Icon(Icons.refresh))
               : Container(),
         ],
       ),
-
       body: RefreshIndicator(
         onRefresh: () => controller.fetchEssencialsDatas(),
         child: Padding(
@@ -222,7 +217,7 @@ class RegisterVehicleView extends StatelessWidget {
                 .then((value) async {
               CustomSnackBarSuccess('VEHICULO REGISTRADO CON EXITO!');
               await Future.delayed(const Duration(seconds: 1));
-              Get.offAllNamed(RouterManager.VEHICLES);
+              Get.offAllNamed(RouterManager.DASH);
             });
           }, ColorPalette.GREEN, isLoading: controller.isLoading.value),
           const SizedBox(

@@ -1,4 +1,5 @@
-import 'package:car_system/controllers/deudor_controller.dart';
+import 'package:car_system/controllers/cuotes_month/cuotes_month_controller.dart';
+import 'package:car_system/controllers/deudor/deudor_controller.dart';
 import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ enum Roles { SUPER, ADMIN, VENDEDOR }
 Widget CustomMenuDrawer() {
   UserStorageController controller = Get.find();
   DeudorController deudorController = Get.find();
+  CuotesMonthController cuotesMonthController = Get.find();
   Widget rounderNotification(int quantity) {
     return Container(
       width: 30,
@@ -46,6 +48,13 @@ Widget CustomMenuDrawer() {
       onTap: () => Get.toNamed(RouterManager.VEHICLES),
     ),
     ListTile(
+      title: const Text('Cuotas por mes'),
+      onTap: () => Get.toNamed(RouterManager.CUOTES_MONTH),
+      trailing: rounderNotification(
+          cuotesMonthController.listDeudoresAgrupadoCuota.length +
+              cuotesMonthController.listDeudoresAgrupadoRefuerzo.length),
+    ),
+    ListTile(
       title: const Text('Registrar vehiculo'),
       onTap: () => Get.toNamed(RouterManager.REGISTER),
     ),
@@ -68,31 +77,24 @@ Widget CustomMenuDrawer() {
   }
 
   _defaultItems.add(
-    Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          ListTile(
-            trailing: const Icon(Icons.exit_to_app),
-            title: const Text(
-              'Cerrar sesión',
-              style: TextStyle(color: Color.fromRGBO(121, 121, 121, 1.0)),
-            ),
-            onTap: () async {
-              await controller.deleteStore();
-              Get.offAllNamed(RouterManager.LOGIN);
-            },
-          ),
-        ],
+    ListTile(
+      trailing: const Icon(Icons.exit_to_app),
+      title: const Text(
+        'Cerrar sesión',
+        style: TextStyle(color: Color.fromRGBO(121, 121, 121, 1.0)),
       ),
+      onTap: () async {
+        await controller.deleteStore();
+        Get.offAllNamed(RouterManager.LOGIN);
+      },
     ),
   );
 
   return Drawer(
     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         DrawerHeader(
           decoration: const BoxDecoration(
@@ -130,7 +132,14 @@ Widget CustomMenuDrawer() {
             ),
           ),
         ),
-        ..._defaultItems
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [..._defaultItems],
+            ),
+          ),
+        )
       ],
     ),
   );

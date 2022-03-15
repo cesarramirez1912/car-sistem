@@ -26,8 +26,10 @@ class NegociosController extends GetxController {
 
   Future<void> requestNegocios() async {
     try {
-      listSales.value = await dashRepository.requestNegocios(userController.user?.value.idEmpresa,
-          firstDateCuoteSelected.value.month, firstDateCuoteSelected.value.year);
+      listSales.value = await dashRepository.requestNegocios(
+          userController.user?.value.idEmpresa,
+          firstDateCuoteSelected.value.month,
+          firstDateCuoteSelected.value.year);
     } catch (e) {
       CustomSnackBarError(e.toString());
     }

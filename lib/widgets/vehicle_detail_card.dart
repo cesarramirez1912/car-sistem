@@ -1,9 +1,7 @@
 import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/widgets/title.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-// ignore: non_constant_identifier_names
 Column CustomVehicleDetailCard(Vehicle? _vehicle) {
   return Column(
     children: [
