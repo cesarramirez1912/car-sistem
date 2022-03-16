@@ -1,9 +1,9 @@
-import 'package:car_system/common/date_format.dart';
-import 'package:car_system/widgets/search_dropdown.dart';
-import 'package:car_system/widgets/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/utils/date_format.dart';
+import '../../global_widgets/search_dropdown.dart';
+import '../../global_widgets/spacing.dart';
 import '../vehicle_detail/vehicle_detail_controller.dart';
 
 class DatesVencView extends GetView<VehicleDetailController> {

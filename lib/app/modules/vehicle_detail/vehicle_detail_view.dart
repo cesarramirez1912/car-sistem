@@ -1,14 +1,14 @@
-import 'package:car_system/colors.dart';
-import 'package:car_system/responsive.dart';
-import 'package:car_system/route_manager.dart';
-import 'package:car_system/widgets/button.dart';
-import 'package:car_system/widgets/plan.dart';
-import 'package:car_system/widgets/title.dart';
-import 'package:car_system/widgets/vehicle_details.dart';
+import '../../core/theme/colors.dart';
+import '../../global_widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../data/models/cuotes.dart';
+import '../../global_widgets/button.dart';
+import '../../global_widgets/plan.dart';
+import '../../global_widgets/title.dart';
+import '../../global_widgets/vehicle_details.dart';
+import '../../routes/app_routes.dart';
 import 'vehicle_detail_controller.dart';
 
 class VehicleDetailView extends GetView<VehicleDetailController> {
@@ -197,6 +197,6 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
 
   Widget venderButton() => CustomButton('VENDER VEHICULO', () {
         controller.seletVehicleToSel();
-        Get.toNamed(RouterManager.SEL_VEHICLE);
+        Get.toNamed(AppRoutes.SEL_VEHICLE);
       }, ColorPalette.GREEN);
 }

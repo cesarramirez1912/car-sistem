@@ -1,6 +1,7 @@
-import 'package:car_system/common/money_format.dart';
-import 'package:car_system/widgets/spacing.dart';
+import 'package:car_system/app/global_widgets/spacing.dart';
 import 'package:flutter/material.dart';
+
+import '../core/utils/money_format.dart';
 
 Widget cardDeudor(Map<String, dynamic> deudor, bool isCuote, Function onTap,
     {bool withDate = true, withDaysOrMonth}) {

@@ -1,12 +1,11 @@
 import 'package:car_system/app/data/repositories/remote/cuotes_month_repository.dart';
-import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../controllers/user_storage_controller.dart';
 import '../../core/utils/dedudores_total.dart';
+import '../../core/utils/user_storage_controller.dart';
 import '../../data/models/deudor_model.dart';
 import '../../data/models/user_model.dart';
+import '../../global_widgets/snack_bars/snack_bar_error.dart';
 
 class CuotesMonthController extends GetxController {
  final  CuotesMonthRepository cuotesMonthRepository = Get.find();
@@ -73,7 +72,7 @@ class CuotesMonthController extends GetxController {
 
   Future<void> requestDeudoresMonth() async {
     try {
-      Future _deudorCuota = cuotesMonthRepository.requestMonthDeudores(
+      Future _deudorCuota = cuotesMonthRepository.requestMonthDeudoresMonthYear(
           user?.idEmpresa,
           firstDateCuoteSelected.value.month,
           firstDateCuoteSelected.value.year);

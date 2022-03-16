@@ -1,11 +1,11 @@
-import 'package:car_system/colors.dart';
-import 'package:car_system/controllers/deudor/deudor_controller.dart';
-import 'package:car_system/widgets/search_input.dart';
-import 'package:car_system/widgets/shared_components/list_card_cuotes.dart';
+import 'package:car_system/app/global_widgets/search_input.dart';
+import 'package:car_system/app/global_widgets/shared_components/list_card_cuotes.dart';
+import '../../core/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../global_widgets/responsive.dart';
+import 'deudor_controller.dart';
 
 
 class DeudorView extends StatelessWidget {

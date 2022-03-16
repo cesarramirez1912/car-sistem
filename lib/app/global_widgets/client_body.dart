@@ -1,4 +1,4 @@
-import 'package:car_system/widgets/title.dart';
+import 'package:car_system/app/global_widgets/title.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../data/models/register_client_model.dart';

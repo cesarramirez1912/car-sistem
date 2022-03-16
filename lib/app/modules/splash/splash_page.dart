@@ -1,8 +1,7 @@
 import 'package:car_system/app/modules/splash/splash_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../responsive.dart';
+import '../../global_widgets/responsive.dart';
 import '../../core/theme/colors.dart';
 
 

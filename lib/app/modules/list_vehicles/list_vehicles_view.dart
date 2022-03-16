@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../controllers/user_storage_controller.dart';
+import '../../core/utils/user_storage_controller.dart';
 import '../../data/enums/roles.dart';
 import '../../global_widgets/menu_drawer.dart';
 import '../../global_widgets/responsive.dart';

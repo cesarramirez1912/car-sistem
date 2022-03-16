@@ -1,10 +1,10 @@
-import 'package:car_system/controllers/client_detail_controller.dart';
-import 'package:car_system/responsive.dart';
-import 'package:car_system/widgets/client_body.dart';
-import 'package:car_system/widgets/spacing.dart';
-import 'package:car_system/widgets/title.dart';
+import 'package:car_system/app/global_widgets/client_body.dart';
+import 'package:car_system/app/global_widgets/title.dart';
+import '../../../global_widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../global_widgets/spacing.dart';
+import 'client_detail_controller.dart';
 
 class ClientDetailView extends StatelessWidget {
   ClientDetailController controller = Get.put(ClientDetailController());

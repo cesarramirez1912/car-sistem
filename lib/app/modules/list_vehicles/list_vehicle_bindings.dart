@@ -1,8 +1,6 @@
-import 'package:car_system/controllers/list_vehicle_controller.dart';
+import 'package:car_system/app/modules/list_vehicles/list_vehicle_controller.dart';
 import 'package:get/get.dart';
-
 import '../client/client_controller.dart';
-
 
 class ListVehicleBindings extends Bindings {
   @override

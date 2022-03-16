@@ -1,11 +1,11 @@
 import 'package:car_system/app/data/models/cuote_detail_model.dart';
-import 'package:car_system/colors.dart';
-import 'package:car_system/common/date_format.dart';
-import 'package:car_system/widgets/cuote_refuerzo/center_text.dart';
-import 'package:car_system/widgets/cuote_refuerzo/column_text.dart';
-import 'package:car_system/widgets/cuote_refuerzo/columns.dart';
-import 'package:car_system/widgets/cuote_refuerzo/pendiente_text.dart';
+import 'package:car_system/app/global_widgets/cuote_refuerzo/pendiente_text.dart';
 import 'package:flutter/material.dart';
+import '../../core/theme/colors.dart';
+import '../../core/utils/date_format.dart';
+import 'center_text.dart';
+import 'column_text.dart';
+import 'columns.dart';
 
 Widget isCuote(List<CuoteDetailModel> lista, Function onSelectChanged) {
   List<Widget> faltanteSection(CuoteDetailModel cuote) {

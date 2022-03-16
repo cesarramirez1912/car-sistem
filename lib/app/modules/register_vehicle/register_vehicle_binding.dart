@@ -1,5 +1,6 @@
-import 'package:car_system/controllers/essencial_vehicle_controller.dart';
 import 'package:get/get.dart';
+
+import 'essencial_vehicle_controller.dart';
 
 class RegisterVehicleBinding implements Bindings {
   @override

@@ -1,5 +1,6 @@
 import 'package:car_system/app/data/models/deudor_model.dart';
-import 'package:car_system/common/date_format.dart';
+
+import 'date_format.dart';
 
 class DeudoresTotal {
   Map<String, dynamic> tipoMoroso(String? tipo) {

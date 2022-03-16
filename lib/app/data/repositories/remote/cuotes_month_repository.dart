@@ -5,11 +5,18 @@ import '../../models/deudor_model.dart';
 class CuotesMonthRepository {
   final CuotesMonthApi _cuotesMonthApi = Get.find<CuotesMonthApi>();
 
-  Future<List<DeudorModel>> requestMonthDeudores(
+  Future<List<DeudorModel>> requestMonthDeudoresMonthYear(
           int? idCompany, int? month, int? year) =>
-      _cuotesMonthApi.requestMonthDeudores(idCompany, month, year);
+      _cuotesMonthApi.requestMonthDeudoresMonthYear(idCompany, month, year);
+
+  Future<List<DeudorModel>> requestMonthDeudoresCompany(
+      int? idCompany) =>
+      _cuotesMonthApi.requestMonthDeudoresCompany(idCompany);
+
 
   Future<List<DeudorModel>> requestDeudoresMonthRefuerzo(
           int? idCompany, int? month, int? year) =>
       _cuotesMonthApi.requestDeudoresMonthRefuerzo(idCompany, month, year);
+
+  Future<List<DeudorModel>> requestDeudoresRefuerzo(int? idCompany) => _cuotesMonthApi.requestDeudoresRefuerzo(idCompany);
 }

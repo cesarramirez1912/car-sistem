@@ -1,4 +1,4 @@
-import 'package:car_system/widgets/title.dart';
+import 'package:car_system/app/global_widgets/title.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/vehicle.dart';

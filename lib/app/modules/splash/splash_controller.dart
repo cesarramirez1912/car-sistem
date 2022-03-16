@@ -1,12 +1,12 @@
 import 'package:car_system/app/data/repositories/local/local_auth_repository.dart';
 import 'package:car_system/app/data/repositories/remote/authentication_repository.dart';
 import 'package:car_system/app/routes/app_routes.dart';
-import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import '../../../widgets/snack_bars/snack_bar_error.dart';
-import '../../data/models/static_model.dart';
+import '../../core/utils/static_model.dart';
+import '../../core/utils/user_storage_controller.dart';
 import '../../data/models/user_model.dart';
+import '../../global_widgets/snack_bars/snack_bar_error.dart';
 
 class SplashController extends GetxController {
   final LocalAuthRepository _localAuthRepository = Get.find();

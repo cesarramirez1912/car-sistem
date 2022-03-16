@@ -1,4 +1,4 @@
-import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
+import 'package:car_system/app/global_widgets/snack_bars/snack_bar_error.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

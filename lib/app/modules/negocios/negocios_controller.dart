@@ -1,15 +1,14 @@
 import 'dart:async';
-import 'package:car_system/controllers/user_storage_controller.dart';
-import 'package:car_system/repositories/dash_repository.dart';
-import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
+import 'package:car_system/app/data/repositories/remote/dash_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import '../../core/utils/user_storage_controller.dart';
 import '../../data/models/sale_collaborator_model.dart';
+import '../../global_widgets/snack_bars/snack_bar_error.dart';
 
 class NegociosController extends GetxController {
   UserStorageController userController = Get.find();
-  DashRepository dashRepository = DashRepository();
+  final DashRepository dashRepository = Get.find();
   RxBool isLoading = true.obs;
   RxList<SaleCollaboratorModel> listSales = <SaleCollaboratorModel>[].obs;
   Rx<SaleCollaboratorModel> saleSelected = SaleCollaboratorModel().obs;

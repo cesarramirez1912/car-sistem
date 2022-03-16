@@ -2,9 +2,8 @@ import 'package:car_system/app/modules/list_vehicles/list_vehicle_controller.dar
 import 'package:car_system/app/modules/sells/sells_from_collaborator_controller.dart';
 import 'package:get/get.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-
-import '../../../controllers/user_storage_controller.dart';
 import '../../core/theme/colors.dart';
+import '../../core/utils/user_storage_controller.dart';
 import '../../data/providers/remote/dash_api.dart';
 import '../../data/repositories/remote/dash_repository.dart';
 import '../client/client_controller.dart';

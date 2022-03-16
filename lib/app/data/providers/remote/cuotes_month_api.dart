@@ -9,9 +9,15 @@ import '../../models/deudor_model.dart';
 class CuotesMonthApi{
   final Dio _dio = Get.find<Dio>();
 
-  Future<List<DeudorModel>> requestMonthDeudores(
+  Future<List<DeudorModel>> requestMonthDeudoresMonthYear(
       int? idCompany, int? month, int? year) async {
     final Response response = await _dio.get(Rest.DEUDORES_CUOTA + '${idCompany}/mes=${month}/ano=${year}');
+    return (response.data['response'] as List).map((e) => DeudorModel.fromJson(e)).toList();
+  }
+
+  Future<List<DeudorModel>> requestMonthDeudoresCompany(
+      int? idCompany) async {
+    final Response response = await _dio.get(Rest.DEUDORES_CUOTA + '${idCompany}');
     return (response.data['response'] as List).map((e) => DeudorModel.fromJson(e)).toList();
   }
 
@@ -22,4 +28,10 @@ class CuotesMonthApi{
     return (response.data['response'] as List).map((e) => DeudorModel.fromJson(e)).toList();
   }
 
+  Future<List<DeudorModel>> requestDeudoresRefuerzo(int? idCompany) async {
+    final Response response = await _dio.get(
+        Rest.DEUDORES_REFUERZO + idCompany.toString());
+    return (response.data['response'] as List).map((e) =>
+        DeudorModel.fromJson(e)).toList();
+  }
 }

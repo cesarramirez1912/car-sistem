@@ -1,11 +1,11 @@
-import 'package:car_system/common/dedudores_total.dart';
-import 'package:car_system/models/deudor_model.dart';
-import 'package:car_system/repositories/deudor_repository.dart';
-import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
+import 'package:car_system/app/data/repositories/remote/cuotes_month_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/user_storage_controller.dart';
+import '../../core/utils/dedudores_total.dart';
+import '../../core/utils/user_storage_controller.dart';
+import '../../data/models/deudor_model.dart';
 import '../../data/models/user_model.dart';
+import '../../global_widgets/snack_bars/snack_bar_error.dart';
 
 
 class DeudorController extends GetxController {
@@ -20,7 +20,7 @@ class DeudorController extends GetxController {
 
   DeudoresTotal deudoresTotal = DeudoresTotal();
 
-  DeudorRepository deudorRepository = DeudorRepository();
+  CuotesMonthRepository deudorRepository = Get.find();
   RxList<Map<String, dynamic>> listDeudoresAgrupadoCuota =
       <Map<String, dynamic>>[].obs;
   RxList<Map<String, dynamic>> listDeudoresAgrupadoCuotaAux =
@@ -80,7 +80,7 @@ class DeudorController extends GetxController {
 
   Future<void> requestDeudores() async {
     try {
-      Future _deudorCuota = deudorRepository.requestDeudores(user?.idEmpresa);
+      Future _deudorCuota = deudorRepository.requestMonthDeudoresCompany(user?.idEmpresa);
       Future _deudorRefuerzo =
           deudorRepository.requestDeudoresRefuerzo(user?.idEmpresa);
 

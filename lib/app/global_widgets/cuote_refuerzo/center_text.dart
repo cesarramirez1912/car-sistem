@@ -1,6 +1,7 @@
-import 'package:car_system/colors.dart';
-import 'package:car_system/common/money_format.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../../core/theme/colors.dart';
+import '../../core/utils/money_format.dart';
 
 Widget centerText(dynamic value,
     {bool isGuaranies = true, Color colorText = ColorPalette.PRIMARY}) {

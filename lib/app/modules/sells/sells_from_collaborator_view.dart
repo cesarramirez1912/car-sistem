@@ -1,18 +1,17 @@
-import 'package:car_system/colors.dart';
-import 'package:car_system/common/date_format.dart';
-import 'package:car_system/common/money_format.dart';
-import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
-import 'package:car_system/responsive.dart';
-import 'package:car_system/route_manager.dart';
-import 'package:car_system/widgets/button.dart';
-import 'package:car_system/widgets/search_dropdown.dart';
-import 'package:car_system/widgets/search_input.dart';
-import 'package:car_system/widgets/spacing.dart';
-import 'package:car_system/widgets/title.dart';
+import 'package:car_system/app/routes/app_routes.dart';
+import '../../core/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-
+import '../../core/utils/date_format.dart';
+import '../../core/utils/money_format.dart';
 import '../../data/models/sale_collaborator_model.dart';
+import '../../global_widgets/button.dart';
+import '../../global_widgets/responsive.dart';
+import '../../global_widgets/search_dropdown.dart';
+import '../../global_widgets/search_input.dart';
+import '../../global_widgets/spacing.dart';
+import '../../global_widgets/title.dart';
+import 'sells_from_collaborator_controller.dart';
 
 class SellsFromCollaboratorView extends GetView<SellsFromCollaboratorController> {
   @override
@@ -104,7 +103,7 @@ class SellsFromCollaboratorView extends GetView<SellsFromCollaboratorController>
 
   Widget cardSell(SaleCollaboratorModel e) {
     return GestureDetector(
-      onTap: () => Get.toNamed(RouterManager.CLIENT_DETAIL_VIEW,
+      onTap: () => Get.toNamed(AppRoutes.CLIENT_DETAIL_VIEW,
           parameters:  e.toJson().map((key, value) => MapEntry(key, value.toString()))),
       child: Card(
         child: Padding(
@@ -236,7 +235,7 @@ Widget render(
             ? CustomButton('PAGAR CUOTA O REFUERZO', () {
                 controller.queryListRefuerzos(e.idVenta);
                 controller.queryListCuotes(e.idVenta);
-                Get.toNamed(RouterManager.SELLS_DETAILS_CUOTES);
+                Get.toNamed(AppRoutes.SELLS_DETAILS_CUOTES);
               }, ColorPalette.GREEN)
             : Container()
       ],

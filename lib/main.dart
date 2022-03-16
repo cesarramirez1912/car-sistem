@@ -2,10 +2,11 @@ import 'package:car_system/app/core/utils/dependency_injection.dart';
 import 'package:car_system/app/modules/splash/splash_binding.dart';
 import 'package:car_system/app/modules/splash/splash_page.dart';
 import 'package:car_system/app/routes/app_pages.dart';
-import 'package:car_system/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'app/core/theme/colors.dart';
 
 
 Future<void> main() async {

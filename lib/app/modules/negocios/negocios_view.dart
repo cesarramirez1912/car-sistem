@@ -1,8 +1,8 @@
+import 'package:car_system/app/modules/negocios/negocios_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../colors.dart';
-import '../../../controllers/negocios_controller.dart';
-import '../../../responsive.dart';
+import '../../core/theme/colors.dart';
+import '../../global_widgets/responsive.dart';
 import '../../core/utils/date_format.dart';
 import '../../data/models/sale_collaborator_model.dart';
 import '../../routes/app_routes.dart';

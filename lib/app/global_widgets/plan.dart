@@ -1,8 +1,7 @@
-import 'package:car_system/colors.dart';
-import 'package:car_system/widgets/renders_cards_plan/render_cuotas.dart';
-import 'package:car_system/widgets/title.dart';
+import 'package:car_system/app/global_widgets/renders_cards_plan/render_cuotas.dart';
+import 'package:car_system/app/global_widgets/title.dart';
+import '../core/theme/colors.dart';
 import 'package:flutter/material.dart';
-
 import '../data/models/cuotes.dart';
 
 // ignore: non_constant_identifier_names

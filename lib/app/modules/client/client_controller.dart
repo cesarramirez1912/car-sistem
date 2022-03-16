@@ -3,11 +3,10 @@ import 'package:car_system/app/data/repositories/remote/clients_repository.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
-
-import '../../../controllers/user_storage_controller.dart';
-import '../../../widgets/snack_bars/snack_bar_success.dart';
+import '../../core/utils/user_storage_controller.dart';
 import '../../data/models/register_client_model.dart';
 import '../../global_widgets/snack_bars/snack_bar_error.dart';
+import '../../global_widgets/snack_bars/snack_bar_success.dart';
 
 class ClientController extends GetxController {
   UserStorageController userStorageController =

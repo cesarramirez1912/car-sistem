@@ -1,22 +1,23 @@
-import 'package:car_system/colors.dart';
-import 'package:car_system/common/money_format.dart';
-import 'package:car_system/common/remove_money_format.dart';
-import 'package:car_system/controllers/essencial_vehicle_controller.dart';
-import 'package:car_system/models/essencial_vehicle_models/brand.dart';
-import 'package:car_system/models/essencial_vehicle_models/model.dart';
-import 'package:car_system/responsive.dart';
-import 'package:car_system/route_manager.dart';
-import 'package:car_system/widgets/button.dart';
-import 'package:car_system/widgets/dialog_fetch.dart';
-import 'package:car_system/widgets/input.dart';
-import 'package:car_system/widgets/plan.dart';
-import 'package:car_system/widgets/search_dropdown.dart';
-import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
-import 'package:car_system/widgets/spacing.dart';
-import 'package:car_system/widgets/title.dart';
+import 'package:car_system/app/routes/app_routes.dart';
+import '../../core/theme/colors.dart';
+import '../../global_widgets/responsive.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../core/utils/money_format.dart';
+import '../../core/utils/remove_money_format.dart';
+import '../../data/models/essencial_vehicle_models/brand.dart';
+import '../../data/models/essencial_vehicle_models/model.dart';
+import '../../global_widgets/button.dart';
+import '../../global_widgets/dialog_fetch.dart';
+import '../../global_widgets/input.dart';
+import '../../global_widgets/plan.dart';
+import '../../global_widgets/search_dropdown.dart';
+import '../../global_widgets/snack_bars/snack_bar_success.dart';
+import '../../global_widgets/spacing.dart';
+import '../../global_widgets/title.dart';
+import 'essencial_vehicle_controller.dart';
 
 class RegisterVehicleView extends StatelessWidget {
   EssencialVehicleController controller = Get.find();
@@ -217,7 +218,7 @@ class RegisterVehicleView extends StatelessWidget {
                 .then((value) async {
               CustomSnackBarSuccess('VEHICULO REGISTRADO CON EXITO!');
               await Future.delayed(const Duration(seconds: 1));
-              Get.offAllNamed(RouterManager.DASH);
+              Get.offAllNamed(AppRoutes.DASH);
             });
           }, ColorPalette.GREEN, isLoading: controller.isLoading.value),
           const SizedBox(

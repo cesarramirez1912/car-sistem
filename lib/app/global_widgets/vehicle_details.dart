@@ -1,7 +1,6 @@
-import 'package:car_system/common/money_format.dart';
-import 'package:car_system/widgets/vehicle_detail_card.dart';
+import 'package:car_system/app/global_widgets/vehicle_detail_card.dart';
 import 'package:flutter/material.dart';
-
+import '../core/utils/money_format.dart';
 import '../data/models/vehicle.dart';
 
 Widget VehicleDetails(Vehicle vehicle,

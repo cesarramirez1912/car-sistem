@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:car_system/app/data/providers/remote/sells_api.dart';
 import 'package:get/get.dart';
-
-import '../../../controllers/user_storage_controller.dart';
 import '../../core/utils/money_format.dart';
+import '../../core/utils/user_storage_controller.dart';
 import '../../data/models/cuote_detail_model.dart';
 import '../../data/models/refuerzo_detail_model.dart';
 import '../../data/models/sale_collaborator_model.dart';

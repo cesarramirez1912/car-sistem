@@ -1,14 +1,14 @@
 import 'package:car_system/app/data/repositories/local/local_auth_repository.dart';
 import 'package:car_system/app/data/repositories/remote/login_repository.dart';
 import 'package:car_system/app/routes/app_routes.dart';
-import 'package:car_system/controllers/user_storage_controller.dart';
-import 'package:car_system/models/static_model.dart';
-import 'package:car_system/widgets/menu_drawer.dart';
-import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/utils/user_storage_controller.dart';
+import '../../core/utils/static_model.dart';
+import '../../data/enums/roles.dart';
 import '../../data/models/user_model.dart';
+import '../../global_widgets/snack_bars/snack_bar_error.dart';
 
 class LoginController extends GetxController {
   UserStorageController userStorageController = Get.find();

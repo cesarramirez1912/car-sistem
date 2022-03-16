@@ -1,10 +1,10 @@
-import 'package:car_system/colors.dart';
-import 'package:car_system/responsive.dart';
-import 'package:car_system/widgets/button.dart';
-import 'package:car_system/widgets/input_login.dart';
+import 'package:car_system/app/modules/login/local_widgets/input_login.dart';
+import '../../core/theme/colors.dart';
+import '../../global_widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../global_widgets/button.dart';
 import 'login_controller.dart';
 
 class LoginView extends GetView<LoginController> {

@@ -1,11 +1,10 @@
-import 'package:car_system/colors.dart';
-import 'package:car_system/widgets/shared_components/list_card_cuotes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import '../../core/theme/colors.dart';
 import '../../core/utils/date_format.dart';
 import '../../global_widgets/responsive.dart';
 import '../../global_widgets/search_input.dart';
+import '../../global_widgets/shared_components/list_card_cuotes.dart';
 import 'cuotes_month_controller.dart';
 
 class PrincipalCuotesMonth extends StatelessWidget {

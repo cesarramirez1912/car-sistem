@@ -1,11 +1,12 @@
 import 'package:car_system/app/modules/client/client_controller.dart';
-import 'package:car_system/colors.dart';
-import 'package:car_system/responsive.dart';
-import 'package:car_system/widgets/button.dart';
-import 'package:car_system/widgets/input.dart';
-import 'package:car_system/widgets/spacing.dart';
+import '../../../global_widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../core/theme/colors.dart';
+import '../../../global_widgets/button.dart';
+import '../../../global_widgets/input.dart';
+import '../../../global_widgets/spacing.dart';
 
 
 class RegisterClientView extends GetView<ClientController> {

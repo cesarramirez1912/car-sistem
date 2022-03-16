@@ -1,4 +1,5 @@
-import 'package:car_system/common/remove_money_format.dart';
+
+import 'package:car_system/app/core/utils/remove_money_format.dart';
 
 String? validatorRefuerzoDinero(String text) {
   double refuerzoGuaraniesDouble = RemoveMoneyFormat().removeToDouble(text);

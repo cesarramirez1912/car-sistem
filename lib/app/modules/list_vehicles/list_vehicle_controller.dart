@@ -1,15 +1,14 @@
 import 'package:car_system/app/data/models/user_model.dart';
-import 'package:car_system/controllers/user_storage_controller.dart';
-import 'package:car_system/repositories/home_repository.dart';
+import 'package:car_system/app/data/repositories/remote/list_vehicles_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
+import '../../core/utils/user_storage_controller.dart';
 import '../../data/models/vehicle.dart';
 
 
 class ListVehicleController extends GetxController {
+  final ListVehiclesRepository _listVehiclesRepository = Get.find();
   UserStorageController userStorageController = Get.find();
-  HomeRepository _homeRepository = HomeRepository();
   RxList<Vehicle> vehiclesComplete = <Vehicle>[].obs;
   RxList<Vehicle> vehicles = <Vehicle>[].obs;
   RxList<Vehicle> vehiclesAux = <Vehicle>[].obs;
@@ -22,7 +21,6 @@ class ListVehicleController extends GetxController {
   @override
   void onInit() async {
     user = userStorageController.user?.value;
-    _homeRepository = HomeRepository();
     isLoading.value = true;
     await fetchVehicles();
     isLoading.value = false;
@@ -32,7 +30,7 @@ class ListVehicleController extends GetxController {
   Future<void> fetchVehicles() async {
     try {
       List<Vehicle> res =
-          await _homeRepository.fetchVehicles(user?.idSucursal ?? 0);
+          await _listVehiclesRepository.fetchVehicles(user?.idSucursal ?? 0);
       vehiclesComplete.value = res;
       List<Vehicle> resFil = [];
       if (res.isNotEmpty) {

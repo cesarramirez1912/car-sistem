@@ -1,13 +1,13 @@
-import 'package:car_system/colors.dart';
-import 'package:car_system/common/money_format.dart';
-import 'package:car_system/common/remove_money_format.dart';
-import 'package:car_system/widgets/button.dart';
-import 'package:car_system/widgets/input.dart';
-import 'package:car_system/widgets/spacing.dart';
-import 'package:car_system/widgets/title.dart';
+import 'package:car_system/app/global_widgets/button.dart';
+import 'package:car_system/app/global_widgets/input.dart';
+import 'package:car_system/app/global_widgets/spacing.dart';
+import 'package:car_system/app/global_widgets/title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
+import '../core/theme/colors.dart';
+import '../core/utils/money_format.dart';
+import '../core/utils/remove_money_format.dart';
 
 Future payDialog(controller, int? id, int? idVenta,
     {required String fecha,
