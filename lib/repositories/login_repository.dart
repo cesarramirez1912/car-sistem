@@ -1,6 +1,7 @@
-import 'package:car_system/models/user_model.dart';
 import 'package:car_system/rest.dart';
 import 'package:get/get.dart';
+
+import '../app/data/models/user_model.dart';
 
 class LoginRepository extends GetConnect {
   Future<dynamic> fetchLogin(Map<String, String> _body) async {

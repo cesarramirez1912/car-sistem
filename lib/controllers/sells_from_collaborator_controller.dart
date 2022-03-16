@@ -4,12 +4,13 @@ import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/models/cuote_detail_model.dart';
 import 'package:car_system/models/refuerzo_detail_model.dart';
-import 'package:car_system/models/sale_collaborator_model.dart';
-import 'package:car_system/models/user_model.dart';
 import 'package:car_system/repositories/sell_vehicle_repository.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
 import 'package:get/get.dart';
+
+import '../app/data/models/sale_collaborator_model.dart';
+import '../app/data/models/user_model.dart';
 
 class SellsFromCollaboratorController extends GetxController {
   UserStorageController userStorageController = Get.find();

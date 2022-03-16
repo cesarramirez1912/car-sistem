@@ -1,7 +1,8 @@
 import 'package:car_system/models/deudor_model.dart';
-import 'package:car_system/models/sale_collaborator_model.dart';
 import 'package:car_system/rest.dart';
 import 'package:get/get.dart';
+
+import '../app/data/models/sale_collaborator_model.dart';
 
 class DashRepository extends GetConnect {
   Future<dynamic> requestCobrosMes(int? idEmpresa, int month, int year) async {

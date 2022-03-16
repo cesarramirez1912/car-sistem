@@ -1,6 +1,7 @@
-import 'package:car_system/models/user_model.dart';
 import 'package:car_system/rest.dart';
 import 'package:get/get.dart';
+
+import '../app/data/models/user_model.dart';
 
 class UserStorageRepository extends GetConnect {
   Future<dynamic> fetchUserInformation(int? idCollaborator) async {

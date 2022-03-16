@@ -1,14 +1,15 @@
-import 'package:car_system/colors.dart';
-import 'package:car_system/common/date_format.dart';
-import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
-import 'package:car_system/responsive.dart';
-import 'package:car_system/widgets/cuote_refuerzo/iscuote_render.dart';
-import 'package:car_system/widgets/cuote_refuerzo/isrefuerzo_render.dart';
-import 'package:car_system/widgets/pay_dialog.dart';
-import 'package:car_system/widgets/search_dropdown.dart';
-import 'package:car_system/widgets/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../app/core/theme/colors.dart';
+import '../app/core/utils/date_format.dart';
+import '../app/global_widgets/cuote_refuerzo/iscuote_render.dart';
+import '../app/global_widgets/cuote_refuerzo/isrefuerzo_render.dart';
+import '../app/global_widgets/pay_dialog.dart';
+import '../app/global_widgets/responsive.dart';
+import '../app/global_widgets/search_dropdown.dart';
+import '../app/global_widgets/spacing.dart';
+import '../app/modules/sells/sells_from_collaborator_controller.dart';
 
 class DatesVencCuotesView extends StatelessWidget {
   SellsFromCollaboratorController controller = Get.find();

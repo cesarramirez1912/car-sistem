@@ -1,10 +1,10 @@
-import 'package:car_system/common/date_format.dart';
-import 'package:car_system/widgets/cuote_refuerzo/iscuote_render.dart';
-import 'package:car_system/widgets/cuote_refuerzo/isrefuerzo_render.dart';
-import 'package:car_system/widgets/pay_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controllers/cuotes_month/cuotes_month_detail_controller.dart';
+import '../../app/core/utils/date_format.dart';
+import '../../app/global_widgets/cuote_refuerzo/iscuote_render.dart';
+import '../../app/global_widgets/cuote_refuerzo/isrefuerzo_render.dart';
+import '../../app/global_widgets/pay_dialog.dart';
+import '../../app/modules/cuote_month/cuotes_month_detail_controller.dart';
 import '../../responsive.dart';
 
 class CuoteMonthDetailView extends StatelessWidget {

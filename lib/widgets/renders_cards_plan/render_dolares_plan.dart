@@ -1,7 +1,7 @@
 import 'package:car_system/common/money_format.dart';
-import 'package:car_system/models/cuotes.dart';
 import 'package:flutter/material.dart';
 
+import '../../app/data/models/cuotes.dart';
 import '../plan.dart';
 import '../title.dart';
 

@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginView extends GetView<LoginController> {
-  UserStorageController userStorageController = Get.find();
 
   @override
   Widget build(context) => Scaffold(
@@ -90,7 +89,7 @@ class LoginView extends GetView<LoginController> {
                   height: 6,
                 ),
                 Text(
-                  userStorageController.packageInfo.value.version,
+                  controller.userStorageController.packageInfo.value.version,
                   style: const TextStyle(
                       color: Colors.grey, fontSize: 9, letterSpacing: 2),
                 ),

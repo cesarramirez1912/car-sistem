@@ -1,17 +1,11 @@
 import 'package:car_system/common/date_format.dart';
-import 'package:car_system/controllers/deudor/deudor_controller.dart';
-import 'package:car_system/models/cuote_detail_model.dart';
-import 'package:car_system/models/refuerzo_detail_model.dart';
-import 'package:car_system/repositories/sell_vehicle_repository.dart';
-import 'package:car_system/widgets/cuote_refuerzo/iscuote_render.dart';
-import 'package:car_system/widgets/cuote_refuerzo/isrefuerzo_render.dart';
 import 'package:car_system/widgets/pay_dialog.dart';
-import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
-import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/deudor/deudor_detail_controller.dart';
+import '../../app/global_widgets/cuote_refuerzo/iscuote_render.dart';
+import '../../app/global_widgets/cuote_refuerzo/isrefuerzo_render.dart';
+import '../../app/modules/deudor/deudor_detail_controller.dart';
 import '../../responsive.dart';
 
 class DeudorDetailView extends StatelessWidget {

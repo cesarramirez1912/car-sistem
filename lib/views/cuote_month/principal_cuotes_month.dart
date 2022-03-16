@@ -1,9 +1,9 @@
 import 'package:car_system/colors.dart';
-import 'package:car_system/controllers/cuotes_month/cuotes_month_controller.dart';
 import 'package:car_system/widgets/shared_components/list_card_cuotes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../app/modules/cuote_month/cuotes_month_controller.dart';
 import '../../common/date_format.dart';
 import '../../responsive.dart';
 import '../../widgets/search_input.dart';

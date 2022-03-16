@@ -1,12 +1,12 @@
 import 'package:car_system/colors.dart';
-import 'package:car_system/common/money_format.dart';
-import 'package:car_system/controllers/client_controller.dart';
 import 'package:car_system/responsive.dart';
 import 'package:car_system/widgets/button.dart';
 import 'package:car_system/widgets/input.dart';
 import 'package:car_system/widgets/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../app/modules/client/client_controller.dart';
 
 class RegisterClientView extends GetView<ClientController> {
   @override

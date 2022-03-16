@@ -1,9 +1,6 @@
 import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/sale_detail_controller.dart';
 import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
-import 'package:car_system/models/register_client_model.dart';
-import 'package:car_system/models/sale_collaborator_model.dart';
-import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/widgets/client_body.dart';
 import 'package:car_system/widgets/spacing.dart';
 import 'package:car_system/widgets/title.dart';
@@ -11,6 +8,9 @@ import 'package:car_system/widgets/vehicle_details.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../app/data/models/register_client_model.dart';
+import '../app/data/models/sale_collaborator_model.dart';
+import '../app/data/models/vehicle.dart';
 import '../colors.dart';
 import '../responsive.dart';
 import '../route_manager.dart';

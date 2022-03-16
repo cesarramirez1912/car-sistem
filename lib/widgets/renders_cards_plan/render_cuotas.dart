@@ -1,11 +1,11 @@
 import 'package:car_system/common/money_format.dart';
-import 'package:car_system/models/cuotes.dart';
 import 'package:car_system/widgets/renders_cards_plan/render_dolares_plan.dart';
 import 'package:car_system/widgets/renders_cards_plan/render_guaranies_plan.dart';
 import 'package:car_system/widgets/renders_cards_plan/totales_plan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../app/data/models/cuotes.dart';
 import '../plan.dart';
 import '../title.dart';
 

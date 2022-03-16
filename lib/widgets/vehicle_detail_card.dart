@@ -1,6 +1,7 @@
-import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:flutter/material.dart';
+
+import '../app/data/models/vehicle.dart';
 
 Column CustomVehicleDetailCard(Vehicle? _vehicle) {
   return Column(

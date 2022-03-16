@@ -1,3 +1,4 @@
+import 'package:car_system/app/modules/client/clients_view.dart';
 import 'package:car_system/bindings/clients_binding.dart';
 import 'package:car_system/bindings/cuotes_month_binding.dart';
 import 'package:car_system/bindings/list_vehicle_bindings.dart';
@@ -6,7 +7,6 @@ import 'package:car_system/bindings/register_vehicle_binding.dart';
 import 'package:car_system/bindings/sell_from_collaborator_binding.dart';
 import 'package:car_system/bindings/vehicle_detail_binding.dart';
 import 'package:car_system/views/client_detail_view.dart';
-import 'package:car_system/views/clients_view.dart';
 import 'package:car_system/views/cuote_month/cuote_month_detail_view.dart';
 import 'package:car_system/views/cuote_month/principal_cuotes_month.dart';
 import 'package:car_system/views/dash/dash_view.dart';
@@ -24,9 +24,9 @@ import 'package:car_system/views/sale_datail_view.dart';
 import 'package:car_system/views/sell/dates_venc_view.dart';
 import 'package:car_system/views/sell/sell_vehicle_view.dart';
 import 'package:car_system/views/sells_from_collaborator_view.dart';
-import 'package:car_system/views/vehicle_detail_view.dart';
 import 'package:get/get.dart';
 
+import 'app/modules/vehicle_detail/vehicle_detail_view.dart';
 import 'bindings/dash_binding.dart';
 
 class RouterManager {

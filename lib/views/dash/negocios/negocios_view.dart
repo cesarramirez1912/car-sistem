@@ -1,10 +1,10 @@
 import 'package:car_system/common/date_format.dart';
 import 'package:car_system/controllers/negocios_controller.dart';
-import 'package:car_system/models/sale_collaborator_model.dart';
 import 'package:car_system/responsive.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../app/data/models/sale_collaborator_model.dart';
 import '../../../colors.dart';
 
 class NegociosView extends StatelessWidget {

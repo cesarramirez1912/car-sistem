@@ -1,6 +1,7 @@
-import 'package:car_system/models/register_client_model.dart';
 import 'package:car_system/rest.dart';
 import 'package:get/get.dart';
+
+import '../app/data/models/register_client_model.dart';
 
 class ClientRepository extends GetConnect {
   Future<dynamic> requestClients(int? idCompany) async {

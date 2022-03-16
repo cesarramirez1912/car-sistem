@@ -1,7 +1,8 @@
 import 'package:car_system/common/money_format.dart';
-import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/widgets/vehicle_detail_card.dart';
 import 'package:flutter/material.dart';
+
+import '../app/data/models/vehicle.dart';
 
 Widget VehicleDetails(Vehicle vehicle,
     {double heithImage = 180, bool withImage = true, bool withPrice = true}) {

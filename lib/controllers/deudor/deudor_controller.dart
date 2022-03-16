@@ -1,11 +1,11 @@
 import 'package:car_system/common/dedudores_total.dart';
-import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/models/deudor_model.dart';
 import 'package:car_system/repositories/deudor_repository.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../models/user_model.dart';
+import '../../app/data/models/user_model.dart';
+import '../user_storage_controller.dart';
 
 class DeudorController extends GetxController {
   UserStorageController userStorageController = Get.find();

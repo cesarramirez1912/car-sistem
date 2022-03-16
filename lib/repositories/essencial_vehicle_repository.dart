@@ -1,8 +1,7 @@
-import 'package:car_system/models/create_vehicle.dart';
-import 'package:car_system/models/essencial_vehicle_models/brand.dart';
-import 'package:car_system/models/user_model.dart';
 import 'package:car_system/rest.dart';
 import 'package:get/get.dart';
+
+import '../app/data/models/user_model.dart';
 
 class EssencialVehicleRepository extends GetConnect {
   Future<dynamic> getchLogin(Map<String, String> _body) async {

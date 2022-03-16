@@ -2,7 +2,6 @@ import 'package:car_system/colors.dart';
 import 'package:car_system/common/date_format.dart';
 import 'package:car_system/common/money_format.dart';
 import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
-import 'package:car_system/models/sale_collaborator_model.dart';
 import 'package:car_system/responsive.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/button.dart';
@@ -12,6 +11,8 @@ import 'package:car_system/widgets/spacing.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+
+import '../app/data/models/sale_collaborator_model.dart';
 
 class SellsFromCollaboratorView extends GetView<SellsFromCollaboratorController> {
   @override

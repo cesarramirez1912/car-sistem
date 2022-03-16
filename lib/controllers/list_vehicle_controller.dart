@@ -1,9 +1,10 @@
 import 'package:car_system/controllers/user_storage_controller.dart';
-import 'package:car_system/models/user_model.dart';
-import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/repositories/home_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+
+import '../app/data/models/user_model.dart';
+import '../app/data/models/vehicle.dart';
 
 class ListVehicleController extends GetxController {
   UserStorageController userStorageController = Get.find();

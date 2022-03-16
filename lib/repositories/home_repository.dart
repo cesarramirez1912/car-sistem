@@ -1,9 +1,7 @@
-import 'dart:math';
-
-import 'package:car_system/models/user_model.dart';
-import 'package:car_system/models/vehicle.dart';
 import 'package:car_system/rest.dart';
 import 'package:get/get.dart';
+
+import '../app/data/models/vehicle.dart';
 
 class HomeRepository extends GetConnect {
   Future<dynamic> fetchVehicles(int idSucursal) async {

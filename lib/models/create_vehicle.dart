@@ -1,4 +1,4 @@
-import 'package:car_system/models/cuotes.dart';
+import '../app/data/models/cuotes.dart';
 
 class CreateVehicle {
   CreateVehicle({

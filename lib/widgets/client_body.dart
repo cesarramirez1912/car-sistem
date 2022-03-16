@@ -1,6 +1,7 @@
-import 'package:car_system/models/register_client_model.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../app/data/models/register_client_model.dart';
 
 Widget ClientBody(ClientModel _client) {
   return Column(

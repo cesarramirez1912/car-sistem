@@ -1,5 +1,5 @@
-import 'package:car_system/controllers/vehicle_detail_controller.dart';
 import 'package:get/get.dart';
+import '../app/modules/vehicle_detail/vehicle_detail_controller.dart';
 
 class VehicleDetailBinding implements Bindings {
   @override

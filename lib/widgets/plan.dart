@@ -1,8 +1,9 @@
 import 'package:car_system/colors.dart';
-import 'package:car_system/models/cuotes.dart';
 import 'package:car_system/widgets/renders_cards_plan/render_cuotas.dart';
 import 'package:car_system/widgets/title.dart';
 import 'package:flutter/material.dart';
+
+import '../app/data/models/cuotes.dart';
 
 // ignore: non_constant_identifier_names
 Widget CustomPlan(int index, Cuota cuota,

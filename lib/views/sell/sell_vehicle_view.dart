@@ -1,12 +1,7 @@
 import 'package:car_system/common/date_format.dart';
-import 'package:car_system/common/remove_money_format.dart';
-import 'package:car_system/controllers/client_controller.dart';
-import 'package:car_system/controllers/list_vehicle_controller.dart';
+import 'package:car_system/common/remove_money_format.dart';import 'package:car_system/controllers/list_vehicle_controller.dart';
 import 'package:car_system/controllers/sells_from_collaborator_controller.dart';
 import 'package:car_system/controllers/user_storage_controller.dart';
-import 'package:car_system/controllers/vehicle_detail_controller.dart';
-import 'package:car_system/models/cuotes.dart';
-import 'package:car_system/models/register_client_model.dart';
 import 'package:car_system/responsive.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:car_system/widgets/button.dart';
@@ -23,6 +18,10 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
+import '../../app/data/models/cuotes.dart';
+import '../../app/data/models/register_client_model.dart';
+import '../../app/modules/client/client_controller.dart';
+import '../../app/modules/vehicle_detail/vehicle_detail_controller.dart';
 import '../../colors.dart';
 import '../../widgets/textInputContainer.dart';
 

@@ -1,8 +1,9 @@
 import 'package:car_system/models/cuote_detail_model.dart';
 import 'package:car_system/models/refuerzo_detail_model.dart';
-import 'package:car_system/models/sale_collaborator_model.dart';
 import 'package:car_system/rest.dart';
 import 'package:get/get.dart';
+
+import '../app/data/models/sale_collaborator_model.dart';
 
 class SellVehicleRepository extends GetConnect {
   Future<dynamic> requestSales(int? idCollaborator) async {

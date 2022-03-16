@@ -1,5 +1,6 @@
-import 'package:car_system/models/sale_collaborator_model.dart';
 import 'package:get/get.dart';
+
+import '../app/data/models/sale_collaborator_model.dart';
 
 class SaleDetailController extends GetxController {
   Rx<SaleCollaboratorModel> saleCollaborator = SaleCollaboratorModel().obs;

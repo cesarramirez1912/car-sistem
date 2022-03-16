@@ -1,24 +1,23 @@
 import 'dart:async';
-import 'package:car_system/common/money_format.dart';
 import 'package:car_system/common/remove_money_format.dart';
 import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/models/create_vehicle.dart';
-import 'package:car_system/models/cuotes.dart';
 import 'package:car_system/models/essencial_vehicle_models/brand.dart';
 import 'package:car_system/models/essencial_vehicle_models/color.dart';
 import 'package:car_system/models/essencial_vehicle_models/fuel.dart';
 import 'package:car_system/models/essencial_vehicle_models/gear.dart';
 import 'package:car_system/models/essencial_vehicle_models/model.dart';
 import 'package:car_system/models/essencial_vehicle_models/motor.dart';
-import 'package:car_system/models/user_model.dart';
 import 'package:car_system/repositories/essencial_vehicle_repository.dart';
 import 'package:car_system/rest.dart';
 import 'package:car_system/widgets/dialog_fetch.dart';
 import 'package:car_system/widgets/snack_bars/snack_bar_error.dart';
-import 'package:car_system/widgets/snack_bars/snack_bar_success.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
+
+import '../app/data/models/cuotes.dart';
+import '../app/data/models/user_model.dart';
 
 class EssencialVehicleController extends GetxController {
   User? user = User();

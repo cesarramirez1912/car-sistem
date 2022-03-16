@@ -1,12 +1,13 @@
 import 'package:car_system/colors.dart';
 import 'package:car_system/common/money_format.dart';
-import 'package:car_system/controllers/dash_controller.dart';
 import 'package:car_system/responsive.dart';
 import 'package:car_system/views/dash/chart_bar_secondary_view.dart';
 import 'package:car_system/widgets/menu_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+
+import '../../app/modules/dash/dash_controller.dart';
 
 List<String> months = [
   'Enero',

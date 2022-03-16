@@ -1,9 +1,9 @@
-import 'package:car_system/controllers/cuotes_month/cuotes_month_controller.dart';
 import 'package:car_system/controllers/deudor/deudor_controller.dart';
 import 'package:car_system/controllers/user_storage_controller.dart';
 import 'package:car_system/route_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../app/modules/cuote_month/cuotes_month_controller.dart';
 import '../colors.dart';
 
 enum Roles { SUPER, ADMIN, VENDEDOR }
@@ -84,7 +84,7 @@ Widget CustomMenuDrawer() {
         style: TextStyle(color: Color.fromRGBO(121, 121, 121, 1.0)),
       ),
       onTap: () async {
-        await controller.deleteStore();
+        //await controller.;
         Get.offAllNamed(RouterManager.LOGIN);
       },
     ),
