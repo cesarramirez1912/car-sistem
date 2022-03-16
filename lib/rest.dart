@@ -14,6 +14,7 @@ class Rest {
     }*/
   }
 
+
   // api routes
   static String LOGIN = BASE_URL + "/login";
   static String USER_INFORMATION = BASE_URL + "/user=";
