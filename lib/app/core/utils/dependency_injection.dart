@@ -24,9 +24,9 @@ import '../../data/repositories/remote/dash_repository.dart';
 class DependencyInjection {
   static Future<void> init() async {
     await GetStorage.init();
-    Get.put(UserStorageController());
     Get.put(GetStorage());
     Get.put(Dio());
+    Get.put(UserStorageController());
 
     //providers
     Get.put(AuthenticationApi());
