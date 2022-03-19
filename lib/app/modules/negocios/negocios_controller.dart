@@ -25,6 +25,7 @@ class NegociosController extends GetxController {
   }
 
   Future<void> requestNegocios() async {
+    listSales.clear();
     try {
       listSales.value = await dashRepository.requestNegocios(
           userController.user?.value.idEmpresa,

@@ -16,17 +16,17 @@ class DeudorDetailView extends StatelessWidget {
     return Responsive(
       tablet: Center(
         child: Container(
-            alignment: Alignment.center, width: 900, child: principal()),
+            alignment: Alignment.center, width: 900, child: principal(context)),
       ),
       desktop: Center(
         child: Container(
-            alignment: Alignment.center, width: 900, child: principal()),
+            alignment: Alignment.center, width: 900, child: principal(context)),
       ),
-      mobile: principal(),
+      mobile: principal(context),
     );
   }
 
-  Widget principal() {
+  Widget principal(context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(controller.isCuota.value ? 'Cuotas' : 'Refuerzos'),
@@ -52,7 +52,8 @@ class DeudorDetailView extends StatelessWidget {
                               : null,
                           pagoDolares: (selected.pagoDolares ?? 0),
                           pagoGuaranies: (selected.pagoGuaranies ?? 0),
-                          isCuote: controller.isCuota.value);
+                          isCuote: controller.isCuota.value,
+                          context: context);
                     })
                   : isRefuerzo(controller.listDudoresModelRef.value,
                       (selected) async {
@@ -70,7 +71,8 @@ class DeudorDetailView extends StatelessWidget {
                               : null,
                           pagoGuaranies: (selected.pagoGuaranies ?? 0),
                           pagoDolares: (selected.pagoDolares ?? 0),
-                          isCuote: controller.isCuota.value);
+                          isCuote: controller.isCuota.value,
+                          context: context);
                     })
             ],
           ),

@@ -167,13 +167,21 @@ class PrincipalCuotesMonth extends StatelessWidget {
     );
   }
 
+  Widget sinCuotasRefuerzos(bool isCuote) {
+    return Center(
+        child: Text(
+            isCuote ? 'Sin cuotas para el mes.' : 'Sin refuerzos para el mes.'));
+  }
+
   Widget Cuotes() {
     return Obx(() => controller.isLoading.value
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : listCardCuotes(controller.listDeudoresAgrupadoCuota, true,
-            isDeudor: false, withDaysOrMonth: false));
+        : controller.listDeudoresAgrupadoCuota.isEmpty
+            ? sinCuotasRefuerzos(true)
+            : listCardCuotes(controller.listDeudoresAgrupadoCuota, true,
+                isDeudor: false, withDaysOrMonth: false));
   }
 
   Widget Refuerzos() {
@@ -181,7 +189,9 @@ class PrincipalCuotesMonth extends StatelessWidget {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : listCardCuotes(controller.listDeudoresAgrupadoRefuerzo, false,
-            isDeudor: false, withDaysOrMonth: false));
+        : controller.listDeudoresAgrupadoRefuerzo.isEmpty
+            ? sinCuotasRefuerzos(false)
+            : listCardCuotes(controller.listDeudoresAgrupadoRefuerzo, false,
+                isDeudor: false, withDaysOrMonth: false));
   }
 }

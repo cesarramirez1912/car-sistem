@@ -1,6 +1,18 @@
 import 'package:intl/intl.dart';
 
 class DateFormatBr {
+  List<DateTime> getDaysBetweenDates({required DateTime start, required DateTime end}) {
+    final days = end.difference(start).inDays;
+    return [for (int i = 0; i < days; i++) start.add(Duration(days: i))];
+  }
+
+  DateTime formatBrToUs(String? dateString) {
+    if (dateString == null) {
+      return DateTime.now();
+    }
+    return DateFormat('dd/MM/yyyy').parse(dateString).toLocal();
+  }
+
   String formatBrFromString(String? dateString) {
     if (dateString == null) {
       return '';

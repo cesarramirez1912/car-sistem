@@ -14,6 +14,18 @@ Widget cardDeudor(Map<String, dynamic> deudor, bool isCuote, Function onTap,
         : Container();
   }
 
+  if (deudor['total_deuda_guaranies'] != null) {
+    if (deudor['total_deuda_guaranies'] < 0) {
+      deudor['total_deuda_guaranies'] = 0;
+    }
+  }
+
+  if (deudor['total_deuda_dolares'] != null) {
+    if (deudor['total_deuda_dolares'] < 0) {
+      deudor['total_deuda_guaranies'] = 0;
+    }
+  }
+
   bool isClean = (deudor['total_deuda_guaranies'] == 0 &&
           deudor['total_deuda_guaranies'] != null) &&
       (deudor['total_deuda_dolares'] == 0 &&

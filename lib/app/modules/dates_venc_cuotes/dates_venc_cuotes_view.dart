@@ -18,22 +18,22 @@ class DatesVencCuotesView extends StatelessWidget {
   Widget build(BuildContext context) {
     controller.filterCuoteOrRefuerzo();
     return Responsive(
-        mobile: principal(),
+        mobile: principal(context),
         tablet: Center(
           child: Container(
               alignment: Alignment.center,
               width: 900,
-              child: principal()),
+              child: principal(context)),
         ),
         desktop: Center(
           child: Container(
               alignment: Alignment.center,
               width: 900,
-              child: principal()),
+              child: principal(context)),
         ));
   }
 
-  Widget principal() {
+  Widget principal(context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Fechas'),
@@ -78,7 +78,7 @@ class DatesVencCuotesView extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [render()],
+                        children: [render(context)],
                       ),
                     ),
                   )
@@ -88,7 +88,7 @@ class DatesVencCuotesView extends StatelessWidget {
     );
   }
 
-  Widget render() {
+  Widget render(context) {
     if (controller.isCuote.value) {
       return isCuote(
         controller.listaCuotes.value,
@@ -111,7 +111,7 @@ class DatesVencCuotesView extends StatelessWidget {
                     : null,
                 pagoGuaranies: (selected.pagoGuaranies ?? 0),
                 pagoDolares: (selected.pagoDolares ?? 0),
-                isCuote: true);
+                isCuote: true,context: context);
           }
         },
       );
@@ -136,7 +136,7 @@ class DatesVencCuotesView extends StatelessWidget {
                   : null,
               pagoGuaranies: (selected.pagoGuaranies ?? 0),
               pagoDolares: (selected.pagoDolares ?? 0),
-              isCuote: false);
+              isCuote: false,context: context);
         }
       });
     }

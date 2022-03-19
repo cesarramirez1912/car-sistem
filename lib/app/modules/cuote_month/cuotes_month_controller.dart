@@ -8,7 +8,7 @@ import '../../data/models/user_model.dart';
 import '../../global_widgets/snack_bars/snack_bar_error.dart';
 
 class CuotesMonthController extends GetxController {
- final  CuotesMonthRepository cuotesMonthRepository = Get.find();
+  final CuotesMonthRepository cuotesMonthRepository = Get.find();
 
   Rx<DateTime> firstDateCuoteSelected = DateTime.utc(
           DateTime.now().year, DateTime.now().month, DateTime.now().day)
@@ -71,6 +71,12 @@ class CuotesMonthController extends GetxController {
   }
 
   Future<void> requestDeudoresMonth() async {
+    listDeudoresCuota.clear();
+    listDeudoresRefuerzo.clear();
+    listDeudoresAgrupadoCuotaAux.clear();
+    listDeudoresAgrupadoRefuerzoAux.clear();
+    listDeudoresAgrupadoCuota.clear();
+    listDeudoresAgrupadoRefuerzo.clear();
     try {
       Future _deudorCuota = cuotesMonthRepository.requestMonthDeudoresMonthYear(
           user?.idEmpresa,
@@ -89,12 +95,6 @@ class CuotesMonthController extends GetxController {
       List<Map<String, dynamic>> listRefuerzo =
           deudoresTotal.counterTotal(responses[1], false);
 
-      listDeudoresCuota.clear();
-      listDeudoresRefuerzo.clear();
-      listDeudoresAgrupadoCuotaAux.clear();
-      listDeudoresAgrupadoRefuerzoAux.clear();
-      listDeudoresAgrupadoCuota.clear();
-      listDeudoresAgrupadoRefuerzo.clear();
       listDeudoresAgrupadoCuota.addAll(listCuote);
       listDeudoresAgrupadoCuotaAux.addAll(listCuote);
       listDeudoresAgrupadoRefuerzo.addAll(listRefuerzo);
