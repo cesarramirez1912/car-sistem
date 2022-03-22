@@ -1,6 +1,7 @@
 import 'package:car_system/app/global_widgets/button.dart';
 import 'package:car_system/app/global_widgets/input.dart';
 import 'package:car_system/app/global_widgets/spacing.dart';
+import 'package:car_system/app/global_widgets/textInputContainer.dart';
 import 'package:car_system/app/global_widgets/title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
@@ -115,7 +116,7 @@ Future payDialog(controller, int? id, int? idVenta,
                   CustomTitle('FECHA'),
                   CustomTitle(fecha, fontWeight: FontWeight.w500, fontSize: 15),
                   ...atrasoRender(days),
-                  CustomTitle('${isCuote ? 'CUOTA' : 'REFUERZO'}'),
+                  CustomTitle(isCuote ? 'CUOTA' : 'REFUERZO'),
                   CustomTitle(
                       faltanteGuaranies != null
                           ? MoneyFormat().formatCommaToDot(faltanteGuaranies)
@@ -123,6 +124,22 @@ Future payDialog(controller, int? id, int? idVenta,
                               isGuaranies: false),
                       fontWeight: FontWeight.w500,
                       fontSize: 15),
+                  CustomTitle('FECHA DE PAGO'),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: textInputContainer(
+                          'fecha',
+                          DateFormatBr().formatBrFromString(controller
+                              .fechaPago.value
+                              .toString()),
+                          onTap: () => controller.changeFechaPago(context),
+                        ),
+                      ),
+                    ],
+                  ),
                   CustomTitle('TOTAL A PAGAR'),
                   CustomSpacing(height: 6),
                   CustomInput('', 'Total a pagar',

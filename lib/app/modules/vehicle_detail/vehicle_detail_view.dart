@@ -18,15 +18,11 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
       mobile: principal(),
       tablet: Center(
         child: Container(
-            alignment: Alignment.center,
-            width: 900,
-            child: principal()),
+            alignment: Alignment.center, width: 900, child: principal()),
       ),
       desktop: Center(
         child: Container(
-            alignment: Alignment.center,
-            width: 900,
-            child: principal()),
+            alignment: Alignment.center, width: 900, child: principal()),
       ),
     );
   }
@@ -52,39 +48,7 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
         color: Colors.white,
         padding: const EdgeInsets.all(20),
         width: 1100,
-        child: Row(
-          children: [
-            Flexible(
-              child: Column(
-                children: [
-                  VehicleDetails(controller.vehicles.first, heithImage: 320),
-                  venderButton()
-                ],
-              ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Flexible(
-              child: ListView.builder(
-                controller: ScrollController(),
-                itemCount: controller.vehicles.value.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Cuota cuota =
-                      Cuota.fromJson(controller.vehicles[index].toJson());
-                  if (cuota.cantidadCuotas != null) {
-                    return CustomPlan(index, cuota);
-                  } else {
-                    return Container(
-                        alignment: Alignment.center,
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: const Text('Sin planes para este vehiculo.'));
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
+        child: rowTabletDesktop(),
       ),
     );
   }
@@ -97,44 +61,49 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
         color: Colors.white,
         padding: const EdgeInsets.all(20),
         width: 750,
-        child: Row(
-          children: [
-            Flexible(
-              child: Column(
-                children: [
-                  VehicleDetails(controller.vehicles.first, heithImage: 320),
-                  venderButton()
-                ],
-              ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Flexible(
-              child: ListView.builder(
-                controller: ScrollController(),
-                itemCount: controller.vehicles.value.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Cuota cuota =
-                      Cuota.fromJson(controller.vehicles[index].toJson());
-                  if (cuota.cantidadCuotas != null) {
-                    return CustomPlan(
-                      index,
-                      cuota,
-                      showTotal: true,
-                    );
-                  } else {
-                    return Container(
-                        alignment: Alignment.center,
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: const Text('Sin planes para este vehiculo.'));
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
+        child: rowTabletDesktop(),
       ),
+    );
+  }
+
+  Widget rowTabletDesktop() {
+    return Row(
+      children: [
+        Flexible(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                VehicleDetails(controller.vehicles.first, heithImage: 320),
+                venderButton()
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        Flexible(
+          child: ListView.builder(
+            controller: ScrollController(),
+            itemCount: controller.vehicles.value.length,
+            itemBuilder: (BuildContext context, int index) {
+              Cuota cuota = Cuota.fromJson(controller.vehicles[index].toJson());
+              if (cuota.cantidadCuotas != null) {
+                return CustomPlan(
+                  index,
+                  cuota,
+                  showTotal: true,
+                );
+              } else {
+                return Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: const Text('Sin planes para este vehiculo.'));
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 

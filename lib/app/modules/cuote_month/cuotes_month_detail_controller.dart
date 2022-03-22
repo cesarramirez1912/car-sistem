@@ -1,4 +1,5 @@
 import 'package:car_system/app/data/providers/remote/sells_api.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../data/models/cuote_detail_model.dart';
@@ -16,7 +17,11 @@ class CuotesMonthDetailController extends GetxController {
   int idCliente = 0;
 
   RxBool isLoadingRequest = false.obs;
-  SellsApi _sellVehicleRepository = Get.find();
+  final SellsApi _sellVehicleRepository = Get.find();
+
+  Rx<DateTime> fechaPago = DateTime.utc(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day)
+      .obs;
 
   @override
   Future<void> onInit() async {
@@ -49,6 +54,18 @@ class CuotesMonthDetailController extends GetxController {
     }
   }
 
+  Future<void> changeFechaPago(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        locale: const Locale('es'),
+        initialDate: fechaPago.value,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != fechaPago) {
+      fechaPago.value = picked;
+    }
+  }
+
   Future<void> postPago(
       dynamic valorDolares, dynamic valorGuaranies, int? id, int? idVenta,
       {required bool isCuote}) async {
@@ -63,12 +80,14 @@ class CuotesMonthDetailController extends GetxController {
     var bodyCuote = {
       "id_cuota_venta": id,
       "pago_dolares": valorDolares,
-      "pago_guaranies": valorGuaranies
+      "pago_guaranies": valorGuaranies,
+      "fecha_pago": fechaPago.value.toString()
     };
     var bodyRefuerzo = {
       "id_refuerzo_venta": id,
       "pago_dolares": valorDolares,
-      "pago_guaranies": valorGuaranies
+      "pago_guaranies": valorGuaranies,
+      "fecha_pago": fechaPago.value.toString()
     };
     isLoadingRequest.value = true;
     try {
