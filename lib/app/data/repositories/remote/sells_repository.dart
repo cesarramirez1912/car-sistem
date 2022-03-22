@@ -19,4 +19,8 @@ class SellsRepository{
 
   Future<List<RefuerzoDetailModel>> requestRefuerzos(int? idVenta) =>_sellsApi.requestRefuerzos(idVenta);
 
+  Future<int> deleteVehicleSucursal(String idVehiculoSucursal) =>_sellsApi.deleteVehicle(idVehiculoSucursal);
+
+  Future<int> deletePlan(int idPlan) =>_sellsApi.deleteVehiclePlan(idPlan);
+
 }

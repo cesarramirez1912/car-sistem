@@ -40,4 +40,15 @@ class SellsApi{
     return (response.data['response'] as List).map((e) => RefuerzoDetailModel.fromJson(e)).toList();
   }
 
+  Future<int> deleteVehicle(String idVehiculoSucursal) async {
+    final Response response = await _dio.delete(Rest.VEHICLES +'/$idVehiculoSucursal');
+    return int.parse(idVehiculoSucursal);
+  }
+
+  Future<int> deleteVehiclePlan(int idPlan) async {
+    final Response response = await _dio.delete(Rest.VEHICLES +'/plan/$idPlan');
+    return idPlan;
+  }
+
+
 }

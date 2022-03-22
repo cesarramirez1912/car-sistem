@@ -1,5 +1,6 @@
 class Vehicle {
   Vehicle({
+    this.idCuota,
     this.idVehiculoSucursal,
     this.idEmpresa,
     this.idSucursal,
@@ -29,6 +30,7 @@ class Vehicle {
   late final int? idVehiculoSucursal;
   late final int? idEmpresa;
   late final int? idSucursal;
+  late final int? idCuota;
   dynamic? chapa;
   dynamic? chassis;
   dynamic costoGuaranies;
@@ -52,6 +54,7 @@ class Vehicle {
   late final dynamic? entradaDolares;
 
   Vehicle.fromJson(Map<String, dynamic> json) {
+    idCuota = json['id_cuota'];
     idVehiculoSucursal = json['id_vehiculo_sucursal'];
     idEmpresa = json['id_empresa'];
     idSucursal = json['id_sucursal'];
@@ -80,6 +83,7 @@ class Vehicle {
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
+    _data['id_cuota'] = idCuota;
     _data['id_vehiculo_sucursal'] = idVehiculoSucursal;
     _data['id_empresa'] = idEmpresa;
     _data['id_sucursal'] = idSucursal;

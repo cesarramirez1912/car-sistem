@@ -20,7 +20,7 @@ Future<void> CustomDialogFetch(Function request,
               Flexible(
                 child: Text(
                   text!,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                   overflow: TextOverflow.clip,
                   textAlign: TextAlign.center,
                 ),
@@ -32,7 +32,6 @@ Future<void> CustomDialogFetch(Function request,
     ),
     barrierDismissible: false,
   );
-
   try {
     await request();
   } catch (e) {

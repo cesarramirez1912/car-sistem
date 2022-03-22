@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:car_system/app/data/providers/remote/sells_api.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../core/utils/date_format.dart';
 import '../../core/utils/money_format.dart';
 import '../../core/utils/user_storage_controller.dart';
 import '../../data/models/cuote_detail_model.dart';
@@ -27,6 +28,9 @@ class SellsFromCollaboratorController extends GetxController {
   RxList<RefuerzoDetailModel> listaRefuerzos = <RefuerzoDetailModel>[].obs;
 
   Rx<DateTime> fechaPago = DateTime.utc(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day)
+      .obs;
+  Rx<DateTime> fechaCuotaRefuerzo = DateTime.utc(
           DateTime.now().year, DateTime.now().month, DateTime.now().day)
       .obs;
 
@@ -73,7 +77,6 @@ class SellsFromCollaboratorController extends GetxController {
   }
 
   Future<void> changeFechaPago(BuildContext context) async {
-    print('acaaaa');
     final DateTime? picked = await showDatePicker(
         context: context,
         locale: const Locale('es'),
@@ -83,6 +86,22 @@ class SellsFromCollaboratorController extends GetxController {
     if (picked != null && picked != fechaPago) {
       fechaPago.value = picked;
     }
+  }
+
+  Future<void> changeFechaCuotaRefuerzo(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        locale: const Locale('es'),
+        initialDate: fechaCuotaRefuerzo.value,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != fechaCuotaRefuerzo) {
+      fechaCuotaRefuerzo.value = picked;
+    }
+  }
+
+  void changeInitialDateCuoteRefuerzo(String dateBr) {
+    fechaCuotaRefuerzo.value = DateFormatBr().formatBrToUs(dateBr);
   }
 
   Future<void> postPago(
@@ -98,12 +117,14 @@ class SellsFromCollaboratorController extends GetxController {
     }
     var bodyCuote = {
       "id_cuota_venta": id,
+      "fecha_cuota": fechaCuotaRefuerzo.value.toString(),
       "pago_dolares": valorDolares,
       "pago_guaranies": valorGuaranies,
       "fecha_pago": fechaPago.value.toString()
     };
     var bodyRefuerzo = {
       "id_refuerzo_venta": id,
+      "fecha_refuerzo": fechaCuotaRefuerzo.value.toString(),
       "pago_dolares": valorDolares,
       "pago_guaranies": valorGuaranies,
       "fecha_pago": fechaPago.value.toString()

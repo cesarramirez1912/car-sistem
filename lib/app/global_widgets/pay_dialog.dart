@@ -96,6 +96,7 @@ Future payDialog(controller, int? id, int? idVenta,
 
   Widget dialogPlan(controller, fecha, faltanteGuaranies, faltanteDolares,
       pagoGuaranies, pagoDolares) {
+    controller.changeInitialDateCuoteRefuerzo(fecha);
     return SingleChildScrollView(
       child: Obx(
         () => controller.isLoadingRequest.value
@@ -113,8 +114,22 @@ Future payDialog(controller, int? id, int? idVenta,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CustomTitle('FECHA'),
-                  CustomTitle(fecha, fontWeight: FontWeight.w500, fontSize: 15),
+                  CustomTitle('FECHA ' + (isCuote ? 'CUOTA' : 'REFUERZO')),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: textInputContainer(
+                          'fecha',
+                          DateFormatBr().formatBrFromString(
+                              controller.fechaCuotaRefuerzo.value.toString()),
+                          onTap: () =>
+                              controller.changeFechaCuotaRefuerzo(context),
+                        ),
+                      ),
+                    ],
+                  ),
                   ...atrasoRender(days),
                   CustomTitle(isCuote ? 'CUOTA' : 'REFUERZO'),
                   CustomTitle(
@@ -132,9 +147,8 @@ Future payDialog(controller, int? id, int? idVenta,
                       Expanded(
                         child: textInputContainer(
                           'fecha',
-                          DateFormatBr().formatBrFromString(controller
-                              .fechaPago.value
-                              .toString()),
+                          DateFormatBr().formatBrFromString(
+                              controller.fechaPago.value.toString()),
                           onTap: () => controller.changeFechaPago(context),
                         ),
                       ),

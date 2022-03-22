@@ -1,4 +1,7 @@
 import 'package:car_system/app/data/repositories/remote/sells_repository.dart';
+import 'package:car_system/app/global_widgets/dialog_confirm.dart';
+import 'package:car_system/app/global_widgets/dialog_fetch.dart';
+import 'package:car_system/app/global_widgets/snack_bars/snack_bar_success.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
@@ -13,9 +16,8 @@ import '../../data/models/vehicle.dart';
 import '../../global_widgets/snack_bars/snack_bar_error.dart';
 import '../list_vehicles/list_vehicle_controller.dart';
 
-
 class VehicleDetailController extends GetxController {
-  ListVehicleController listVehicleController = ListVehicleController();
+  final ListVehicleController listVehicleController = Get.find();
   final SellsRepository _sellVehicleRepository = Get.find();
   RxList<Vehicle> vehicles = <Vehicle>[].obs;
   Rx<Vehicle>? vehicleDetail;
@@ -91,7 +93,6 @@ class VehicleDetailController extends GetxController {
     firstDateRefuerzoSelected.value = DateTime.utc(
         DateTime.now().year, DateTime.now().month + 1, DateTime.now().day);
     idVehiculoSucursal = args['idVehiculoSucursal'];
-    listVehicleController = Get.find<ListVehicleController>();
     vehicles
         .addAll(listVehicleController.getVehiclesFromId(idVehiculoSucursal));
     vehicleDetail?.value = vehicles.first;
@@ -105,6 +106,33 @@ class VehicleDetailController extends GetxController {
 
   void seletVehicleToSel() {
     vehicleSelected.addAll(vehicles);
+  }
+
+  Future<void> deleteVehicle(BuildContext context) async {
+    bool? responseCustom =
+        await CustomDialogConfirm(context, 'Desea eliminar el vehiculo ?');
+    if (responseCustom != null && responseCustom) {
+      await CustomDialogFetch(
+          () async => await _sellVehicleRepository
+              .deleteVehicleSucursal(idVehiculoSucursal),
+          text: 'Eliminando vehiculo...');
+      Get.back();
+      CustomSnackBarSuccess('Vehiculo eliminado con exito!');
+      listVehicleController.fetchVehicles();
+    }
+  }
+
+  Future<void> deletePlan(BuildContext context, int idPlan, int index) async {
+    bool? responseCustom =
+        await CustomDialogConfirm(context, 'Desea eliminar el plan n $index ?');
+    if (responseCustom != null && responseCustom) {
+      await CustomDialogFetch(
+          () async => await _sellVehicleRepository.deletePlan(idPlan),
+          text: 'Eliminando plan...');
+      Get.back();
+      CustomSnackBarSuccess('Plan eliminado con exito!');
+      listVehicleController.fetchVehicles();
+    }
   }
 
   void selectedPlan(Cuota _cuota) {

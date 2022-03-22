@@ -1,5 +1,6 @@
 class Cuota {
   Cuota({
+    this.idCuota,
     this.cantidadCuotas,
     this.cuotaGuaranies,
     this.cuotaDolares,
@@ -15,6 +16,7 @@ class Cuota {
   dynamic? cuotaGuaranies;
   dynamic? cuotaDolares;
   int? idVehiculoSucursal;
+  int? idCuota;
   dynamic? cantidadRefuerzo;
   dynamic? refuerzoGuaranies;
   dynamic? refuerzoDolares;
@@ -22,6 +24,7 @@ class Cuota {
   dynamic? entradaDolares;
 
   Cuota.fromJson(Map<String, dynamic> json) {
+    idCuota = json['id_cuota'];
     cantidadCuotas = json['cantidad_cuotas'];
     cuotaGuaranies = json['cuota_guaranies'];
     cuotaDolares = json['cuota_dolares'];
@@ -35,6 +38,7 @@ class Cuota {
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
+    _data['id_cuota'] = idCuota;
     _data['cantidad_cuotas'] = cantidadCuotas;
     _data['cuota_guaranies'] = cuotaGuaranies;
     _data['cuota_dolares'] = cuotaDolares;

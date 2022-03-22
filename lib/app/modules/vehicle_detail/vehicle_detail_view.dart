@@ -2,7 +2,6 @@ import '../../core/theme/colors.dart';
 import '../../global_widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../data/models/cuotes.dart';
 import '../../global_widgets/button.dart';
 import '../../global_widgets/plan.dart';
@@ -12,35 +11,37 @@ import '../../routes/app_routes.dart';
 import 'vehicle_detail_controller.dart';
 
 class VehicleDetailView extends GetView<VehicleDetailController> {
+  const VehicleDetailView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Responsive(
-      mobile: principal(),
+      mobile: principal(context),
       tablet: Center(
         child: Container(
-            alignment: Alignment.center, width: 900, child: principal()),
+            alignment: Alignment.center, width: 900, child: principal(context)),
       ),
       desktop: Center(
         child: Container(
-            alignment: Alignment.center, width: 900, child: principal()),
+            alignment: Alignment.center, width: 900, child: principal(context)),
       ),
     );
   }
 
-  Widget principal() {
+  Widget principal(context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalles'),
       ),
       body: Obx(() => Responsive(
-            desktop: desktop(),
-            tablet: tablet(),
-            mobile: mobile(),
+            desktop: desktop(context),
+            tablet: tablet(context),
+            mobile: mobile(context),
           )),
     );
   }
 
-  Widget desktop() {
+  Widget desktop(context) {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -48,12 +49,12 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
         color: Colors.white,
         padding: const EdgeInsets.all(20),
         width: 1100,
-        child: rowTabletDesktop(),
+        child: rowTabletDesktop(context),
       ),
     );
   }
 
-  Widget tablet() {
+  Widget tablet(context) {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -61,12 +62,12 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
         color: Colors.white,
         padding: const EdgeInsets.all(20),
         width: 750,
-        child: rowTabletDesktop(),
+        child: rowTabletDesktop(context),
       ),
     );
   }
 
-  Widget rowTabletDesktop() {
+  Widget rowTabletDesktop(context) {
     return Row(
       children: [
         Flexible(
@@ -74,7 +75,8 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
             child: Column(
               children: [
                 VehicleDetails(controller.vehicles.first, heithImage: 320),
-                venderButton()
+                eliminarButton(context),
+                venderButton(),
               ],
             ),
           ),
@@ -92,6 +94,8 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                 return CustomPlan(
                   index,
                   cuota,
+                  onPressed: () async => await controller.deletePlan(
+                      context, cuota.idCuota!, index + 1),
                   showTotal: true,
                 );
               } else {
@@ -107,7 +111,7 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
     );
   }
 
-  Widget mobile() {
+  Widget mobile(context) {
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,
@@ -142,7 +146,11 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                           Cuota cuota = Cuota.fromJson(
                               controller.vehicles[index].toJson());
                           if (cuota.cantidadCuotas != null) {
-                            return CustomPlan(index, cuota, showTotal: true);
+                            return CustomPlan(index, cuota,
+                                onPressed: () async =>
+                                    await controller.deletePlan(
+                                        context, cuota.idCuota!, index + 1),
+                                showTotal: true);
                           } else {
                             return Container(
                                 alignment: Alignment.center,
@@ -152,6 +160,7 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
                           }
                         },
                       ),
+                      eliminarButton(context),
                       venderButton()
                     ],
                   )
@@ -163,6 +172,11 @@ class VehicleDetailView extends GetView<VehicleDetailController> {
       ),
     );
   }
+
+  Widget eliminarButton(BuildContext context) =>
+      CustomButton('ELIMINAR VEHICULO', () {
+        controller.deleteVehicle(context);
+      }, ColorPalette.PRIMARY);
 
   Widget venderButton() => CustomButton('VENDER VEHICULO', () {
         controller.seletVehicleToSel();
