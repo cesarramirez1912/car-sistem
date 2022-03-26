@@ -1,3 +1,6 @@
+import 'package:car_system/app/data/enums/types_moneys.dart';
+import 'package:car_system/app/data/enums/types_sells.dart';
+import 'package:car_system/app/modules/sells/local_widget/plan_dialog_widget.dart';
 import 'package:car_system/app/modules/sells/sells_from_collaborator_controller.dart';
 import 'package:car_system/app/routes/app_routes.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -7,7 +10,6 @@ import '../../core/theme/colors.dart';
 import '../../core/utils/date_format.dart';
 import '../../core/utils/remove_money_format.dart';
 import '../../core/utils/user_storage_controller.dart';
-import '../../data/models/cuotes.dart';
 import '../../data/models/register_client_model.dart';
 import '../../global_widgets/button.dart';
 import '../../global_widgets/dialog_fetch.dart';
@@ -25,6 +27,7 @@ import '../list_vehicles/list_vehicle_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../vehicle_detail/vehicle_detail_controller.dart';
+import 'local_widget/select_plan_dialog_widget.dart';
 
 class SellVehicleView extends GetView<VehicleDetailController> {
   ClientController clientController = Get.find();
@@ -172,17 +175,30 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                       color: Colors.grey,
                     ),
                     CustomSpacing(),
+                    CustomTitle('FECHA'),
+                    textInputContainer(
+                      'Fecha de venta:',
+                      DateFormatBr().formatBrFromString(
+                          controller.dateFromSell.value.toString()),
+                      onTap: () => controller.changeDateFromSell(context),
+                    ),
+                    CustomSpacing(),
+                    const Divider(
+                      color: Colors.grey,
+                    ),
+                    CustomSpacing(),
                     CustomTitle('FILTROS'),
                     CustomSpacing(),
                     CustomDropDowSearch(
-                        controller.typesSell, 'ELEGIR TIPO DE VENTA',
-                        iconData: controller.typeSellSelected.value == 'CONTADO'
+                        controller.listTypesSells(), 'ELEGIR TIPO DE VENTA',
+                        iconData: controller.typeSellSelected.value ==
+                                TypesSells.CONTADO
                             ? Icons.money
                             : Icons.credit_card_sharp,
-                        selectedItem: controller.typeSellSelected.value,
+                        selectedItem: controller.typeSellSelected.value.name,
                         onChanged: (value) {
                       controller.cleanInputsCuotes();
-                      if (value == 'FINANCIADO') {
+                      if (value == TypesSells.FINANCIADO) {
                         controller.sellVehicleModel.value.contadoGuaranies =
                             null;
                         controller.sellVehicleModel.value.contadoDolares = null;
@@ -193,22 +209,25 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                         controller.sellVehicleModel.value.cuotas?.clear();
                         controller.sellVehicleModel.value.refuerzos?.clear();
                       }
-                      controller.typeSellSelected.value = value;
+                      controller.typeSellSelected.value = TypesSells.values
+                          .firstWhere((e) => e.name.toString() == value);
                     }),
                     CustomSpacing(),
                     CustomDropDowSearch(
-                      controller.typesMoney,
+                      controller.listTypesMoney(),
                       'ELEGIR TIPO DE MONEDA',
                       iconData: Icons.monetization_on_outlined,
-                      selectedItem: controller.typesMoneySelected.value,
+                      selectedItem: controller.typesMoneySelected.value.name,
                       onChanged: (value) {
                         controller.cleanInputsCuotes();
-                        if (value == 'GUARANIES') {
+                        if (value == TypesMoneys.GUARANIES) {
                           controller.cuota.value.cuotaDolares = null;
                         } else {
                           controller.cuota.value.cuotaGuaranies = null;
                         }
-                        controller.typesMoneySelected.value = value;
+                        controller.typesMoneySelected.value = TypesMoneys.values
+                            .firstWhere((e) => e.name.toString() == value);
+                        ;
                       },
                     ),
                     CustomSpacing(),
@@ -234,40 +253,52 @@ class SellVehicleView extends GetView<VehicleDetailController> {
         .removeToDouble(controller.textContadoGuaranies.text);
     double _contadoDolares =
         RemoveMoneyFormat().removeToDouble(controller.textContadoDolares.text);
-    if (controller.typeSellSelected.value == 'CONTADO' ||
-        (controller.cuota.value.cantidadCuotas != null &&
-            controller.cuota.value.cuotaGuaranies != null) ||
-        (controller.cuota.value.cantidadCuotas != null &&
-            controller.cuota.value.cuotaDolares != null) ||
-        _contadoGuaranies > 0.0 ||
-        _contadoDolares > 0.0) {
-      return CustomButton('FINALIZAR VENTA', () async {
-        bool res = false;
-        CustomDialogFetch(() async {
-          res = await controller.registerSale();
-        }, text: 'REGISTRANDO NUEVA VENTA')
-            .then((value) async {
-          if (res) {
-            CustomSnackBarSuccess('VENTA REGISTRADA CON EXITO!');
-            await Future.delayed(Duration(seconds: 1));
-            Get.offAllNamed(AppRoutes.DASH);
-          }
-        });
-      }, ColorPalette.GREEN);
-    } else {
-      return Container();
+
+    bool returnButton = controller.conditionalPlan();
+    if (controller.typeSellSelected.value == TypesSells.CONTADO) {
+      if (controller.typesMoneySelected.value == TypesMoneys.DOLARES) {
+        if (_contadoDolares > 0.0) {
+          returnButton = true;
+        }
+      } else {
+        if (_contadoGuaranies > 0.0) {
+          returnButton = true;
+        }
+      }
     }
+
+    if (controller.typeClientSelected.value.idCliente == null) {
+      returnButton = false;
+    }
+
+    return returnButton
+        ? CustomButton('FINALIZAR VENTA', () async {
+            bool res = false;
+            CustomDialogFetch(() async {
+              res = await controller.registerSale();
+            }, text: 'REGISTRANDO NUEVA VENTA')
+                .then((value) async {
+              if (res) {
+                CustomSnackBarSuccess('VENTA REGISTRADA CON EXITO!');
+                await Future.delayed(const Duration(seconds: 1));
+                Get.offAllNamed(AppRoutes.DASH);
+              }
+            });
+          }, ColorPalette.GREEN)
+        : Container();
   }
 
   List<Widget> listRender(BuildContext context) {
     switch (controller.typeSellSelected.value) {
-      case 'CONTADO':
+      case TypesSells.CONTADO:
         return [
-          CustomInput('', 'PRECIO VENTA ${controller.typesMoneySelected.value}',
+          CustomInput(
+              '', 'PRECIO VENTA ${controller.typesMoneySelected.value.name}',
               isNumber: true,
               iconData: Icons.price_change_outlined,
               onChanged: (text) {
-                if (controller.typesMoneySelected == 'GUARANIES') {
+                if (controller.typesMoneySelected.value ==
+                    TypesMoneys.GUARANIES) {
                   if (text.toString().length < 4) {
                     controller.textContadoGuaranies.updateValue(0);
                   }
@@ -281,7 +312,8 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                   return null;
                 }
               },
-              onSaved: (text) => controller.typesMoneySelected == 'GUARANIES'
+              onSaved: (text) => controller.typesMoneySelected.value ==
+                      TypesMoneys.GUARANIES
                   ? {
                       controller.sellVehicleModel.value.contadoGuaranies = text,
                       controller.sellVehicleModel.value.contadoDolares = null
@@ -291,74 +323,33 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                       controller.sellVehicleModel.value.contadoGuaranies = null
                     },
               textEditingController:
-                  controller.typesMoneySelected == 'GUARANIES'
+                  controller.typesMoneySelected.value == TypesMoneys.GUARANIES
                       ? (controller.textContadoGuaranies)
                       : controller.textContadoDolares),
         ];
-      case 'FINANCIADO':
+      case TypesSells.FINANCIADO:
         return [
           CustomPlan(0, controller.cuota.value,
-              textRender: controller.typesMoneySelected.value,
+              textRender: controller.typesMoneySelected.value.name,
               showTotal: true,
-              showDolares: controller.typesMoneySelected == 'DOLARES',
-              showGuaranies: controller.typesMoneySelected == 'GUARANIES',
+              showDolares:
+                  controller.typesMoneySelected.value == TypesMoneys.DOLARES,
+              showGuaranies:
+                  controller.typesMoneySelected.value == TypesMoneys.GUARANIES,
               withTitle: false),
           (controller.vehicleSelected.first.cantidadCuotas == null ||
                   controller.vehicleSelected.first.cantidadCuotas == 0)
               ? Container()
-              : expanded(CustomButton(
-                  'ELEGIR PLAN',
-                  () => Get.defaultDialog(
-                          title: 'ELEGIR PLAN ${controller.typesMoneySelected}',
-                          content: dialogSelectPlan(),
-                          actions: [
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: CustomButton('CANCELAR', () => Get.back(),
-                                  ColorPalette.PRIMARY,
-                                  edgeInsets: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 4),
-                                  fontSize: 12,
-                                  isLoading: controller.isLoading.value),
-                            ),
-                          ]),
-                  ColorPalette.YELLOW,
-                  iconData: Icons.list,
-                  isLoading: controller.isLoading.value)),
-          expanded(CustomButton(
-              'NUEVO PLAN',
-              () => Get.defaultDialog(
-                      title: 'NUEVO PLAN ${controller.typesMoneySelected}',
-                      content: dialogPlan(),
-                      actions: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomButton(
-                                'REGISTRAR PLAN',
-                                controller.registerCuota,
-                                ColorPalette.SECUNDARY,
-                                edgeInsets: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
-                                fontSize: 12,
-                                isLoading: controller.isLoading.value),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            CustomButton('CANCELAR', () => Get.back(),
-                                ColorPalette.PRIMARY,
-                                edgeInsets: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
-                                fontSize: 12,
-                                isLoading: controller.isLoading.value),
-                          ],
-                        ),
-                      ]),
-              ColorPalette.SECUNDARY,
-              iconData: Icons.post_add,
-              isLoading: controller.isLoading.value)),
+              : expanded(CustomButton('ELEGIR PLAN', () async {
+                  bool? selectPlan =
+                      await selectPlanDialog(controller, context);
+                }, ColorPalette.YELLOW,
+                  iconData: Icons.list, isLoading: controller.isLoading.value)),
+          expanded(CustomButton('NUEVO PLAN', () async {
+            controller.setCuoteInDialog();
+            bool? responseDialog = await dialogPlanSell(controller, context);
+          }, ColorPalette.SECUNDARY,
+              iconData: Icons.post_add, isLoading: controller.isLoading.value)),
           CustomSpacing(),
           controller.cuota.value.cantidadCuotas == null ||
                   controller.cuota.value.cantidadCuotas == 0
@@ -370,7 +361,7 @@ class SellVehicleView extends GetView<VehicleDetailController> {
     }
   }
 
-  vencimientosSection(BuildContext context) {
+  Widget vencimientosSection(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -404,9 +395,13 @@ class SellVehicleView extends GetView<VehicleDetailController> {
               children: [
                 CustomSpacing(height: 7),
                 CustomButton('', () {
-                  controller.generatedDatesCuotes();
-                  Get.toNamed(AppRoutes.DATES_VEN,
-                      parameters: {'isCuote': 'true'});
+                  Get.toNamed(AppRoutes.DATES_VEN, parameters: {
+                    'isCuote': 'true',
+                    'isDolar': controller.typesMoneySelected.value ==
+                            TypesMoneys.DOLARES
+                        ? 'true'
+                        : 'false'
+                  });
                 }, ColorPalette.SECUNDARY,
                     iconData: Icons.calendar_today_rounded),
               ],
@@ -456,9 +451,12 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                         children: [
                           CustomSpacing(height: 7),
                           CustomButton('', () {
-                            controller.generatedDatesRefuerzos();
-                            Get.toNamed(AppRoutes.DATES_VEN,
-                                parameters: {'isCuote': 'false'});
+                            Get.toNamed(AppRoutes.DATES_VEN, parameters: {
+                              'isCuote': 'false',
+                              'isDolar': (controller.typesMoneySelected.value ==
+                                      TypesMoneys.DOLARES)
+                                  .toString()
+                            });
                           }, ColorPalette.SECUNDARY,
                               iconData: Icons.calendar_today_rounded),
                         ],
@@ -479,40 +477,6 @@ class SellVehicleView extends GetView<VehicleDetailController> {
   Widget expanded(Widget body) {
     return Row(
       children: [Expanded(child: body)],
-    );
-  }
-
-  Widget dialogSelectPlan() {
-    return SingleChildScrollView(
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-        child: SizedBox(
-          height: 300,
-          width: double.maxFinite,
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: controller.vehicleSelected.length,
-              itemBuilder: (BuildContext context, int index) {
-                Cuota cuota =
-                    Cuota.fromJson(controller.vehicleSelected[index].toJson());
-                return Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () => controller.selectedPlan(cuota),
-                      child: CustomPlan(index, cuota,
-                          textRender: controller.typesMoneySelected.value),
-                    ),
-                    CustomButton(
-                        'ELEGIR PLAN N° ${(index + 1).toString()}',
-                        () => controller.selectedPlan(cuota),
-                        ColorPalette.YELLOW),
-                    CustomSpacing(),
-                  ],
-                );
-              }),
-        ),
-      ),
     );
   }
 
@@ -545,199 +509,6 @@ class SellVehicleView extends GetView<VehicleDetailController> {
       title: Text(item?.cliente ?? ''),
       subtitle: Text(textCiController.text),
     );
-  }
-
-  Widget dialogPlan() {
-    return SingleChildScrollView(
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(4),
-            ),
-            border: Border.all(width: 1, color: Colors.grey)),
-        child: SizedBox(
-          height: 300,
-          child: SingleChildScrollView(
-            child: Form(
-                key: controller.formKeyDialog,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CustomSpacing(),
-                    CustomTitle('Cant. Cuotas | Refuerzos'),
-                    CustomSpacing(),
-                    CustomInput(
-                      '',
-                      'Cantidad cuotas',
-                      isNumber: true,
-                      onSaved: (text) => controller.cuota.value.cantidadCuotas =
-                          int.parse(text),
-                      validator: (String text) {
-                        if (text.isEmpty) {
-                          return 'Campo obligatorio.';
-                        } else {
-                          if (double.parse(text.toString()) == 0.0) {
-                            return 'Cantidad debe de ser minimo 1';
-                          }
-                        }
-                      },
-                      textEditingController: controller.textCantidadCuotas,
-                    ),
-                    CustomInput('', 'Cantidad refuerzos',
-                        validator: (String text) {
-                          double guaraniesRefuerzo = RemoveMoneyFormat()
-                              .removeToDouble(
-                                  controller.textRefuezoGuaranies.text);
-                          double dolaresRefuerzo = RemoveMoneyFormat()
-                              .removeToDouble(
-                                  controller.textRefuezoDolares.text);
-                          if (text.isEmpty) {
-                            if (dolaresRefuerzo > 0.0 ||
-                                guaraniesRefuerzo > 0.0) {
-                              return 'Campo obligatorio';
-                            } else {
-                              return null;
-                            }
-                          }
-                          if (double.parse(text.toString()) == 0.0) {
-                            return 'Cantidad debe de ser minimo 1';
-                          }
-                        },
-                        isNumber: true,
-                        onSaved: (text) {
-                          if (text == '') {
-                            controller.cuota.value.cantidadRefuerzo = null;
-                          } else {
-                            controller.cuota.value.cantidadRefuerzo =
-                                int.parse(text);
-                          }
-                        },
-                        textEditingController:
-                            controller.textCantidadRefuerzos),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: renderWidgetsMoneyType(),
-                    ),
-                  ],
-                )),
-          ),
-        ),
-      ),
-    );
-  }
-
-  List<Widget> renderWidgetsMoneyType() {
-    switch (controller.typesMoneySelected.value) {
-      case 'GUARANIES':
-        return [
-          CustomTitle('Plan guaraníes'),
-          CustomSpacing(),
-          CustomInput(
-            '',
-            'Entrada',
-            isNumber: true,
-            onChanged: (text) => controller.textEntradaGuaranies
-                .updateValue(RemoveMoneyFormat().removeToDouble(text)),
-            iconData: Icons.price_change_outlined,
-            textEditingController: controller.textEntradaGuaranies,
-            onSaved: (text) {
-              controller.cuota.value.entradaGuaranies = text;
-            },
-          ),
-          CustomInput(
-            '',
-            'Cuota',
-            isNumber: true,
-            onChanged: (text) => controller.textCuotaGuaranies
-                .updateValue(RemoveMoneyFormat().removeToDouble(text)),
-            validator: (String text) {
-              String newString = RemoveMoneyFormat().removeToString(text);
-              if (text.isEmpty) return 'Informar cuota mensual.';
-              if (newString.isNum) {
-                if (double.parse(newString.toString()) == 0.0) {
-                  return 'Informar cuota mensual.';
-                }
-              } else {
-                return 'Informar cuota mensual.';
-              }
-            },
-            iconData: Icons.price_change_outlined,
-            textEditingController: controller.textCuotaGuaranies,
-            onSaved: (text) => controller.cuota.value.cuotaGuaranies = text,
-          ),
-          CustomInput(
-            '',
-            'Refuerzo',
-            isNumber: true,
-            onChanged: (text) => controller.textRefuezoGuaranies
-                .updateValue(RemoveMoneyFormat().removeToDouble(text)),
-            validator: (String text) {
-              String newString = RemoveMoneyFormat().removeToString(text);
-              if (controller.textCantidadRefuerzos.text.isNotEmpty) {
-                if (newString.isNum) {
-                  if (double.parse(newString.toString()) == 0.0) {
-                    return 'Informar cuota refuerzo.';
-                  }
-                } else {
-                  return 'Informar cuota refuerzo.';
-                }
-              }
-            },
-            iconData: Icons.price_change_outlined,
-            onSaved: (text) => controller.cuota.value.refuerzoGuaranies = text,
-            textEditingController: controller.textRefuezoGuaranies,
-          ),
-        ];
-      case 'DOLARES':
-        return [
-          CustomTitle('Plan dólares'),
-          CustomSpacing(),
-          CustomInput('', 'Entrada',
-              isNumber: true,
-              iconData: Icons.price_change_outlined,
-              onSaved: (text) => controller.cuota.value.entradaDolares = text,
-              textEditingController: controller.textEntradaDolares),
-          CustomInput('', 'Cuota',
-              isNumber: true,
-              validator: (String text) {
-                String newString = RemoveMoneyFormat().removeToString(text);
-                if (text.isEmpty) return 'Informar cuota mensual.';
-                if (newString.isNum) {
-                  if (double.parse(newString.toString()) == 0.0) {
-                    return 'Informar cuota mensual.';
-                  }
-                } else {
-                  return 'Informar cuota mensual.';
-                }
-              },
-              iconData: Icons.price_change_outlined,
-              onSaved: (text) => controller.cuota.value.cuotaDolares = text,
-              textEditingController: controller.textCuotaDolares),
-          CustomInput('', 'Refuerzo',
-              isNumber: true,
-              validator: (String text) {
-                String newString = RemoveMoneyFormat().removeToString(text);
-                if (controller.textCantidadRefuerzos.text.isNotEmpty) {
-                  if (newString.isNum) {
-                    if (double.parse(newString.toString()) == 0.0) {
-                      return 'Informar cuota refuerzo.';
-                    }
-                  } else {
-                    return 'Informar cuota refuerzo.';
-                  }
-                }
-              },
-              iconData: Icons.price_change_outlined,
-              onSaved: (text) => controller.cuota.value.refuerzoDolares = text,
-              textEditingController: controller.textRefuezoDolares),
-        ];
-      default:
-        return [];
-    }
   }
 
   String? validatorTreeCaracteressAndNull(String text) {

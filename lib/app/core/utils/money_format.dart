@@ -2,7 +2,7 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
 
 class MoneyFormat {
-  final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
+  final _formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
 
   String formatCommaToDot(dynamic value, {bool isGuaranies = true}) {
     if (value == null) {
@@ -24,7 +24,7 @@ class MoneyFormat {
                 leftSymbol: 'U\$ ', initialValue: newDouble)
             .text;
       }
-      return formatter
+      return _formatter
           .format(double.parse(value.toString()))
           .replaceAll('R\$', "")
           .toString()

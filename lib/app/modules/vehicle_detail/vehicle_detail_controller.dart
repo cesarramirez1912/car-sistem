@@ -1,14 +1,18 @@
+import 'package:car_system/app/data/enums/types_moneys.dart';
+import 'package:car_system/app/data/enums/types_sells.dart';
 import 'package:car_system/app/data/repositories/remote/sells_repository.dart';
 import 'package:car_system/app/global_widgets/dialog_confirm.dart';
 import 'package:car_system/app/global_widgets/dialog_fetch.dart';
+import 'package:car_system/app/global_widgets/input.dart';
 import 'package:car_system/app/global_widgets/snack_bars/snack_bar_success.dart';
+import 'package:car_system/app/global_widgets/spacing.dart';
+import 'package:car_system/app/global_widgets/title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
-
-import '../../core/utils/date_format.dart';
 import '../../core/utils/remove_money_format.dart';
 import '../../data/models/cuotes.dart';
+import '../../data/models/date_value_model.dart';
 import '../../data/models/register_client_model.dart';
 import '../../data/models/resument_model.dart';
 import '../../data/models/sell_vehicle_model.dart';
@@ -23,6 +27,8 @@ class VehicleDetailController extends GetxController {
   Rx<Vehicle>? vehicleDetail;
   String idVehiculoSucursal = '';
 
+  final RemoveMoneyFormat _remove = RemoveMoneyFormat();
+
   final formKey = GlobalKey<FormState>();
 
   RxBool isLoading = false.obs;
@@ -31,24 +37,30 @@ class VehicleDetailController extends GetxController {
   RxList<String> typesCobroMensuales = ['3 MESES', '6 MESES', '12 MESES'].obs;
   RxString typeCobroMensualSelected = '3 MESES'.obs;
 
-  RxList<String> typesSell = ['CONTADO', 'FINANCIADO'].obs;
-  RxString typeSellSelected = ''.obs;
+  RxList<TypesSells> typesSell =
+      [TypesSells.CONTADO, TypesSells.FINANCIADO].obs;
+  Rx<TypesSells> typeSellSelected = TypesSells.CONTADO.obs;
 
   RxString typeClientSelectedString = ''.obs;
   Rx<ClientModel> typeClientSelected = ClientModel().obs;
 
-  RxList<String> typesMoney = ['GUARANIES', 'DOLARES'].obs;
-  RxString typesMoneySelected = ''.obs;
+  RxList<TypesMoneys> typesMoney =
+      [TypesMoneys.GUARANIES, TypesMoneys.GUARANIES].obs;
+  Rx<TypesMoneys> typesMoneySelected = TypesMoneys.GUARANIES.obs;
 
   RxList<Resumen> listResumen = <Resumen>[].obs;
 
-  RxList<DateTime> listDateGeneratedCuotas = <DateTime>[].obs;
-  RxList<DateTime> listDateGeneratedRefuerzos = <DateTime>[].obs;
+  RxList<DateValue> listDateGeneratedCuotas = <DateValue>[].obs;
+  RxList<DateValue> listDateGeneratedRefuerzos = <DateValue>[].obs;
   Rx<DateTime> firstDateCuoteSelected = DateTime.utc(
           DateTime.now().year, DateTime.now().month + 1, DateTime.now().day)
       .obs;
   Rx<DateTime> firstDateRefuerzoSelected = DateTime.utc(
           DateTime.now().year, DateTime.now().month + 1, DateTime.now().day)
+      .obs;
+
+  Rx<DateTime> dateFromSell = DateTime.utc(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day)
       .obs;
 
   final formKeyDialog = GlobalKey<FormState>();
@@ -60,6 +72,8 @@ class VehicleDetailController extends GetxController {
 
   //DIALOG INPUTS
   Rx<Cuota> cuota = Cuota().obs;
+
+  //-------------------- INPUTS DIALOG --------------------
   TextEditingController textCantidadCuotas = TextEditingController();
   TextEditingController textCantidadRefuerzos = TextEditingController();
   MoneyMaskedTextController textEntradaGuaranies = MoneyMaskedTextController(
@@ -75,10 +89,15 @@ class VehicleDetailController extends GetxController {
   MoneyMaskedTextController textRefuezoDolares =
       MoneyMaskedTextController(leftSymbol: 'U\$ ');
 
+  //-------------------- FIN DIALOG --------------------
+
+  //-------------------- CONTADO --------------------
   MoneyMaskedTextController textContadoGuaranies = MoneyMaskedTextController(
       leftSymbol: 'G\$ ', precision: 0, decimalSeparator: '');
   MoneyMaskedTextController textContadoDolares =
       MoneyMaskedTextController(leftSymbol: 'U\$ ');
+
+  //-------------------- FIN CONTADO --------------------
 
   Rx<SellVehicleModel> sellVehicleModel =
       SellVehicleModel(cuotas: [], refuerzos: []).obs;
@@ -104,13 +123,60 @@ class VehicleDetailController extends GetxController {
         vehicles.first.idVehiculoSucursal;
   }
 
+  List<String> listTypesMoney() {
+    List<String> _values = [];
+    for (var i in TypesMoneys.values) {
+      _values.add(i.name.toString());
+    }
+    return _values;
+  }
+
+  List<String> listTypesSells() {
+    List<String> _values = [];
+    for (var i in TypesSells.values) {
+      _values.add(i.name.toString());
+    }
+    return _values;
+  }
+
+  void setCuoteInDialog() {
+    textCantidadCuotas.text =
+        verifyIsNull(cuota.value.cantidadCuotas.toString(), valueToReturn: '');
+    textCantidadRefuerzos.text = verifyIsNull(
+        cuota.value.cantidadRefuerzo.toString(),
+        valueToReturn: '');
+    textEntradaGuaranies.text =
+        verifyIsNull(cuota.value.entradaGuaranies.toString());
+    textCuotaGuaranies.text =
+        verifyIsNull(cuota.value.cuotaGuaranies.toString());
+    textEntradaDolares.text =
+        verifyIsNull(cuota.value.entradaDolares.toString());
+    textCuotaDolares.text = verifyIsNull(cuota.value.cuotaDolares.toString());
+    textRefuezoGuaranies.text =
+        verifyIsNull(cuota.value.refuerzoGuaranies.toString());
+    textRefuezoDolares.text =
+        verifyIsNull(cuota.value.refuerzoDolares.toString());
+  }
+
+  String verifyIsNull(dynamic value, {String? valueToReturn}) {
+    if (value == 'null') {
+      if (valueToReturn == null) {
+        return '0';
+      } else {
+        return valueToReturn;
+      }
+    } else {
+      return value;
+    }
+  }
+
   void seletVehicleToSel() {
     vehicleSelected.addAll(vehicles);
   }
 
   Future<void> deleteVehicle(BuildContext context) async {
-    bool? responseCustom =
-        await CustomDialogConfirm(context, 'Desea eliminar el vehiculo ?');
+    bool? responseCustom = await CustomDialogConfirm(context,
+        text: 'Desea eliminar el vehiculo ?');
     if (responseCustom != null && responseCustom) {
       await CustomDialogFetch(
           () async => await _sellVehicleRepository
@@ -123,8 +189,8 @@ class VehicleDetailController extends GetxController {
   }
 
   Future<void> deletePlan(BuildContext context, int idPlan, int index) async {
-    bool? responseCustom =
-        await CustomDialogConfirm(context, 'Desea eliminar el plan n $index ?');
+    bool? responseCustom = await CustomDialogConfirm(context,
+        text: 'Desea eliminar el plan n $index ?');
     if (responseCustom != null && responseCustom) {
       await CustomDialogFetch(
           () async => await _sellVehicleRepository.deletePlan(idPlan),
@@ -135,32 +201,119 @@ class VehicleDetailController extends GetxController {
     }
   }
 
-  void selectedPlan(Cuota _cuota) {
-    cuota.value = _cuota;
-    Get.back();
-  }
-
   Future<void> selectDateCuote(
       BuildContext context, DateTime dateTime, int index) async {
+    List<DateValue> _auxDateValue = [...listDateGeneratedCuotas];
+
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != dateTime) {
-      listDateGeneratedCuotas[index] = picked;
+      listDateGeneratedCuotas[index].date = picked;
+      listDateGeneratedCuotas.clear();
+      listDateGeneratedCuotas.addAll(_auxDateValue);
     }
   }
 
   Future<void> selectDateRefuerzo(
       BuildContext context, DateTime dateTime, int index) async {
+    List<DateValue> _auxDateValue = [...listDateGeneratedRefuerzos];
+
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != dateTime) {
-      listDateGeneratedRefuerzos[index] = picked;
+      listDateGeneratedRefuerzos[index].date = picked;
+      listDateGeneratedRefuerzos.clear();
+      listDateGeneratedRefuerzos.addAll(_auxDateValue);
+    }
+  }
+
+  Future<void> changeValue(
+      BuildContext context, int index, bool isCuote) async {
+    MoneyMaskedTextController dolaresFormat =
+        MoneyMaskedTextController(leftSymbol: 'U\$ ', initialValue: 0);
+    MoneyMaskedTextController guaraniesFormat = MoneyMaskedTextController(
+        leftSymbol: 'G\$ ',
+        precision: 0,
+        decimalSeparator: '',
+        initialValue: 0);
+
+    bool isDolar = typesMoneySelected.value == TypesMoneys.DOLARES;
+
+    if (isCuote) {
+      if (isDolar) {
+        dolaresFormat.text = listDateGeneratedCuotas[index].cuotaDolares;
+      } else {
+        guaraniesFormat.text =
+            listDateGeneratedCuotas[index].cuotaGuaranies.toString();
+      }
+    } else {
+      if (isDolar) {
+        dolaresFormat.text = listDateGeneratedRefuerzos[index].refuerzoDolares;
+      } else {
+        guaraniesFormat.text =
+            listDateGeneratedRefuerzos[index].refuerzoGuaranies.toString();
+      }
+    }
+
+    String newValue = '';
+    List<DateValue> _auxDateValue = isCuote
+        ? [...listDateGeneratedCuotas]
+        : [...listDateGeneratedRefuerzos];
+    bool? responseDialog = await CustomDialogConfirm(
+      context,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomSpacing(height: 10),
+          CustomTitle('Editar valor'),
+          CustomSpacing(height: 10),
+          CustomInput(
+            'Editar valor',
+            'Editar valor',
+            onChanged: (value) => newValue = value,
+            textEditingController: isDolar ? dolaresFormat : guaraniesFormat,
+          )
+        ],
+      ),
+    );
+    if (responseDialog != null && responseDialog) {
+      double doubleValue = _remove.removeToDouble(newValue);
+      if (isCuote) {
+        if (isDolar) {
+          _auxDateValue[index].cuotaDolares = doubleValue;
+        } else {
+          _auxDateValue[index].cuotaGuaranies = doubleValue;
+        }
+        listDateGeneratedCuotas.clear();
+        listDateGeneratedCuotas.addAll(_auxDateValue);
+      } else {
+        if (isDolar) {
+          _auxDateValue[index].refuerzoDolares = doubleValue;
+        } else {
+          _auxDateValue[index].refuerzoGuaranies = doubleValue;
+        }
+        listDateGeneratedRefuerzos.clear();
+        listDateGeneratedRefuerzos.addAll(_auxDateValue);
+      }
+    }
+  }
+
+  Future<void> changeDateFromSell(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        locale: const Locale('es'),
+        initialDate: dateFromSell.value,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != dateFromSell.value) {
+      dateFromSell.value = picked;
     }
   }
 
@@ -171,8 +324,9 @@ class VehicleDetailController extends GetxController {
         initialDate: firstDateCuoteSelected.value,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != firstDateCuoteSelected) {
+    if (picked != null && picked != firstDateCuoteSelected.value) {
       firstDateCuoteSelected.value = picked;
+      generatedDatesCuotes();
     }
   }
 
@@ -183,38 +337,47 @@ class VehicleDetailController extends GetxController {
         initialDate: firstDateRefuerzoSelected.value,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != firstDateRefuerzoSelected) {
+    if (picked != null && picked != firstDateRefuerzoSelected.value) {
       firstDateRefuerzoSelected.value = picked;
+      generatedDatesRefuerzos();
     }
   }
 
   void generatedDatesCuotes() {
-    listDateGeneratedCuotas.value = List<DateTime>.generate(
+    listDateGeneratedCuotas.value = List<DateValue>.generate(
       cuota.value.cantidadCuotas,
-      (i) => DateTime.utc(
-        firstDateCuoteSelected.value.year,
-        firstDateCuoteSelected.value.month + i,
-        firstDateCuoteSelected.value.day,
-      ),
+      (i) => DateValue(
+          date: DateTime.utc(
+            firstDateCuoteSelected.value.year,
+            firstDateCuoteSelected.value.month + i,
+            firstDateCuoteSelected.value.day,
+          ),
+          cuotaGuaranies: cuota.value.cuotaGuaranies,
+          cuotaDolares: cuota.value.cuotaDolares),
     );
   }
 
   void generatedDatesRefuerzos() {
-    String valueFromString = typeCobroMensualSelected.value.substring(0, 2);
+    String months = typeCobroMensualSelected.value.substring(0, 2);
     if (cuota.value.cantidadRefuerzo != null) {
-      int typeCobroMensualSelectedInt = int.parse(valueFromString);
-      List<DateTime> listGeneratedAux = List<DateTime>.generate(
-        cuota.value.cantidadRefuerzo * typeCobroMensualSelectedInt,
-        (i) => DateTime.utc(
-          firstDateRefuerzoSelected.value.year,
-          firstDateRefuerzoSelected.value.month + i,
-          firstDateRefuerzoSelected.value.day,
-        ),
+      int monthInteger = int.parse(months);
+      List<DateValue> listGeneratedAux = List<DateValue>.generate(
+        cuota.value.cantidadRefuerzo * monthInteger,
+        (i) => DateValue(
+            date: DateTime.utc(
+              firstDateRefuerzoSelected.value.year,
+              firstDateRefuerzoSelected.value.month + i,
+              firstDateRefuerzoSelected.value.day,
+            ),
+            refuerzoDolares: cuota.value.refuerzoDolares,
+            refuerzoGuaranies: cuota.value.refuerzoGuaranies),
       );
+
       listDateGeneratedRefuerzos.clear();
+
       for (int i = 0; i < listGeneratedAux.length; i++) {
         if (i != 0) {
-          if ((i % typeCobroMensualSelectedInt) == 0) {
+          if ((i % monthInteger) == 0) {
             listDateGeneratedRefuerzos.add(listGeneratedAux[i]);
           }
         } else {
@@ -224,79 +387,71 @@ class VehicleDetailController extends GetxController {
     }
   }
 
-  void generatedDatesResumen() {
-    listResumen.clear();
-    for (int i = 0; i < listDateGeneratedCuotas.length; i++) {
-      listResumen.add(
-        Resumen(
-          fechaCuota: DateFormatBr()
-              .formatBrFromString(listDateGeneratedRefuerzos[i].toString()),
-          fechaRefuerzo: DateFormatBr()
-              .formatBrFromString(listDateGeneratedRefuerzos[i].toString()),
-          valorCuota: cuota.value.cuotaGuaranies,
-          valorRefuerzo: cuota.value.cuotaGuaranies,
-        ),
-      );
-    }
-  }
-
   void registerCuota() async {
     if (formKeyDialog.currentState == null) {
     } else if (formKeyDialog.currentState!.validate()) {
       formKeyDialog.currentState!.save();
-      cuota.value.entradaGuaranies =
-          RemoveMoneyFormat().removeToString(cuota.value.entradaGuaranies);
-      cuota.value.cuotaGuaranies =
-          RemoveMoneyFormat().removeToString(cuota.value.cuotaGuaranies);
-      cuota.value.refuerzoGuaranies =
-          RemoveMoneyFormat().removeToString(cuota.value.refuerzoGuaranies);
-      cuota.value.entradaDolares =
-          RemoveMoneyFormat().removeToString(cuota.value.entradaDolares);
-      cuota.value.cuotaDolares =
-          RemoveMoneyFormat().removeToString(cuota.value.cuotaDolares);
-      cuota.value.refuerzoDolares =
-          RemoveMoneyFormat().removeToString(cuota.value.refuerzoDolares);
-
-      if (cuota.value.entradaDolares != null) {
-        if (double.parse(cuota.value.entradaDolares) == 0.0) {
-          cuota.value.entradaDolares = null;
+      if (typesMoneySelected.value == TypesMoneys.DOLARES) {
+      } else {}
+      cuota.value = cuotaTratada();
+      generatedDatesCuotes();
+      if (cuota.value.cantidadRefuerzo != null) {
+        if (cuota.value.cantidadRefuerzo > 0) {
+          generatedDatesRefuerzos();
         }
       }
-
-      if (cuota.value.cuotaDolares != null) {
-        if (double.parse(cuota.value.cuotaDolares) == 0.0) {
-          cuota.value.cuotaDolares = null;
-        }
-      }
-
-      if (cuota.value.refuerzoDolares != null) {
-        if (double.parse(cuota.value.refuerzoDolares) == 0.0) {
-          cuota.value.refuerzoDolares = null;
-        }
-      }
-
-      if (cuota.value.entradaGuaranies != null) {
-        if (int.parse(cuota.value.entradaGuaranies) == 0) {
-          cuota.value.entradaGuaranies = null;
-        }
-      }
-
-      if (cuota.value.cuotaGuaranies != null) {
-        if (int.parse(cuota.value.cuotaGuaranies) == 0) {
-          cuota.value.cuotaGuaranies = null;
-        }
-      }
-
-      if (cuota.value.refuerzoGuaranies != null) {
-        if (int.parse(cuota.value.refuerzoGuaranies) == 0) {
-          cuota.value.refuerzoGuaranies = null;
-        }
-      }
-
-      cuota.refresh();
-
       Get.back();
     }
+  }
+
+  void selectedPlan(Cuota _cuota) {
+    cuota.value = cuotaTratada(cuote: _cuota);
+    generatedDatesCuotes();
+    if (_cuota.cantidadRefuerzo != null) {
+      generatedDatesRefuerzos();
+    }
+    Get.back();
+  }
+
+  Cuota cuotaTratada({Cuota? cuote}) {
+    List<String> keysDols = [
+      'entrada_dolares',
+      'cuota_dolares',
+      'refuerzo_dolares'
+    ];
+
+    List<String> keysGs = [
+      'entrada_guaranies',
+      'cuota_guaranies',
+      'refuerzo_guaranies'
+    ];
+
+    Map<String, dynamic> cuotaJson =
+        cuote == null ? cuota.value.toJson() : cuote.toJson();
+    for (var i = 0; i < keysGs.length; i++) {
+      String? guaraniStr = _remove.removeToString(cuotaJson[keysGs[i]]);
+      String? dolarStr = _remove.removeToString(cuotaJson[keysDols[i]]);
+      cuotaJson[keysDols[i]] = dolarStr;
+      cuotaJson[keysGs[i]] = guaraniStr;
+      if (typesMoneySelected.value == TypesMoneys.DOLARES) {
+        cuotaJson[keysGs[i]] = null;
+        //dolares
+        if (dolarStr != null) {
+          if (double.parse(dolarStr) == 0) {
+            cuotaJson[keysDols[i]] = null;
+          }
+        }
+      } else {
+        cuotaJson[keysDols[i]] = null;
+        //guaranies
+        if (guaraniStr != null) {
+          if (int.parse(guaraniStr) == 0) {
+            cuotaJson[keysGs[i]] = null;
+          }
+        }
+      }
+    }
+    return Cuota.fromJson(cuotaJson);
   }
 
   Future<bool> registerSale() async {
@@ -306,54 +461,47 @@ class VehicleDetailController extends GetxController {
       isLoading.value = true;
       try {
         formKey.currentState!.save();
-        sellVehicleModel.value.fechaVenta = DateTime.now().toString();
+        sellVehicleModel.value.fechaVenta = dateFromSell.value.toString();
 
-        if (textCantidadRefuerzos.text.isNotEmpty) {
-          generatedDatesRefuerzos();
-        }
-        if (textCantidadCuotas.text.isNotEmpty ||
-            cuota.value.cantidadCuotas != null) {
-          generatedDatesCuotes();
-        }
-
-        if (typeSellSelected != 'CONTADO') {
-          if (typesMoneySelected == 'GUARANIES' &&
+        if (typeSellSelected.value != TypesSells.CONTADO) {
+          if (typesMoneySelected.value == TypesMoneys.GUARANIES &&
                   cuota.value.cuotaGuaranies == null ||
-              typesMoneySelected == 'DOLARES' &&
+              typesMoneySelected.value == TypesMoneys.DOLARES &&
                   cuota.value.cuotaDolares == null) {
             isLoading.value = false;
             CustomSnackBarError('SIN VALOR EN CUOTA! HACER UN NUEVO PLAN');
             return false;
           }
-
           sellVehicleModel.value.entradaDolares =
-              RemoveMoneyFormat().removeToString(cuota.value.entradaDolares);
+              _remove.removeToString(cuota.value.entradaDolares);
           sellVehicleModel.value.entradaGuaranies =
-              RemoveMoneyFormat().removeToString(cuota.value.entradaGuaranies);
-
+              _remove.removeToString(cuota.value.entradaGuaranies);
           if (listDateGeneratedCuotas.isNotEmpty) {
             sellVehicleModel.value.cuotas?.clear();
             for (var fecha in listDateGeneratedCuotas) {
               sellVehicleModel.value.cuotas?.add(Cuotas(
-                  cuotaGuaranies: cuota.value.cuotaGuaranies.toString(),
-                  cuotaDolares: cuota.value.cuotaDolares.toString(),
-                  fechaCuota: fecha.toString()));
+                  cuotaGuaranies: fecha.cuotaGuaranies.toString(),
+                  cuotaDolares: fecha.cuotaDolares.toString(),
+                  fechaCuota: fecha.date.toString()));
             }
           }
           if (listDateGeneratedRefuerzos.isNotEmpty) {
             sellVehicleModel.value.refuerzos?.clear();
             for (var fecha in listDateGeneratedRefuerzos) {
-              sellVehicleModel.value.refuerzos?.add(Refuerzos(
-                  refuerzoGuaranies: cuota.value.refuerzoGuaranies.toString(),
-                  refuerzoDolares: cuota.value.refuerzoDolares.toString(),
-                  fechaRefuerzo: fecha.toString()));
+              sellVehicleModel.value.refuerzos?.add(
+                Refuerzos(
+                  refuerzoGuaranies: fecha.refuerzoGuaranies.toString(),
+                  refuerzoDolares: fecha.refuerzoDolares.toString(),
+                  fechaRefuerzo: fecha.date.toString(),
+                ),
+              );
             }
           }
         } else {
-          sellVehicleModel.value.contadoGuaranies = RemoveMoneyFormat()
-              .removeToString(sellVehicleModel.value.contadoGuaranies);
-          sellVehicleModel.value.contadoDolares = RemoveMoneyFormat()
-              .removeToString(sellVehicleModel.value.contadoDolares);
+          sellVehicleModel.value.contadoGuaranies =
+              _remove.removeToString(sellVehicleModel.value.contadoGuaranies);
+          sellVehicleModel.value.contadoDolares =
+              _remove.removeToString(sellVehicleModel.value.contadoDolares);
         }
         var responseSellVehicle =
             await _sellVehicleRepository.sellVehicle(sellVehicleModel.toJson());
@@ -405,19 +553,42 @@ class VehicleDetailController extends GetxController {
     listDateGeneratedRefuerzos.clear();
   }
 
-  void sellVehicle() {
-    try {
-      SellVehicleModel sellVehicleModel = SellVehicleModel(
-          idVehiculoSucursal: vehicleDetail?.value.idVehiculoSucursal,
-          entradaGuaranies: 10,
-          entradaDolares: 20,
-          idCliente: 1,
-          idColaborador: vehicleDetail?.value.idVehiculoSucursal,
-          idEmpresa: vehicleDetail?.value.idVehiculoSucursal,
-          idSucursal: vehicleDetail?.value.idSucursal);
-      //  _sellVehicleRepository.sellVehicle(_body);
-    } catch (e) {
-      CustomSnackBarError(e.toString());
+  bool conditionalPlan() {
+    if (typeSellSelected.value == TypesSells.FINANCIADO) {
+      if (typesMoneySelected.value == TypesMoneys.DOLARES) {
+        if (cuota.value.cantidadRefuerzo != null) {
+          if (cuota.value.refuerzoDolares != null) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+        if (cuota.value.cantidadCuotas != null) {
+          if (cuota.value.cuotaDolares != null) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      } else {
+        if (cuota.value.cantidadRefuerzo != null) {
+          if (cuota.value.refuerzoGuaranies != null) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+        if (cuota.value.cantidadCuotas != null) {
+          if (cuota.value.cuotaGuaranies != null) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      }
+
+      return false;
     }
+    return false;
   }
 }

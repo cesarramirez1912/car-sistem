@@ -13,8 +13,8 @@ import '../../global_widgets/snack_bars/snack_bar_error.dart';
 import '../../global_widgets/snack_bars/snack_bar_success.dart';
 
 class SellsFromCollaboratorController extends GetxController {
-  UserStorageController userStorageController = Get.find();
-  SellsApi _sellVehicleRepository = Get.find();
+  final UserStorageController userStorageController = Get.find();
+  final SellsApi _sellVehicleRepository = Get.find();
 
   RxList<SaleCollaboratorModel> sales = <SaleCollaboratorModel>[].obs;
   RxList<SaleCollaboratorModel> salesAux = <SaleCollaboratorModel>[].obs;
@@ -83,7 +83,7 @@ class SellsFromCollaboratorController extends GetxController {
         initialDate: fechaPago.value,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != fechaPago) {
+    if (picked != null && picked != fechaPago.value) {
       fechaPago.value = picked;
     }
   }
@@ -95,7 +95,7 @@ class SellsFromCollaboratorController extends GetxController {
         initialDate: fechaCuotaRefuerzo.value,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != fechaCuotaRefuerzo) {
+    if (picked != null && picked != fechaCuotaRefuerzo.value) {
       fechaCuotaRefuerzo.value = picked;
     }
   }

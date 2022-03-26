@@ -1,0 +1,1 @@
+ enum TypesMoneys { GUARANIES, DOLARES }
