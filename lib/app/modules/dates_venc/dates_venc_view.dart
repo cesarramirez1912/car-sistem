@@ -3,6 +3,7 @@ import 'package:car_system/app/modules/dates_venc/dates_venc_widgets/dates_venc_
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/theme/colors.dart';
+import '../../global_widgets/responsive.dart';
 import 'dates_venc_controller.dart';
 
 class DatesVencView extends StatelessWidget {
@@ -12,6 +13,24 @@ class DatesVencView extends StatelessWidget {
   Widget build(BuildContext context) {
     PageController pageController =
         PageController(initialPage: controller.selectedIndex.value);
+    return Responsive(
+      mobile: principal(context, pageController),
+      desktop: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal(context, pageController)),
+      ),
+      tablet: Center(
+        child: Container(
+            alignment: Alignment.center,
+            width: 900,
+            child: principal(context, pageController)),
+      ),
+    );
+  }
+
+  Widget principal(context, pageController) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Fechas generadas'),

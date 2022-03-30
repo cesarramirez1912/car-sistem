@@ -109,7 +109,11 @@ class NewDatesView extends StatelessWidget {
                           CustomButton(
                               'VER FECHAS GENERADAS',
                               () => Get.toNamed(AppRoutes.DATES_VEN),
-                              ColorPalette.SECUNDARY)
+                              ColorPalette.SECUNDARY),
+                          CustomButton(
+                              'GENERAR NUEVAS FECHAS',
+                                  () => controller.updateDatesCuotesRefuerzos(),
+                              ColorPalette.GREEN)
                         ],
                       ),
                     ),

@@ -54,10 +54,6 @@ Widget CustomMenuDrawer() {
               cuotesMonthController.listDeudoresAgrupadoRefuerzo.length),
     ),
     ListTile(
-      title: const Text('Registrar vehiculo'),
-      onTap: () => Get.toNamed(AppRoutes.REGISTER),
-    ),
-    ListTile(
       title: const Text('Pendientes de pago'),
       onTap: () => Get.toNamed(AppRoutes.DEUDOR_VIEW),
       trailing: rounderNotification(

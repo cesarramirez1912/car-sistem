@@ -15,6 +15,8 @@ class SellsRepository{
 
   Future<String> sellVehicle(Map<String, dynamic> _body) =>_sellsApi.sellVehicle(_body);
 
+  Future<String> updateDateCuoteRefuerzo(Map<String, dynamic> _body) =>_sellsApi.updateDateCuoteRefuerzo(_body);
+
   Future<List<CuoteDetailModel>> requestCuotes(int? idVenta) =>_sellsApi.requestCuotes(idVenta);
 
   Future<List<RefuerzoDetailModel>> requestRefuerzos(int? idVenta) =>_sellsApi.requestRefuerzos(idVenta);

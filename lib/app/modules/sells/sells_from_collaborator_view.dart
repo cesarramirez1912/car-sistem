@@ -13,7 +13,8 @@ import '../../global_widgets/spacing.dart';
 import '../../global_widgets/title.dart';
 import 'sells_from_collaborator_controller.dart';
 
-class SellsFromCollaboratorView extends GetView<SellsFromCollaboratorController> {
+class SellsFromCollaboratorView
+    extends GetView<SellsFromCollaboratorController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +105,8 @@ class SellsFromCollaboratorView extends GetView<SellsFromCollaboratorController>
   Widget cardSell(SaleCollaboratorModel e) {
     return GestureDetector(
       onTap: () => Get.toNamed(AppRoutes.CLIENT_DETAIL_VIEW,
-          parameters:  e.toJson().map((key, value) => MapEntry(key, value.toString()))),
+          parameters:
+              e.toJson().map((key, value) => MapEntry(key, value.toString()))),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -232,11 +234,10 @@ Widget render(
                 (int.parse(e.cantidadRefuerzos) -
                         int.parse(e.cantidadRefuerzosPagados)) >
                     0
-            ? CustomButton('PAGAR CUOTA O REFUERZO', () {
-                controller.queryListRefuerzos(e.idVenta);
-                controller.queryListCuotes(e.idVenta);
-                Get.toNamed(AppRoutes.SELLS_DETAILS_CUOTES);
-              }, ColorPalette.GREEN)
+            ? CustomButton(
+                'PAGAR CUOTA O REFUERZO',
+                () => Get.toNamed(AppRoutes.SELLS_DETAILS_CUOTES),
+                ColorPalette.GREEN)
             : Container()
       ],
     );

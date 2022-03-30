@@ -254,10 +254,6 @@ class SaleDetailView extends StatelessWidget {
       ),
       CustomSpacing(height: 8),
       CustomButton('FECHAS', () {
-        sellsController
-            .queryListRefuerzos(controller.saleCollaborator.value.idVenta);
-        sellsController
-            .queryListCuotes(controller.saleCollaborator.value.idVenta);
         Get.toNamed(AppRoutes.SELLS_DETAILS_CUOTES, parameters: {
           'idVenta': controller.saleCollaborator.value.idVenta.toString()
         });

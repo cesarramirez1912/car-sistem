@@ -1,18 +1,29 @@
 import 'package:car_system/app/core/utils/date_format.dart';
 import 'package:car_system/app/core/utils/remove_money_format.dart';
+import 'package:car_system/app/core/utils/user_storage_controller.dart';
 import 'package:car_system/app/data/models/refuerzo_detail_model.dart';
+import 'package:car_system/app/data/repositories/remote/sells_repository.dart';
+import 'package:car_system/app/global_widgets/dialog_confirm.dart';
+import 'package:car_system/app/global_widgets/dialog_fetch.dart';
+import 'package:car_system/app/global_widgets/snack_bars/snack_bar_error.dart';
+import 'package:car_system/app/global_widgets/snack_bars/snack_bar_success.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
 import '../../data/models/cuote_detail_model.dart';
 import '../../data/models/date_value_model.dart';
+import '../../data/models/sell_vehicle_model.dart';
 import '../dates_venc/dates_venc_controller.dart';
-import '../sells/sells_from_collaborator_controller.dart';
+import '../dates_venc_cuotes/detail_dates_cuotes_refuerzo_controller.dart';
+import '../sale_detail/sale_detail_controller.dart';
 
 class NewDatesController extends GetxController {
-  final SellsFromCollaboratorController _sellsFromCollaboratorController =
-      Get.find();
+  final DetailDatesCuotesRefuerzosController
+      _detailDatesCuotesRefuerzosController = Get.find();
   final DatesVencController datesVencController = Get.find();
+  final SellsRepository _sellsRepository = Get.find();
+  final SaleDetailController _saleDetailController = Get.find();
 
   RxString typeCobroMensualSelected = '12 MESES'.obs;
   RxList<String> typesCobroMensuales = ['12 MESES', '6 MESES', '3 MESES'].obs;
@@ -45,13 +56,16 @@ class NewDatesController extends GetxController {
   MoneyMaskedTextController? textDolaresRefuerzos =
       MoneyMaskedTextController(leftSymbol: 'U\$ ');
 
+  Rx<SellVehicleModel> sellVehicleModel =
+      SellVehicleModel(cuotas: [], refuerzos: []).obs;
+
   @override
   void onInit() async {
     super.onInit();
     List<CuoteDetailModel> listCuotes =
-        _sellsFromCollaboratorController.listaCuotes;
+        _detailDatesCuotesRefuerzosController.listaCuotes;
     List<RefuerzoDetailModel> listRefuerzos =
-        _sellsFromCollaboratorController.listaRefuerzos;
+        _detailDatesCuotesRefuerzosController.listaRefuerzos;
     initialCuote(listCuotes);
     initialRefuerzo(listRefuerzos);
     generatedDatesCuotes();
@@ -74,21 +88,30 @@ class NewDatesController extends GetxController {
         ? double.parse(listCuotes.last.cuotaDolares.toString())
             .toStringAsFixed(2)
         : '0.00';
-
   }
 
   void initialRefuerzo(List<RefuerzoDetailModel> listRefuerzos) {
-    String fechaStr = listRefuerzos.first.fechaRefuerzo!;
-    initialDateRefuerzo.value = DateFormatBr().formatLocalFromString(fechaStr);
-    quantRefuerzosController.text = listRefuerzos.length.toString();
-    textGuaraniesRefuerzos?.text = listRefuerzos.last.refuerzoGuaranies != null
-        ? listRefuerzos.last.refuerzoGuaranies.toString()
-        : '0.00';
-
-    textDolaresRefuerzos?.text = listRefuerzos.last.refuerzoDolares != null
-        ? double.parse(listRefuerzos.last.refuerzoDolares.toString())
-            .toStringAsFixed(2)
-        : '0.00';
+    String fechaStr = DateTime.now().toString();
+    if (listRefuerzos.isNotEmpty) {
+      fechaStr = listRefuerzos.first.fechaRefuerzo!;
+      initialDateRefuerzo.value =
+          DateFormatBr().formatLocalFromString(fechaStr);
+      quantRefuerzosController.text = listRefuerzos.length.toString();
+      textGuaraniesRefuerzos?.text =
+          listRefuerzos.last.refuerzoGuaranies != null
+              ? listRefuerzos.last.refuerzoGuaranies.toString()
+              : '0.00';
+      textDolaresRefuerzos?.text = listRefuerzos.last.refuerzoDolares != null
+          ? double.parse(listRefuerzos.last.refuerzoDolares.toString())
+              .toStringAsFixed(2)
+          : '0.00';
+    } else {
+      initialDateRefuerzo.value =
+          DateFormatBr().formatLocalFromString(fechaStr);
+      quantRefuerzosController.text = '0';
+      textGuaraniesRefuerzos?.text = '0.00';
+      textDolaresRefuerzos?.text = '0.00';
+    }
   }
 
   Future<void> changeInitialDateCuote(BuildContext context) async {
@@ -119,7 +142,8 @@ class NewDatesController extends GetxController {
     int? intValue = int.tryParse(value);
     if (intValue != null) {
       quantCuotesController.text = value;
-      quantCuotesController.selection =  TextSelection.collapsed(offset: value.toString().length);
+      quantCuotesController.selection =
+          TextSelection.collapsed(offset: value.toString().length);
       generatedDatesCuotes();
     }
   }
@@ -128,7 +152,8 @@ class NewDatesController extends GetxController {
     int? intValue = int.tryParse(value);
     if (intValue != null) {
       quantRefuerzosController.text = value;
-      quantRefuerzosController.selection =  TextSelection.collapsed(offset: value.toString().length);
+      quantRefuerzosController.selection =
+          TextSelection.collapsed(offset: value.toString().length);
       generatedDatesRefuerzos();
     }
   }
@@ -206,5 +231,57 @@ class NewDatesController extends GetxController {
       }
     }
     datesVencController.changeListRefuerzos(listDateGeneratedRefuerzos);
+  }
+
+  Future<void> updateDatesCuotesRefuerzos() async {
+    try {
+      sellVehicleModel.value.idEmpresa =
+          _saleDetailController.saleCollaborator.value.idEmpresa;
+      sellVehicleModel.value.idSucursal =
+          _saleDetailController.saleCollaborator.value.idSucursal;
+      sellVehicleModel.value.refuerzos?.clear();
+      sellVehicleModel.value.cuotas?.clear();
+      for (var fecha in datesVencController.listDateGeneratedCuotas) {
+        sellVehicleModel.value.cuotas?.add(Cuotas(
+            cuotaGuaranies:
+                isDolar.value ? null : fecha.cuotaGuaranies.toString(),
+            cuotaDolares: isDolar.value ? fecha.cuotaDolares.toString() : null,
+            fechaCuota: fecha.date.toString()));
+      }
+
+      for (var fecha in datesVencController.listDateGeneratedRefuerzos) {
+        sellVehicleModel.value.refuerzos?.add(
+          Refuerzos(
+            refuerzoGuaranies:
+                isDolar.value ? null : fecha.refuerzoGuaranies.toString(),
+            refuerzoDolares:
+                isDolar.value ? fecha.refuerzoDolares.toString() : null,
+            fechaRefuerzo: fecha.date.toString(),
+          ),
+        );
+      }
+     await CustomDialogFetch(
+        () async {
+          await _sellsRepository.updateDateCuoteRefuerzo(
+            {
+              ...sellVehicleModel.toJson(),
+              'id_venta': _saleDetailController.saleCollaborator.value.idVenta
+            },
+          );
+          _detailDatesCuotesRefuerzosController.isLoading.value = true;
+          await _detailDatesCuotesRefuerzosController.cuotesAndRefuerzosRequest();
+        },
+        text: 'Generando nuevas fechas',
+      );
+      CustomSnackBarSuccess('Generados con exito!');
+      Get.back();
+    } catch (error) {
+      String response = '';
+      if (error is DioError) {
+        response =
+            error.response?.data['message'] ?? error.response?.data.toString();
+      }
+      CustomSnackBarError(response);
+    }
   }
 }

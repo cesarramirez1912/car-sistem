@@ -9,7 +9,7 @@ Widget pendienteText(dynamic value, {bool isGuaranies = true}) {
         isGuaranies: isGuaranies),
     textAlign: TextAlign.center,
     style: TextStyle(
-        color: value != 0 ? ColorPalette.PRIMARY : ColorPalette.GREEN,
+        color: value <= 0 ?  ColorPalette.GREEN :ColorPalette.PRIMARY,
         fontSize: 12),
   );
 }

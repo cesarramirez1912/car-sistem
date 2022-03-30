@@ -1,4 +1,5 @@
 import 'package:car_system/app/global_widgets/snack_bars/snack_bar_error.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,7 +36,13 @@ Future<void> CustomDialogFetch(Function request,
   try {
     await request();
   } catch (e) {
-    CustomSnackBarError(e.toString());
+    String response = '';
+    if (e is DioError) {
+      response = e.response?.data['message'] ?? e.response?.data.toString();
+    } else {
+      response = e.toString();
+    }
+    CustomSnackBarError(response);
   } finally {
     Get.back();
   }

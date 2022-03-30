@@ -4,10 +4,10 @@ class SellVehicleModel {
   int? idCliente;
   int? idColaborador;
   int? idVehiculoSucursal;
-  dynamic? entradaDolares;
-  dynamic? entradaGuaranies;
-  dynamic? contadoDolares;
-  dynamic? contadoGuaranies;
+  dynamic entradaDolares;
+  dynamic entradaGuaranies;
+  dynamic contadoDolares;
+  dynamic contadoGuaranies;
   String? fechaVenta;
   List<Refuerzos>? refuerzos;
   List<Cuotas>? cuotas;
@@ -40,42 +40,42 @@ class SellVehicleModel {
     if (json['refuerzos'] != null) {
       refuerzos = <Refuerzos>[];
       json['refuerzos'].forEach((v) {
-        refuerzos!.add(new Refuerzos.fromJson(v));
+        refuerzos!.add(Refuerzos.fromJson(v));
       });
     }
     if (json['cuotas'] != null) {
       cuotas = <Cuotas>[];
       json['cuotas'].forEach((v) {
-        cuotas!.add(new Cuotas.fromJson(v));
+        cuotas!.add(Cuotas.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id_empresa'] = this.idEmpresa;
-    data['id_sucursal'] = this.idSucursal;
-    data['id_cliente'] = this.idCliente;
-    data['id_colaborador'] = this.idColaborador;
-    data['id_vehiculo_sucursal'] = this.idVehiculoSucursal;
-    data['entrada_dolares'] = this.entradaDolares;
-    data['entrada_guaranies'] = this.entradaGuaranies;
-    data['contado_dolares'] = this.contadoDolares;
-    data['contado_guaranies'] = this.contadoGuaranies;
-    data['fecha_venta'] = this.fechaVenta;
-    if (this.refuerzos != null) {
-      data['refuerzos'] = this.refuerzos!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id_empresa'] = idEmpresa;
+    data['id_sucursal'] = idSucursal;
+    data['id_cliente'] = idCliente;
+    data['id_colaborador'] = idColaborador;
+    data['id_vehiculo_sucursal'] = idVehiculoSucursal;
+    data['entrada_dolares'] = entradaDolares;
+    data['entrada_guaranies'] = entradaGuaranies;
+    data['contado_dolares'] = contadoDolares;
+    data['contado_guaranies'] = contadoGuaranies;
+    data['fecha_venta'] = fechaVenta;
+    if (refuerzos != null) {
+      data['refuerzos'] = refuerzos!.map((v) => v.toJson()).toList();
     }
-    if (this.cuotas != null) {
-      data['cuotas'] = this.cuotas!.map((v) => v.toJson()).toList();
+    if (cuotas != null) {
+      data['cuotas'] = cuotas!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Refuerzos {
-  dynamic? refuerzoDolares;
-  dynamic? refuerzoGuaranies;
+  dynamic refuerzoDolares;
+  dynamic refuerzoGuaranies;
   String? fechaRefuerzo;
 
   Refuerzos({this.refuerzoDolares, this.refuerzoGuaranies, this.fechaRefuerzo});
@@ -87,17 +87,17 @@ class Refuerzos {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['refuerzo_dolares'] = this.refuerzoDolares;
-    data['refuerzo_guaranies'] = this.refuerzoGuaranies;
-    data['fecha_refuerzo'] = this.fechaRefuerzo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['refuerzo_dolares'] = refuerzoDolares;
+    data['refuerzo_guaranies'] = refuerzoGuaranies;
+    data['fecha_refuerzo'] = fechaRefuerzo;
     return data;
   }
 }
 
 class Cuotas {
-  dynamic? cuotaDolares;
-  dynamic? cuotaGuaranies;
+  dynamic cuotaDolares;
+  dynamic cuotaGuaranies;
   String? fechaCuota;
 
   Cuotas({this.cuotaDolares, this.cuotaGuaranies, this.fechaCuota});
@@ -109,10 +109,10 @@ class Cuotas {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['cuota_dolares'] = this.cuotaDolares;
-    data['cuota_guaranies'] = this.cuotaGuaranies;
-    data['fecha_cuota'] = this.fechaCuota;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['cuota_dolares'] = cuotaDolares;
+    data['cuota_guaranies'] = cuotaGuaranies;
+    data['fecha_cuota'] = fechaCuota;
     return data;
   }
 }

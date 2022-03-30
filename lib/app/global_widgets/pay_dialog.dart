@@ -31,7 +31,10 @@ Future payDialog(controller, int? id, int? idVenta,
   int porcentaje = 0;
 
   if (days >= 30) {
-    porcentaje = 3;
+    int? valu = int.tryParse((days / 30).round().toString());
+    if (valu != null) {
+      porcentaje = 3 * valu;
+    }
   }
 
   if (faltanteGuaranies != null) {
@@ -115,21 +118,27 @@ Future payDialog(controller, int? id, int? idVenta,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomTitle('FECHA ' + (isCuote ? 'CUOTA' : 'REFUERZO')),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: textInputContainer(
-                          'fecha',
-                          DateFormatBr().formatBrFromString(
-                              controller.fechaCuotaRefuerzo.value.toString()),
-                          onTap: () =>
-                              controller.changeFechaCuotaRefuerzo(context),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   mainAxisSize: MainAxisSize.max,
+                  //   children: [
+                  //     Expanded(
+                  //       child: textInputContainer(
+                  //         'fecha',
+                  //         DateFormatBr().formatBrFromString(
+                  //             controller.fechaCuotaRefuerzo.value.toString()),
+                  //         onTap: () =>
+                  //             controller.changeFechaCuotaRefuerzo(context),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  CustomTitle(
+                      DateFormatBr().formatBrFromString(
+                          controller.fechaCuotaRefuerzo.value.toString()),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15),
+
                   ...atrasoRender(days),
                   CustomTitle(isCuote ? 'CUOTA' : 'REFUERZO'),
                   CustomTitle(
@@ -192,49 +201,51 @@ Future payDialog(controller, int? id, int? idVenta,
     content: dialogPlan(controller, fecha, faltanteGuaranies, faltanteDolares,
         pagoGuaranies, pagoDolares),
     actions: [
-      Obx(() => controller.isLoadingRequest.value
-          ? const SizedBox()
-          : isPending(faltanteGuaranies, faltanteDolares)
-              ? Row(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomButton(
-                        '     PAGAR     ',
-                        () async => await controller.postPago(
-                            faltanteDolares != null
-                                ? (RemoveMoneyFormat().removeToDouble(
-                                            textDolaresCosto.text) +
-                                        pagoDolares)
-                                    .toString()
-                                : null,
-                            faltanteGuaranies != null
-                                ? (pagoGuaranies +
-                                        RemoveMoneyFormat().removeToDouble(
-                                            textGuaraniesCosto.text))
-                                    .toString()
-                                : null,
-                            id,
-                            idVenta,
-                            isCuote: isCuote),
-                        ColorPalette.GREEN,
-                        edgeInsets: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        fontSize: 12,
-                        isLoading: controller.isLoadingRequest.value),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    CustomButton(
-                        'CANCELAR', () => Get.back(), ColorPalette.PRIMARY,
-                        edgeInsets: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        fontSize: 12,
-                        isLoading: controller.isLoadingRequest.value),
-                  ],
-                )
-              : Container())
+      Obx(
+        () => controller.isLoadingRequest.value
+            ? const SizedBox()
+            : isPending(faltanteGuaranies, faltanteDolares)
+                ? Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomButton(
+                          '     PAGAR     ',
+                          () async => await controller.postPago(
+                              faltanteDolares != null
+                                  ? (RemoveMoneyFormat().removeToDouble(
+                                              textDolaresCosto.text) +
+                                          pagoDolares)
+                                      .toString()
+                                  : null,
+                              faltanteGuaranies != null
+                                  ? (pagoGuaranies +
+                                          RemoveMoneyFormat().removeToDouble(
+                                              textGuaraniesCosto.text))
+                                      .toString()
+                                  : null,
+                              id,
+                              idVenta,
+                              isCuote: isCuote),
+                          ColorPalette.GREEN,
+                          edgeInsets: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          fontSize: 12,
+                          isLoading: controller.isLoadingRequest.value),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      CustomButton(
+                          'CANCELAR', () => Get.back(), ColorPalette.PRIMARY,
+                          edgeInsets: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          fontSize: 12,
+                          isLoading: controller.isLoadingRequest.value),
+                    ],
+                  )
+                : Container(),
+      )
     ],
   );
 
@@ -245,52 +256,4 @@ Future payDialog(controller, int? id, int? idVenta,
       return alert;
     },
   );
-
-  return Get.defaultDialog(
-      title: 'PAGAR ${isCuote ? 'CUOTA' : 'REFUERZO'}',
-      content: dialogPlan(controller, fecha, faltanteGuaranies, faltanteDolares,
-          pagoGuaranies, pagoDolares),
-      actions: [
-        Obx(() => controller.isLoadingRequest.value
-            ? const SizedBox()
-            : Row(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CustomButton(
-                      '     PAGAR     ',
-                      () async => await controller.postPago(
-                          faltanteDolares != null
-                              ? (RemoveMoneyFormat().removeToDouble(
-                                          textDolaresCosto.text) +
-                                      pagoDolares)
-                                  .toString()
-                              : null,
-                          faltanteGuaranies != null
-                              ? (pagoGuaranies +
-                                      RemoveMoneyFormat().removeToDouble(
-                                          textGuaraniesCosto.text))
-                                  .toString()
-                              : null,
-                          id,
-                          idVenta,
-                          isCuote: isCuote),
-                      ColorPalette.GREEN,
-                      edgeInsets: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      fontSize: 12,
-                      isLoading: controller.isLoadingRequest.value),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  CustomButton(
-                      'CANCELAR', () => Get.back(), ColorPalette.PRIMARY,
-                      edgeInsets: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      fontSize: 12,
-                      isLoading: controller.isLoadingRequest.value),
-                ],
-              ))
-      ]);
 }

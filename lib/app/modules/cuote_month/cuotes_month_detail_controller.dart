@@ -20,13 +20,9 @@ class CuotesMonthDetailController extends GetxController {
   RxBool isLoadingRequest = false.obs;
   final SellsApi _sellVehicleRepository = Get.find();
 
-  Rx<DateTime> fechaPago = DateTime.utc(
-          DateTime.now().year, DateTime.now().month, DateTime.now().day)
-      .obs;
+  Rx<DateTime> fechaPago = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day).obs;
 
-  Rx<DateTime> fechaCuotaRefuerzo = DateTime.utc(
-          DateTime.now().year, DateTime.now().month, DateTime.now().day)
-      .obs;
+  Rx<DateTime> fechaCuotaRefuerzo = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day).obs;
 
   @override
   Future<void> onInit() async {

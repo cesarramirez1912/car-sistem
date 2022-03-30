@@ -1,3 +1,4 @@
+import 'package:car_system/app/modules/dates_venc_cuotes/detail_dates_cuotes_refuerzo_controller.dart';
 import 'package:car_system/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,19 +7,17 @@ import '../../core/theme/colors.dart';
 import '../../core/utils/date_format.dart';
 import '../../global_widgets/cuote_refuerzo/iscuote_render.dart';
 import '../../global_widgets/cuote_refuerzo/isrefuerzo_render.dart';
-import '../../global_widgets/dialog.dart';
 import '../../global_widgets/pay_dialog.dart';
 import '../../global_widgets/responsive.dart';
 import '../../global_widgets/spacing.dart';
-import '../../global_widgets/textInputContainer.dart';
-import '../sells/sells_from_collaborator_controller.dart';
 
-class DatesVencCuotesView extends StatelessWidget {
-  SellsFromCollaboratorController controller = Get.find();
+class DetailDatesCuotesRefuerzosView extends StatelessWidget {
+  DetailDatesCuotesRefuerzosController controller = Get.find();
+  double _heigth = 0.0;
 
   @override
   Widget build(BuildContext context) {
-    controller.filterCuoteOrRefuerzo();
+    _heigth = MediaQuery.of(context).size.height;
     return Responsive(
         mobile: principal(context),
         tablet: Center(
@@ -43,22 +42,23 @@ class DatesVencCuotesView extends StatelessWidget {
         title: const Text('Fechas'),
         actions: [
           IconButton(
-              onPressed: () => Get.toNamed(AppRoutes.EDIT_DATES),
-              icon: Stack(
-                children: const [
-                  Icon(Icons.calendar_today_outlined),
-                  Positioned.fill(
-                    bottom: -5,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.fiber_new_outlined,
-                        size: 18,
-                      ),
+            onPressed: () => Get.toNamed(AppRoutes.NEW_DATES),
+            icon: Stack(
+              children: const [
+                Icon(Icons.calendar_today_outlined),
+                Positioned.fill(
+                  bottom: -5,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.fiber_new_outlined,
+                      size: 18,
                     ),
-                  )
-                ],
-              ),),
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
       ),
       body: SizedBox.expand(
@@ -67,15 +67,15 @@ class DatesVencCuotesView extends StatelessWidget {
           onPageChanged: (index) => controller.selectedIndex.value = index,
           children: <Widget>[
             RefreshIndicator(
-              onRefresh: () async => await controller.requestSales(),
+              onRefresh: () async => print('ssss'),
               child: scroll(
-                child: Cuotes(context),
+                child: Cuotes(context, _heigth),
               ),
             ),
             RefreshIndicator(
-              onRefresh: () async => await controller.requestSales(),
+              onRefresh: () async => print('ssss'),
               child: scroll(
-                child: Refuerzos(context),
+                child: Refuerzos(context, _heigth),
               ),
             ),
           ],
@@ -109,17 +109,19 @@ class DatesVencCuotesView extends StatelessWidget {
   Widget scroll({required Widget child}) {
     return SingleChildScrollView(
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [child],
       ),
     );
   }
 
-  Widget Cuotes(context) {
+  Widget Cuotes(context, _heigth) {
     return Obx(
       () => controller.isLoading.value
-          ? const Center(
-              child: CircularProgressIndicator(),
+          ? SizedBox(
+              height: _heigth - 200,
+              child: const Center(child: CircularProgressIndicator()),
             )
           : isCuote(
               controller.listaCuotes,
@@ -148,46 +150,16 @@ class DatesVencCuotesView extends StatelessWidget {
                       context: context);
                 }
               },
-              onEditDate: (i) async {
-                controller.fechaPagoCuota.value = DateFormatBr()
-                    .formatLocalFromString(
-                        controller.listaCuotes[i].fechaCuota!);
-                bool? resDialog = await dialogEditFecha(context, i);
-                if (resDialog != null) {
-                  if (resDialog) {
-                    if (controller.fechaPagoCuota.value !=
-                        DateFormatBr().formatLocalFromString(
-                            controller.listaCuotes[i].fechaCuota!)) {
-                      // CustomDialogFetch((i) async => print(i));
-                    }
-                  }
-                }
-              },
             ),
     );
   }
 
-  Future dialogEditFecha(context, i) {
-    return CustomDialog(
-      context,
-      body: Obx(
-        () => Container(
-          child: textInputContainer(
-            'Fecha de venta:',
-            DateFormatBr()
-                .formatBrFromString(controller.fechaPagoCuota.value.toString()),
-            onTap: () => controller.changeFechaCuota(context, i),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget Refuerzos(context) {
+  Widget Refuerzos(context, _heigth) {
     return Obx(
       () => controller.isLoading.value
-          ? const Center(
-              child: CircularProgressIndicator(),
+          ? SizedBox(
+              height: _heigth - 200,
+              child: const Center(child: CircularProgressIndicator()),
             )
           : isRefuerzo(controller.listaRefuerzos, (selected) async {
               if (((selected.refuerzoDolares ?? 0) -
@@ -241,7 +213,7 @@ class DatesVencCuotesView extends StatelessWidget {
       return [
         Text(
           'Total Financiado: ' + controller.financiadoTotalStr.value,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         CustomSpacing(height: 6),
         Text('Total Refuerzo: ' + controller.totalVentaRefuerzoStr.value),

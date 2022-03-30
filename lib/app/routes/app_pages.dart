@@ -12,7 +12,8 @@ import '../modules/cuote_month/cuotes_month_binding.dart';
 import '../modules/cuote_month/principal_cuotes_month.dart';
 import '../modules/dash/dash_binding.dart';
 import '../modules/dash/dash_view.dart';
-import '../modules/dates_venc_cuotes/dates_venc_cuotes_view.dart';
+import '../modules/dates_venc_cuotes/detail_dates_cuotes_refuerzos_binding.dart';
+import '../modules/dates_venc_cuotes/detail_dates_cuotes_refuerzos_view.dart';
 import '../modules/deudor/deudor_detail_view.dart';
 import '../modules/deudor/deudor_view.dart';
 import '../modules/essencial/register_essencial_view.dart';
@@ -44,7 +45,7 @@ class AppPages{
     GetPage(name: AppRoutes.SEL_VEHICLE, page: () => SellVehicleView(), binding: SellFromCollaboratorBinding()),
     GetPage(name: AppRoutes.DATES_VEN, page: () => DatesVencView(),binding: DatesVencBinding()),
     GetPage(name: AppRoutes.SELLS_FROM_COLLABORATOR, page: () => SellsFromCollaboratorView(),binding:SellFromCollaboratorBinding()),
-    GetPage(name: AppRoutes.SELLS_DETAILS_CUOTES, page: () => DatesVencCuotesView(),),
+    GetPage(name: AppRoutes.SELLS_DETAILS_CUOTES, page: () => DetailDatesCuotesRefuerzosView(),binding: DetailDatesCuotesRefuerzosBinding()),
     GetPage(name: AppRoutes.REGISTER_ESSENCIAL, page: () => RegisterEssencialView(),),
     GetPage(name: AppRoutes.NEW_PLAN_VIEW, page: () => NewPlanView(),),
     GetPage(name: AppRoutes.CLIENT_DETAIL_VIEW, page: () => ClientDetailView(),),
@@ -55,6 +56,6 @@ class AppPages{
     GetPage(name: AppRoutes.DEUDOR_DETAIL_VIEW, page: () => DeudorDetailView(),),
     GetPage(name: AppRoutes.CUOTE_MONTH_DETAIL_VIEW, page: () => CuoteMonthDetailView(),),
     GetPage(name: AppRoutes.NEGOCIOS_VIEW, page: () => NegociosView() ),
-    GetPage(name: AppRoutes.EDIT_DATES, page: () => NewDatesView() ,binding: NewDatesBinding()),
+    GetPage(name: AppRoutes.NEW_DATES, page: () => NewDatesView() ,binding: NewDatesBinding()),
   ];
 }

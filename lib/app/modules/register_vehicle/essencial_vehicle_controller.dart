@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:car_system/app/data/models/essencial_vehicle_models/color.dart';
 import 'package:car_system/app/data/repositories/remote/essencial_vehicle_repository.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
@@ -258,7 +259,11 @@ class EssencialVehicleController extends GetxController {
         formKeyDialog.currentState?.reset();
         isLoading.value = false;
       } catch (e) {
-        CustomSnackBarError(e.toString());
+        String response = '';
+        if(e is DioError){
+          response = e.response?.data['message'] ?? e.response?.data.toString();
+        }
+        CustomSnackBarError(response);
         isLoading.value = false;
       }
     }

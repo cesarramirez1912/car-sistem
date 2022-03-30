@@ -88,13 +88,22 @@ class SellsApi {
   }
 
   Future<int> updateDateSale(int idVenta, DateTime dateTime) async {
-    print(_user.user?.value.token);
-    print(Rest.SELLS + '/date');
     final Response response = await _dio.put(Rest.SELLS + '/date',
         data: {"id_venta": idVenta, "fecha_venta": dateTime.toString()},
         options: Options(
           headers: {'Authorization': 'Bearer: ${_user.user?.value.token}'},
         ));
     return idVenta;
+  }
+
+  Future<String> updateDateCuoteRefuerzo(Map<String, dynamic> _body) async {
+    final Response response = await _dio.put(
+      Rest.SELLS,
+      data: _body,
+      options: Options(
+        headers: {'Authorization': 'Bearer: ${_user.user?.value.token}'},
+      ),
+    );
+    return 'ok';
   }
 }

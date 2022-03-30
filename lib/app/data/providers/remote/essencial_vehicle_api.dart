@@ -49,7 +49,11 @@ class EssencialVehicleApi {
   }
 
   Future<dynamic> createVehicle(Map<String, dynamic> _body) async {
-    final Response response = await _dio.post(Rest.VEHICLES, data: _body);
+    final Response response = await _dio.post(Rest.VEHICLES,
+        data: _body,
+        options: Options(
+          headers: {'Authorization': 'Bearer: ${_user.user?.value.token}'},
+        ));
     return response.data['response'];
   }
 }

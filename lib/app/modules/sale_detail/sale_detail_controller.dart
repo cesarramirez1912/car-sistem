@@ -39,12 +39,10 @@ class SaleDetailController extends GetxController {
     try {
       int response = await _sellsRepository.updateDateSale(
           saleCollaborator.value.idVenta!, dateFromSell.value);
-      print(response);
     } catch (e) {
       if(e is DioError){
         print(e.response?.data);
       }
-      print(e);
     }
   }
 }
