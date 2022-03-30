@@ -221,13 +221,14 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                       onChanged: (value) {
                         controller.cleanInputsCuotes();
                         if (value == TypesMoneys.GUARANIES) {
+                          controller.datesVencController.changeIsDolar(false);
                           controller.cuota.value.cuotaDolares = null;
                         } else {
+                          controller.datesVencController.changeIsDolar(true);
                           controller.cuota.value.cuotaGuaranies = null;
                         }
                         controller.typesMoneySelected.value = TypesMoneys.values
                             .firstWhere((e) => e.name.toString() == value);
-                        ;
                       },
                     ),
                     CustomSpacing(),
@@ -395,13 +396,8 @@ class SellVehicleView extends GetView<VehicleDetailController> {
               children: [
                 CustomSpacing(height: 7),
                 CustomButton('', () {
-                  Get.toNamed(AppRoutes.DATES_VEN, parameters: {
-                    'isCuote': 'true',
-                    'isDolar': controller.typesMoneySelected.value ==
-                            TypesMoneys.DOLARES
-                        ? 'true'
-                        : 'false'
-                  });
+                  controller.datesVencController.changeSelectedIndex(0);
+                  Get.toNamed(AppRoutes.DATES_VEN);
                 }, ColorPalette.SECUNDARY,
                     iconData: Icons.calendar_today_rounded),
               ],
@@ -451,12 +447,8 @@ class SellVehicleView extends GetView<VehicleDetailController> {
                         children: [
                           CustomSpacing(height: 7),
                           CustomButton('', () {
-                            Get.toNamed(AppRoutes.DATES_VEN, parameters: {
-                              'isCuote': 'false',
-                              'isDolar': (controller.typesMoneySelected.value ==
-                                      TypesMoneys.DOLARES)
-                                  .toString()
-                            });
+                            controller.datesVencController.changeSelectedIndex(1);
+                            Get.toNamed(AppRoutes.DATES_VEN);
                           }, ColorPalette.SECUNDARY,
                               iconData: Icons.calendar_today_rounded),
                         ],

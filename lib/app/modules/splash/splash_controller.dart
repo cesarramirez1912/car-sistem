@@ -25,7 +25,11 @@ class SplashController extends GetxController {
   _init() async {
     user = await _localAuthRepository.restoremodel;
     if (user.idColaborador != null) {
-      await fetchUserInformation();
+      if (user.token == null) {
+        Get.offAndToNamed(AppRoutes.LOGIN);
+      } else {
+        await fetchUserInformation();
+      }
     } else {
       Get.offNamed(AppRoutes.LOGIN);
     }

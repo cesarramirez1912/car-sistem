@@ -2,46 +2,74 @@ import 'package:car_system/app/data/models/sale_collaborator_model.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import '../../../../rest.dart';
+import '../../../core/utils/user_storage_controller.dart';
 
-class DashApi{
+class DashApi {
   final Dio _dio = Get.find<Dio>();
+  final UserStorageController _user = Get.find();
 
-  Future<List<Total>> requestCobrosMes(int? idEmpresa, int month, int year) async {
+  Future<List<Total>> requestCobrosMes(
+      int? idEmpresa, int month, int year) async {
     final Response response =
-    await _dio.get(Rest.COBROS_MES + '${idEmpresa}/mes=${month}/ano=${year}');
-    return (response.data['response'] as List).map((e) => Total.fromJson(e)).toList();
+        await _dio.get(Rest.COBROS_MES + '$idEmpresa/mes=$month/ano=$year',
+            options: Options(
+              headers: {'Authorization': 'Bearer: ${_user.user?.value.token}'},
+            ));
+    return (response.data['response'] as List)
+        .map((e) => Total.fromJson(e))
+        .toList();
   }
 
   Future<List<TotalVenta>> requestTotalVentasMes(
       int? idEmpresa, int month, int year) async {
     final Response response =
-    await _dio.get(Rest.VENTAS_MES + '${idEmpresa}/mes=${month}/ano=${year}');
-    return (response.data['response'] as List).map((e) => TotalVenta.fromJson(e)).toList();
+        await _dio.get(Rest.VENTAS_MES + '$idEmpresa/mes=$month/ano=$year',
+            options: Options(
+              headers: {'Authorization': 'Bearer: ${_user.user?.value.token}'},
+            ));
+    return (response.data['response'] as List)
+        .map((e) => TotalVenta.fromJson(e))
+        .toList();
   }
 
   Future<List<Count>> requestCount(int? idEmpresa, int month, int year) async {
-    final Response response = await _dio.get(
-        Rest.COUNT_VENTA_MES + '${idEmpresa}/mes=${month}/ano=${year}');
-    return (response.data['response'] as List).map((e) => Count.fromJson(e)).toList();
+    final Response response =
+        await _dio.get(Rest.COUNT_VENTA_MES + '$idEmpresa/mes=$month/ano=$year',
+            options: Options(
+              headers: {'Authorization': 'Bearer: ${_user.user?.value.token}'},
+            ));
+    return (response.data['response'] as List)
+        .map((e) => Count.fromJson(e))
+        .toList();
   }
 
   Future<dynamic> requestCountCuotesPagos(
       int? idEmpresa, int? month, int year) async {
     final Response response = await _dio.get(
-        Rest.COUNT_CUOTES_PAGOS_MES + '${idEmpresa}/mes=${month}/ano=${year}');
-    return (response.data['response'] as List).map((e) => CountTotalCuotaPago.fromJson(e)).toList();
+        Rest.COUNT_CUOTES_PAGOS_MES + '$idEmpresa/mes=$month/ano=$year',
+        options: Options(
+          headers: {'Authorization': 'Bearer: ${_user.user?.value.token}'},
+        ));
+    return (response.data['response'] as List)
+        .map((e) => CountTotalCuotaPago.fromJson(e))
+        .toList();
   }
 
   Future<dynamic> requestNegocios(int? idEmpresa, int? month, int year) async {
     final Response response =
-    await _dio.get(Rest.NEGOCIOS_MES + '${idEmpresa}/mes=${month}/ano=${year}');
-    return (response.data['response'] as List).map((e) => SaleCollaboratorModel.fromJson(e)).toList();
+        await _dio.get(Rest.NEGOCIOS_MES + '$idEmpresa/mes=$month/ano=$year',
+            options: Options(
+              headers: {'Authorization': 'Bearer: ${_user.user?.value.token}'},
+            ));
+    return (response.data['response'] as List)
+        .map((e) => SaleCollaboratorModel.fromJson(e))
+        .toList();
   }
 }
 
 class Total {
-  dynamic? pagoGuaranies;
-  dynamic? pagoDolares;
+  dynamic pagoGuaranies;
+  dynamic pagoDolares;
 
   Total({this.pagoGuaranies, this.pagoDolares});
 
@@ -52,8 +80,8 @@ class Total {
 }
 
 class TotalVenta {
-  dynamic? ventaGuaranies;
-  dynamic? ventaDolares;
+  dynamic ventaGuaranies;
+  dynamic ventaDolares;
 
   TotalVenta({this.ventaGuaranies, this.ventaDolares});
 
@@ -85,5 +113,4 @@ class CountTotalCuotaPago {
     totalCuotas = int.parse(json['total_cuotas']);
     totalPagado = int.parse(json['total_pagado']);
   }
-
 }

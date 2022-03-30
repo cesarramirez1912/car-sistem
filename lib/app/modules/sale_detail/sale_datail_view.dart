@@ -1,7 +1,12 @@
+import 'dart:math';
+
+import 'package:car_system/app/global_widgets/dialog.dart';
+import 'package:car_system/app/global_widgets/dialog_fetch.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/theme/colors.dart';
+import '../../core/utils/date_format.dart';
 import '../../core/utils/money_format.dart';
 import '../../data/models/register_client_model.dart';
 import '../../data/models/sale_collaborator_model.dart';
@@ -10,6 +15,7 @@ import '../../global_widgets/button.dart';
 import '../../global_widgets/client_body.dart';
 import '../../global_widgets/responsive.dart';
 import '../../global_widgets/spacing.dart';
+import '../../global_widgets/textInputContainer.dart';
 import '../../global_widgets/title.dart';
 import '../../global_widgets/vehicle_details.dart';
 import '../../routes/app_routes.dart';
@@ -25,21 +31,17 @@ class SaleDetailView extends StatelessWidget {
     return Responsive(
       tablet: Center(
         child: Container(
-            alignment: Alignment.center,
-            width: 900,
-            child: principal()),
+            alignment: Alignment.center, width: 900, child: principal(context)),
       ),
       desktop: Center(
         child: Container(
-            alignment: Alignment.center,
-            width: 900,
-            child: principal()),
+            alignment: Alignment.center, width: 900, child: principal(context)),
       ),
-      mobile: principal(),
+      mobile: principal(context),
     );
   }
 
-  Widget principal() {
+  Widget principal(context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalles de la venta'),
@@ -64,13 +66,41 @@ class SaleDetailView extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                CustomSpacing(),
-                                CustomTitle('Precio negociado'),
-                                CustomSpacing(),
+                                CustomTitle('FECHA DE VENTA'),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    suBtitle(
+                                      DateFormatBr().formatBrFromString(
+                                        controller.dateFromSell.value
+                                            .toString(),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () async {
+                                        bool? resDialog =
+                                            await dialogEditFecha(context);
+                                        if (resDialog != null) {
+                                          if (resDialog) {
+                                            CustomDialogFetch(() async =>
+                                                await controller.putDate());
+                                          }
+                                        }
+                                      },
+                                      icon: const Icon(
+                                        Icons.edit_outlined,
+                                        color: ColorPalette.YELLOW,
+                                      ),
+                                    )
+                                  ],
+                                ),
                                 const Divider(
                                   height: 2,
                                   color: Colors.grey,
                                 ),
+                                CustomSpacing(),
+                                CustomTitle('Precio negociado'),
                                 CustomSpacing(),
                                 price(controller.saleCollaborator.value),
                                 CustomSpacing(),
@@ -140,6 +170,22 @@ class SaleDetailView extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future dialogEditFecha(context) {
+    return CustomDialog(
+      context,
+      body: Obx(
+        () => Container(
+          child: textInputContainer(
+            'Fecha de venta:',
+            DateFormatBr()
+                .formatBrFromString(controller.dateFromSell.value.toString()),
+            onTap: () => controller.changeDateFromSell(context),
           ),
         ),
       ),

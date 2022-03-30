@@ -1,23 +1,30 @@
-import 'package:car_system/app/data/models/cuote_detail_model.dart';
-import 'package:car_system/app/data/models/refuerzo_detail_model.dart';
-import 'package:car_system/app/data/models/sale_collaborator_model.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import '../../../../rest.dart';
+import '../../../core/utils/user_storage_controller.dart';
 import '../../models/user_model.dart';
 
 class EssencialVehicleApi {
   final Dio _dio = Get.find<Dio>();
+  final UserStorageController _user = Get.find();
 
   Future<List<User>> getchLogin(Map<String, String> _body) async {
-    final Response response = await _dio.get(Rest.CLIENTS);
-    return (response.data['response'] as List).map((e) => User.fromJson(e)).toList();
+    final Response response = await _dio.get(Rest.CLIENTS,
+        options: Options(
+          headers: {'Authorization': 'Bearer: ${_user.user?.value.token}'},
+        ));
+    return (response.data['response'] as List)
+        .map((e) => User.fromJson(e))
+        .toList();
   }
 
   Future<dynamic> fetchVehicleInformation(
       List listType, String url, dynamic fromJson,
       {return2arrays = true}) async {
-    final Response response = await _dio.get(url);
+    final Response response = await _dio.get(url,
+        options: Options(
+          headers: {'Authorization': 'Bearer: ${_user.user?.value.token}'},
+        ));
     List<String> _listString = [];
     for (var i in response.data['response']) {
       if (return2arrays) {
@@ -33,7 +40,11 @@ class EssencialVehicleApi {
 
   Future<dynamic> postInformations(
       String url, Map<dynamic, dynamic> body) async {
-    final Response response = await _dio.post(url, data: body);
+    final Response response = await _dio.post(url,
+        data: body,
+        options: Options(
+          headers: {'Authorization': 'Bearer: ${_user.user?.value.token}'},
+        ));
     return 'ok';
   }
 

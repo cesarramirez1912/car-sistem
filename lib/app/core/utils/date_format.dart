@@ -25,6 +25,10 @@ class DateFormatBr {
     return DateFormat('dd/MM/yyyy').format(DateTime.parse(dateString));
   }
 
+  DateTime formatLocalFromString(String dateString) {
+    return DateTime.parse(dateString);
+  }
+
   String formatBrWithTime(String dateString) {
     return DateFormat('dd/MM/yyyy - hh:mm a')
         .format(DateTime.parse(dateString));

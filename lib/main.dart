@@ -8,7 +8,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app/core/theme/colors.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DependencyInjection.init();
@@ -24,7 +23,7 @@ Future<void> main() async {
         Locale('es', ''),
       ],
       debugShowCheckedModeBanner: false,
-            smartManagement: SmartManagement.keepFactory,
+      smartManagement: SmartManagement.keepFactory,
       home: SplashPage(),
       initialBinding: SplashBinding(),
       getPages: AppPages.pages,
@@ -44,49 +43,3 @@ Future<void> main() async {
     ),
   );
 }
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   UserStorageController userStorageController =
-//       Get.put(UserStorageController());
-//   await userStorageController.initStorage();
-//   runApp(
-//     GetMaterialApp(
-//       localizationsDelegates: const [
-//         GlobalMaterialLocalizations.delegate,
-//         GlobalMaterialLocalizations.delegate,
-//         GlobalCupertinoLocalizations.delegate,
-//       ],
-//       supportedLocales: const [
-//         Locale('en', ''),
-//         Locale('es', ''),
-//       ],
-//       smartManagement: SmartManagement.keepFactory,
-//       debugShowCheckedModeBanner: false,
-//       initialRoute: userStorageController.restoreModel().idColaborador ==
-//                   null ||
-//               userStorageController.restoreModel().dias <
-//                   Static.DAYS_PERMIT_APP_USE ||
-//               userStorageController.restoreModel().activo == 0
-//           ? RouterManager.LOGIN
-//           : (userStorageController.restoreModel().cargo == Roles.ADMIN.name ||
-//                   userStorageController.restoreModel().cargo == Roles.SUPER.name
-//               ? RouterManager.DASH
-//               : RouterManager.VEHICLES),
-//       theme: ThemeData(
-//           appBarTheme: const AppBarTheme(
-//               iconTheme: IconThemeData(
-//                 color: ColorPalette.PRIMARY, //change your color here
-//               ),
-//               titleTextStyle: TextStyle(
-//                   color: ColorPalette.PRIMARY,
-//                   fontSize: 22,
-//                   fontWeight: FontWeight.w700),
-//               backgroundColor: Colors.white,
-//               elevation: 0),
-//           fontFamily: 'Poppins',
-//           primaryColor: ColorPalette.PRIMARY),
-//       getPages: RouterManager.getRoutes(),
-//     ),
-//   );
-// }

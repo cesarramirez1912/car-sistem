@@ -19,4 +19,5 @@ class AppRoutes {
   static const String CUOTE_MONTH_DETAIL_VIEW = '/cuote_month_detail_view';
   static const String NEGOCIOS_VIEW = '/negocios_view';
   static const String CUOTES_MONTH = '/cuotes_month';
+  static const String EDIT_DATES = '/new_dates';
 }

@@ -1,10 +1,10 @@
 class CuoteDetailModel {
   int? idCuotaVenta;
-  int? cuotaGuaranies;
-  dynamic? cuotaDolares;
-  dynamic? pagoGuaranies;
-  dynamic? pagoDolares;
-  dynamic? fechaPago;
+  dynamic cuotaGuaranies;
+  dynamic cuotaDolares;
+  dynamic pagoGuaranies;
+  dynamic pagoDolares;
+  dynamic fechaPago;
   String? fechaCuota;
   int? idVenta;
   String? anosMesesDias;

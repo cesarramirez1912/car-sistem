@@ -7,27 +7,62 @@ import 'center_text.dart';
 import 'column_text.dart';
 import 'columns.dart';
 
-Widget isCuote(List<CuoteDetailModel> lista, Function onSelectChanged) {
+Widget isCuote(List<CuoteDetailModel> lista, Function onSelectChanged,
+    {Function? onEditDate}) {
   List<Widget> faltanteSection(CuoteDetailModel cuote) {
     if (cuote.fechaPago != null) {
       if (cuote.pagoGuaranies != null) {
         double faltante = (double.parse(cuote.cuotaGuaranies.toString()) -
-            double.parse(cuote.pagoGuaranies.toString()));
-        return [pendienteText(faltante)];
+            double.parse(
+              cuote.pagoGuaranies.toString(),
+            ));
+        return [
+          pendienteText(faltante),
+          faltante <= 0
+              ? Container()
+              : const Text(
+                  'cobrar',
+                  style: TextStyle(color: ColorPalette.GREEN_SHADE_400),
+                  textAlign: TextAlign.center,
+                )
+        ];
       } else {
         double faltante = (double.parse(cuote.cuotaDolares.toString()) -
-            double.parse(cuote.pagoDolares.toString()));
-        return [pendienteText(faltante, isGuaranies: false)];
+            double.parse(
+              cuote.pagoDolares.toString(),
+            ));
+        return [
+          pendienteText(faltante, isGuaranies: false),
+          faltante <= 0
+              ? Container()
+              : const Text(
+                  'cobrar',
+                  style: TextStyle(color: ColorPalette.GREEN_SHADE_400),
+                  textAlign: TextAlign.center,
+                )
+        ];
       }
     } else {
       if (cuote.cuotaGuaranies != null) {
         return [
           centerText(
             cuote.cuotaGuaranies,
+          ),
+          const Text(
+            'cobrar',
+            style: TextStyle(color: ColorPalette.GREEN_SHADE_400),
+            textAlign: TextAlign.center,
           )
         ];
       } else {
-        return [centerText(cuote.cuotaDolares, isGuaranies: false)];
+        return [
+          centerText(cuote.cuotaDolares, isGuaranies: false),
+          const Text(
+            'cobrar',
+            style: TextStyle(color: ColorPalette.GREEN_SHADE_400),
+            textAlign: TextAlign.center,
+          )
+        ];
       }
     }
   }
@@ -48,7 +83,7 @@ Widget isCuote(List<CuoteDetailModel> lista, Function onSelectChanged) {
         const Text(
           'Pediente',
           textAlign: TextAlign.center,
-          style: TextStyle(color: ColorPalette.PRIMARY,fontSize: 12),
+          style: TextStyle(color: ColorPalette.PRIMARY, fontSize: 12),
         ),
       ];
     }
@@ -64,63 +99,80 @@ Widget isCuote(List<CuoteDetailModel> lista, Function onSelectChanged) {
   }
 
   return DataTable(
-      columnSpacing: 0,
-      dataRowHeight: 85,
-      showCheckboxColumn: false,
-      rows: List.generate(
-        lista.length,
-        (i) => DataRow(
-          onSelectChanged: (selected) => onSelectChanged(lista[i]),
-          cells: [
-            DataCell(
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  priceVencSection(lista[i]),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    DateFormatBr()
-                        .formatBrFromString(lista[i].fechaCuota.toString()),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  lista[i].anosMesesDias != null
-                      ? const SizedBox(
-                          height: 4,
-                        )
-                      : const SizedBox(),
-                  lista[i].anosMesesDias != null
-                      ? Text(
-                          lista[i].anosMesesDias ?? '',
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 12),
-                          textAlign: TextAlign.center,
-                        )
-                      : const SizedBox()
-                ],
+    columnSpacing: 0,
+    dataRowHeight: 85,
+    showCheckboxColumn: false,
+    rows: List.generate(
+      lista.length,
+      (i) => DataRow(
+        onSelectChanged: (selected) => onSelectChanged(lista[i]),
+        cells: [
+          DataCell(
+            GestureDetector(
+              onTap: onEditDate != null ? () => onEditDate(i) : null,
+              child: Container(
+                width: double.infinity,
+                color: Colors.transparent,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    priceVencSection(lista[i]),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      DateFormatBr()
+                          .formatBrFromString(lista[i].fechaCuota.toString()),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    lista[i].anosMesesDias != null
+                        ? const SizedBox(
+                            height: 4,
+                          )
+                        : const SizedBox(),
+                    lista[i].anosMesesDias != null
+                        ? Text(
+                            lista[i].anosMesesDias ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 12),
+                            textAlign: TextAlign.center,
+                          )
+                        : const SizedBox(),
+                    onEditDate != null
+                        ? const Text(
+                            'editar',
+                            style: TextStyle(color: ColorPalette.YELLOW),
+                            textAlign: TextAlign.center,
+                          )
+                        : Container()
+                  ],
+                ),
               ),
             ),
-            DataCell(
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [...pricePagoSection(lista[i])],
-              ),
+          ),
+          DataCell(
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [...pricePagoSection(lista[i])],
             ),
-            DataCell(
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [...faltanteSection(lista[i])],
-              ),
+          ),
+          DataCell(
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ...faltanteSection(lista[i]),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      columns: dataColumn());
+    ),
+    columns: dataColumn(),
+  );
 }

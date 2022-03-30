@@ -51,6 +51,8 @@ class SellsFromCollaboratorController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isCuote = false.obs;
 
+  RxInt selectedIndex = 0.obs;
+
   RxBool isLoadingRequest = false.obs;
 
   RxList<String> listString = ['TODOS', 'EN ABIERTO', 'CERRADOS'].obs;
@@ -61,11 +63,27 @@ class SellsFromCollaboratorController extends GetxController {
 
   RxBool isGuaranies = true.obs;
 
+  Rx<DateTime> fechaPagoCuota = DateTime.utc(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day)
+      .obs;
+
   @override
   void onInit() async {
     user = userStorageController.user?.value;
     await requestSales();
     super.onInit();
+  }
+
+  Future<void> changeFechaCuota(BuildContext context, int index) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        locale: const Locale('es'),
+        initialDate: fechaPagoCuota.value,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != fechaPagoCuota.value) {
+      fechaPagoCuota.value = picked;
+    }
   }
 
   Future<void> requestSales() async {

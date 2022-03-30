@@ -9,7 +9,8 @@ class User {
     this.colaborador,
     this.celular,
     this.dias,
-    this.activo
+    this.activo,
+    this.token
   });
 
   int? idEmpresa;
@@ -22,6 +23,7 @@ class User {
   String? celular;
   dynamic? dias;
   int? activo;
+  String? token;
 
   User.fromJson(Map<String, dynamic> json) {
     idEmpresa = json['id_empresa'];
@@ -34,6 +36,7 @@ class User {
     celular = json['celular'];
     dias = json['dias'];
     activo = json['activo'];
+    token = json['token'];
   }
 
   Map<String, dynamic> toJson() {
@@ -48,6 +51,7 @@ class User {
     _data['celular'] = celular;
     _data['dias'] = dias;
     _data['activo'] = activo;
+    _data['token'] = token;
     return _data;
   }
 }

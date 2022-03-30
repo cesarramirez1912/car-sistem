@@ -23,4 +23,6 @@ class SellsRepository{
 
   Future<int> deletePlan(int idPlan) =>_sellsApi.deleteVehiclePlan(idPlan);
 
+  Future<int> updateDateSale(int idVenta,DateTime dateTime) =>_sellsApi.updateDateSale(idVenta,dateTime);
+
 }

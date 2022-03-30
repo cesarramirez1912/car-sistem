@@ -1,3 +1,5 @@
+import 'package:car_system/app/modules/dates_venc/dates_venc_binding.dart';
+import 'package:car_system/app/modules/dates_venc/dates_venc_view.dart';
 import 'package:car_system/app/modules/login/login_view.dart';
 import 'package:car_system/app/routes/app_routes.dart';
 import 'package:get/get.dart';
@@ -18,11 +20,12 @@ import '../modules/list_vehicles/list_vehicle_bindings.dart';
 import '../modules/list_vehicles/list_vehicles_view.dart';
 import '../modules/login/login_binding.dart';
 import '../modules/negocios/negocios_view.dart';
+import '../modules/new_dates/new_dates_binding.dart';
+import '../modules/new_dates/new_dates_view.dart';
 import '../modules/plan/new_plan_view.dart';
 import '../modules/register_vehicle/register_vehicle_binding.dart';
 import '../modules/register_vehicle/register_vehicle_view.dart';
 import '../modules/sale_detail/sale_datail_view.dart';
-import '../modules/sells/dates_venc_view.dart';
 import '../modules/sells/sell_from_collaborator_binding.dart';
 import '../modules/sells/sell_vehicle_view.dart';
 import '../modules/sells/sells_from_collaborator_view.dart';
@@ -39,7 +42,7 @@ class AppPages{
     GetPage(name: AppRoutes.VEHICLE_DETAIL, page: () => VehicleDetailView(),binding: VehicleDetailBinding()),
     GetPage(name: AppRoutes.REGISTER, page: () => RegisterVehicleView(), binding: RegisterVehicleBinding()),
     GetPage(name: AppRoutes.SEL_VEHICLE, page: () => SellVehicleView(), binding: SellFromCollaboratorBinding()),
-    GetPage(name: AppRoutes.DATES_VEN, page: () => DatesVencView()),
+    GetPage(name: AppRoutes.DATES_VEN, page: () => DatesVencView(),binding: DatesVencBinding()),
     GetPage(name: AppRoutes.SELLS_FROM_COLLABORATOR, page: () => SellsFromCollaboratorView(),binding:SellFromCollaboratorBinding()),
     GetPage(name: AppRoutes.SELLS_DETAILS_CUOTES, page: () => DatesVencCuotesView(),),
     GetPage(name: AppRoutes.REGISTER_ESSENCIAL, page: () => RegisterEssencialView(),),
@@ -51,6 +54,7 @@ class AppPages{
     GetPage(name: AppRoutes.CUOTES_MONTH, page: () => PrincipalCuotesMonth(),binding: CuotesMonthBinding()),
     GetPage(name: AppRoutes.DEUDOR_DETAIL_VIEW, page: () => DeudorDetailView(),),
     GetPage(name: AppRoutes.CUOTE_MONTH_DETAIL_VIEW, page: () => CuoteMonthDetailView(),),
-     GetPage(name: AppRoutes.NEGOCIOS_VIEW, page: () => NegociosView() ),
+    GetPage(name: AppRoutes.NEGOCIOS_VIEW, page: () => NegociosView() ),
+    GetPage(name: AppRoutes.EDIT_DATES, page: () => NewDatesView() ,binding: NewDatesBinding()),
   ];
 }

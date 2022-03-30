@@ -7,6 +7,7 @@ import 'package:car_system/app/global_widgets/input.dart';
 import 'package:car_system/app/global_widgets/snack_bars/snack_bar_success.dart';
 import 'package:car_system/app/global_widgets/spacing.dart';
 import 'package:car_system/app/global_widgets/title.dart';
+import 'package:car_system/app/modules/dates_venc/dates_venc_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,8 @@ import '../list_vehicles/list_vehicle_controller.dart';
 class VehicleDetailController extends GetxController {
   final ListVehicleController listVehicleController = Get.find();
   final SellsRepository _sellVehicleRepository = Get.find();
+  final DatesVencController datesVencController = Get.find();
+
   RxList<Vehicle> vehicles = <Vehicle>[].obs;
   Rx<Vehicle>? vehicleDetail;
   String idVehiculoSucursal = '';
@@ -34,8 +37,12 @@ class VehicleDetailController extends GetxController {
   RxBool isLoading = false.obs;
   RxList<Vehicle> vehicleSelected = <Vehicle>[].obs;
 
-  RxList<String> typesCobroMensuales = ['3 MESES', '6 MESES', '12 MESES'].obs;
-  RxString typeCobroMensualSelected = '3 MESES'.obs;
+  RxList<String> typesCobroMensuales = [
+    '12 MESES',
+    '6 MESES',
+    '3 MESES',
+  ].obs;
+  RxString typeCobroMensualSelected = '12 MESES'.obs;
 
   RxList<TypesSells> typesSell =
       [TypesSells.CONTADO, TypesSells.FINANCIADO].obs;
@@ -107,6 +114,7 @@ class VehicleDetailController extends GetxController {
     Map<dynamic, dynamic>? args = Get.parameters;
     typeSellSelected.value = typesSell.first;
     typesMoneySelected.value = typesMoney.first;
+    datesVencController.changeIsDolar(typesMoneySelected.value==TypesMoneys.DOLARES);
     firstDateCuoteSelected.value = DateTime.utc(
         DateTime.now().year, DateTime.now().month + 1, DateTime.now().day);
     firstDateRefuerzoSelected.value = DateTime.utc(
@@ -355,6 +363,7 @@ class VehicleDetailController extends GetxController {
           cuotaGuaranies: cuota.value.cuotaGuaranies,
           cuotaDolares: cuota.value.cuotaDolares),
     );
+    datesVencController.changeListCuotas(listDateGeneratedCuotas.value);
   }
 
   void generatedDatesRefuerzos() {
@@ -385,6 +394,8 @@ class VehicleDetailController extends GetxController {
         }
       }
     }
+    datesVencController.changeListRefuerzos(listDateGeneratedRefuerzos.value);
+
   }
 
   void registerCuota() async {
@@ -476,18 +487,18 @@ class VehicleDetailController extends GetxController {
               _remove.removeToString(cuota.value.entradaDolares);
           sellVehicleModel.value.entradaGuaranies =
               _remove.removeToString(cuota.value.entradaGuaranies);
-          if (listDateGeneratedCuotas.isNotEmpty) {
+          if (datesVencController.listDateGeneratedCuotas.isNotEmpty) {
             sellVehicleModel.value.cuotas?.clear();
-            for (var fecha in listDateGeneratedCuotas) {
+            for (var fecha in datesVencController.listDateGeneratedCuotas) {
               sellVehicleModel.value.cuotas?.add(Cuotas(
                   cuotaGuaranies: fecha.cuotaGuaranies.toString(),
                   cuotaDolares: fecha.cuotaDolares.toString(),
                   fechaCuota: fecha.date.toString()));
             }
           }
-          if (listDateGeneratedRefuerzos.isNotEmpty) {
+          if (datesVencController.listDateGeneratedRefuerzos.isNotEmpty) {
             sellVehicleModel.value.refuerzos?.clear();
-            for (var fecha in listDateGeneratedRefuerzos) {
+            for (var fecha in datesVencController.listDateGeneratedRefuerzos) {
               sellVehicleModel.value.refuerzos?.add(
                 Refuerzos(
                   refuerzoGuaranies: fecha.refuerzoGuaranies.toString(),

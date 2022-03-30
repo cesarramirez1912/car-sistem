@@ -1,6 +1,7 @@
 import 'package:car_system/app/data/repositories/local/local_auth_repository.dart';
 import 'package:car_system/app/data/repositories/remote/login_repository.dart';
 import 'package:car_system/app/routes/app_routes.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,7 +34,6 @@ class LoginController extends GetxController {
       await userStorageController.storePriceModel(user!.value);
       _localAuthRepository.setUser(user!.value);
 
-      isFetching.value = false;
       if (res.first.dias < Static.DAYS_PERMIT_APP_USE ||
           res.first.activo == 0) {
         CustomSnackBarError('Porfavor contactar al soporte.');
@@ -44,8 +44,13 @@ class LoginController extends GetxController {
             : AppRoutes.VEHICLES);
       }
     } catch (e) {
+      if (e is DioError) {
+        CustomSnackBarError(e.response?.data['message']);
+      } else {
+        CustomSnackBarError(e.toString());
+      }
+    } finally {
       isFetching.value = false;
-      CustomSnackBarError(e.toString());
     }
   }
 }
